@@ -20,8 +20,6 @@ datamodel/.settings/org.eclipse.m2e.core.prefs
 datamodel/.settings/org.eclipse.wst.common.component
 datamodel/.settings/org.eclipse.wst.common.project.facet.core.xml
 datamodel/.settings/org.eclipse.wst.validation.prefs
-datamodel/src/main/java/ru/mail/ales2003/deals2017/datamodel/Customer.java
-datamodel/src/main/java/ru/mail/ales2003/deals2017/datamodel/Manager.java
 services/.classpath
 services/.project
 services/.settings/org.eclipse.core.resources.prefs
