@@ -28,38 +28,38 @@
 		<dependencies>
 			<!-- Project modules -->
 			<dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>datamodel</artifactId>
 				<version>1.0.0</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>dao-api</artifactId>
 				<version>1.0.0</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>dao-impl-db</artifactId>
 				<version>1.0.0</version>
 			</dependency>
 
 			<!--dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>dao-impl-xml</artifactId>
 				<version>1.0.0</version>
 			</dependency-->
 
 
 			<dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>services</artifactId>
 				<version>1.0.0</version>
 			</dependency>
 
 			<dependency>
-				<groupId>com.epam.training.library2017</groupId>
+				<groupId>ru.mail.ales2003.deals2017</groupId>
 				<artifactId>webapp</artifactId>
 				<version>1.0.0</version>
 			</dependency>
