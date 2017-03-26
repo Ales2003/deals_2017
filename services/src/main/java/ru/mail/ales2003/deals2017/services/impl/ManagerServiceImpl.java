@@ -1,11 +1,8 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
-import org.springframework.stereotype.Service;
-
 import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.services.IManagerService;
 
-@Service
 public class ManagerServiceImpl implements IManagerService {
 
 	@Override
