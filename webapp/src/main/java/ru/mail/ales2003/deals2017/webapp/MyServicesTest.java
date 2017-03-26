@@ -16,19 +16,21 @@ public class MyServicesTest {
 		 * как ресурсы
 		 */
 
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("web-context.xml");
+		ClassPathXmlApplicationContext context = 
+				new ClassPathXmlApplicationContext("web-context.xml");
 		System.out.println(context);
 
 		// вытягиваем бин из контекста и печатаем его
-		IItemDao iD = context.getBean(IItemDao.class);
-		System.out.println(iD);
+		IItemDao item = context.getBean(IItemDao.class);
+		System.out.println(item);
 		// печатаем имя класса
-		System.out.println(iD.getClass());
-
+		System.out.println(item.getClass());
+		//печатаем объект Item
+		System.out.println(item.get(1));
+		
 		// !!! когда имплементаций несколько, контекст не отдаст бин по
-		// интерфейсу,
-		// поэтому должныы указать класс, как здесь:
-		IItemDao impl = (IItemDao) context.getBean(ItemDaoImpl.class);
+		// интерфейсу, поэтому должен указываться класс, как здесь:
+		IItemDao impl = context.getBean(ItemDaoImpl.class);
 		System.out.println(impl);
 		// какой-то тустринг, хочется лучше
 		impl.toString();
@@ -40,6 +42,8 @@ public class MyServicesTest {
 		// а класс ItemDao является бином, поэтому контекст словил
 		System.out.println(context.containsBeanDefinition("itemDaoImpl"));
 
+		
+		//получаем массив бинов и распечатывем их имена
 		String[] beanDefinitionNames = context.getBeanDefinitionNames();
 		System.out.println("Бобы в банке:");
 		for (String beanName : beanDefinitionNames) {

@@ -5,9 +5,12 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	    http://www.springframework.org/schema/context 
-	    http://www.springframework.org/schema/context/spring-context-3.0.xsd"
->
-    <context:annotation-config />
+	    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!--Элемент <context:annotation-config> сообщает фреймворку Spring, что 
+		для связывания свойств должен использоваться механизм на осно ве аннотаций. -->
+
+	<context:annotation-config />
 
 	<context:component-scan base-package="ru.mail.ales2003.deals2017.dao.impl.db.impl" />
 

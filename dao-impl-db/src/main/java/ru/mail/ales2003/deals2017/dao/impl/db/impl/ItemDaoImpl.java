@@ -16,8 +16,10 @@ public class ItemDaoImpl implements IItemDao {
 
 	@Override
 	public Item get(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		 // TODO go to DB
+        Item item = new Item();
+        item.setId(id);
+        return item;
 	}
 
 	@Override
