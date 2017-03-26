@@ -1,8 +1,11 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import org.springframework.stereotype.Service;
+
 import ru.mail.ales2003.deals2017.datamodel.Contract2Item;
 import ru.mail.ales2003.deals2017.services.IContract2ItemService;
 
+@Service
 public class Contract2ItemServiceImpl implements IContract2ItemService {
 
 	@Override
