@@ -9,13 +9,28 @@
 
 	<!--Элемент <context:annotation-config> сообщает фреймворку Spring, что 
 		для связывания свойств должен использоваться механизм на осно ве аннотаций. -->
-
 	<context:annotation-config />
 
 	<context:component-scan base-package="ru.mail.ales2003.deals2017.dao.impl.db.impl" />
 
+	<!-- adding placeholder for db properties -->
+	<context:property-placeholder
+		ignore-unresolvable="true" location="classpath:db.properties" />
+	
+	<!-- Initialization for data source -->
+	<bean id="dataSource"
+		class="ru.mail.ales2003.deals2017.dao.impl.db.util.SchemaNameAwareBasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="schema" value="${db.schema}" />
+	</bean>
 
-
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
 
 
 </beans>
