@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class DbConnectionTest {
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		Connection con = null;
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -21,8 +21,7 @@ public class DbConnectionTest {
 			ResultSet resultSet = createStatement.getResultSet();
 			resultSet.next();
 			int id = resultSet.getInt("id");
-			
-			
+
 			boolean next = resultSet.next();
 			int id2 = resultSet.getInt("id");
 
@@ -38,5 +37,5 @@ public class DbConnectionTest {
 			} catch (SQLException e) {
 			}
 		}
-	}
+	}*/
 }
