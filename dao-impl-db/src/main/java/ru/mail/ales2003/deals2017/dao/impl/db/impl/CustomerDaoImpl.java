@@ -28,8 +28,8 @@ public class CustomerDaoImpl implements ICustomerDao {
 
 	@Override
 	public Customer insert(Customer entity) {
-		final String INSERT_SQL = "insert into customer " + "(first_name, patronymic, last_name, company_name,"
-				+ " address, phone_number,customer_group_id, manager_id)" + " values(?,?,?,?,?,?,?,?)";
+		final String INSERT_SQL = "insert into customer (first_name, patronymic, last_name, company_name,"
+				+ " address, phone_number,customer_group_id, manager_id) values(?,?,?,?,?,?,?,?)";
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 

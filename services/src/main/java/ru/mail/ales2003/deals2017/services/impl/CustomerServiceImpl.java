@@ -18,7 +18,6 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Override
 	public Customer get(Integer id) {
-
 		return customerDao.get(id);
 	}
 
@@ -35,8 +34,10 @@ public class CustomerServiceImpl implements ICustomerService {
 	}
 
 	@Override
-	public void saveMultiple(Customer... customer) {
-		// TODO Auto-generated method stub
+	public void saveMultiple(Customer... customerArr) {
+		for (Customer customer : customerArr) {
+			save(customer);
+		}
 
 	}
 

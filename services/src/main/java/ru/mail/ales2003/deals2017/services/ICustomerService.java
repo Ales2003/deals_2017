@@ -10,12 +10,12 @@ public interface ICustomerService {
 
 	Customer get(Integer id);
 
-	    void save(Customer customer);
+	List<Customer> getAll();
 
-	    @Transactional
-	    void saveMultiple(Customer... customer);
+	void save(Customer customer);
 
-	    List<Customer> getAll();
+	@Transactional
+	void saveMultiple(Customer... customer);
 
-	    void delete(Integer id);
+	void delete(Integer id);
 }
