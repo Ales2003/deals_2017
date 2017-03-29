@@ -7,7 +7,7 @@ import ru.mail.ales2003.deals2017.dao.impl.db.impl.ItemDaoImpl;
 import ru.mail.ales2003.deals2017.services.IItemService;
 import ru.mail.ales2003.deals2017.services.impl.ItemServiceImpl;
 
-public class MyServicesTest {
+public class WithBeanInjectionServicesTest {
 
 	public static void main(String[] args) {
 
@@ -55,7 +55,8 @@ public class MyServicesTest {
 
 		System.out.println("======Тестируем app.properties====");
 		IItemService itemService = context.getBean(ItemServiceImpl.class);
-		
+		// why  wrong??
+		//itemService.key1;
 		
 		
 	}

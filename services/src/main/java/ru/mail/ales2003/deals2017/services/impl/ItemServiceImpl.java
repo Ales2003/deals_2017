@@ -21,6 +21,7 @@ public class ItemServiceImpl implements IItemService {
 	@Value("${key1}")
 	public String key1;
 
+	
 	@Value("${key2}")
 	public Integer key2;
 

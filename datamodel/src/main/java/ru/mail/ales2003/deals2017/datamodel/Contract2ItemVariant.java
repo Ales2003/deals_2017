@@ -1,11 +1,11 @@
 package ru.mail.ales2003.deals2017.datamodel;
 
-public class Contract2Item {
+public class Contract2ItemVariant {
 
 	private Integer id;
 	private Integer quantity;
 	private Integer contractId;
-	private Integer itemId;
+	private Integer itemVariantId;
 
 	public Integer getId() {
 		return id;
@@ -31,18 +31,20 @@ public class Contract2Item {
 		this.contractId = contractId;
 	}
 
-	public Integer getItemId() {
-		return itemId;
+	public Integer getItemVariantId() {
+		return itemVariantId;
 	}
 
-	public void setItemId(Integer itemId) {
-		this.itemId = itemId;
+	public void setItemVariantId(Integer itemVariantId) {
+		this.itemVariantId = itemVariantId;
 	}
 
 	@Override
 	public String toString() {
-		return "Contract2Item [id=" + id + ", quantity=" + quantity + ", contractId=" + contractId + ", itemId="
-				+ itemId + "]";
+		return "Contract2ItemVariant [id=" + id + ", quantity=" + quantity + ", contractId=" + contractId
+				+ ", itemVariantId=" + itemVariantId + "]";
 	}
+
+	
 
 }

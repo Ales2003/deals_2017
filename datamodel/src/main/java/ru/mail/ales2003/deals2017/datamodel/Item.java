@@ -6,7 +6,6 @@ public class Item {
 	private String name;
 	private String description;
 	private Double basicPrice;
-	private Integer customerId;
 
 	public Integer getId() {
 		return id;
@@ -40,18 +39,10 @@ public class Item {
 		this.basicPrice = basicPrice;
 	}
 
-	public Integer getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
-
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", basicPrice=" + basicPrice
-				+ ", customerId=" + customerId + "]";
+				+ "]";
 	}
 
 }
