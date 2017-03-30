@@ -10,10 +10,10 @@ public interface II18NDao {
 
 	I18N get(Integer id);
 
+	List<I18N> getAll();
+
 	void update(I18N entity);
 
 	void delete(Integer id);
-
-	List<I18N> getAll();
 
 }
