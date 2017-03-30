@@ -1,5 +1,7 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,30 +23,29 @@ public class ItemServiceImpl implements IItemService {
 	@Value("${key1}")
 	public String key1;
 
-	
 	@Value("${key2}")
 	public Integer key2;
 
-	
-	
-	
-	
-	
-	
 	@Override
-	public Integer insert(Item item) {
+	public Item get(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Item get(Integer id) {
-
-		return itemDao.get(id);
+	public List<Item> getAll() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public void update(Item item) {
+	public void save(Item item) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void saveMultiple(Item... item) {
 		// TODO Auto-generated method stub
 
 	}

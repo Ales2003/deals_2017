@@ -9,7 +9,7 @@ import ru.mail.ales2003.deals2017.datamodel.Manager;
 public class ManagerDaoImpl implements IManagerDao {
 
 	@Override
-	public Integer insert(Manager manager) {
+	public Manager insert(Manager manager) {
 		// TODO Auto-generated method stub
 		return null;
 	}

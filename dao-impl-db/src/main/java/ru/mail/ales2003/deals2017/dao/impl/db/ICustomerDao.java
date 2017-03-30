@@ -6,11 +6,11 @@ import ru.mail.ales2003.deals2017.datamodel.Customer;
 
 public interface ICustomerDao {
 
-	Customer insert(Customer customer);
+	Customer insert(Customer entity);
 
 	Customer get(Integer id);
 
-	void update(Customer customer);
+	void update(Customer entity);
 
 	void delete(Integer id);
 

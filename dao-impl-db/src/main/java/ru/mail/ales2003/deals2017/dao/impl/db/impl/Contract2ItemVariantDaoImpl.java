@@ -9,7 +9,7 @@ import ru.mail.ales2003.deals2017.datamodel.Contract2ItemVariant;
 public class Contract2ItemVariantDaoImpl implements IContract2ItemVariantDao {
 
 	@Override
-	public Integer insert(Contract2ItemVariant contract2ItemVariant) {
+	public Contract2ItemVariant insert(Contract2ItemVariant entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -21,7 +21,7 @@ public class Contract2ItemVariantDaoImpl implements IContract2ItemVariantDao {
 	}
 
 	@Override
-	public void update(Contract2ItemVariant contract2ItemVariant) {
+	public void update(Contract2ItemVariant entity) {
 		// TODO Auto-generated method stub
 
 	}

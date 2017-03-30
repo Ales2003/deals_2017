@@ -7,7 +7,7 @@ import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 public class ItemVariantDaoImpl implements IItemVariantDao {
 
 	@Override
-	public Integer insert(ItemVariant itemVariant) {
+	public ItemVariant insert(ItemVariant entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -19,16 +19,15 @@ public class ItemVariantDaoImpl implements IItemVariantDao {
 	}
 
 	@Override
-	public void update(ItemVariant itemVariant) {
+	public void update(ItemVariant entity) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void delete(Integer id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 }

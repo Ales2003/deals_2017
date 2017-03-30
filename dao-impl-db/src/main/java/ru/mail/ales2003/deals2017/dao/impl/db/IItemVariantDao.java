@@ -5,11 +5,11 @@ import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
 public interface IItemVariantDao {
 
-	Integer insert(ItemVariant itemVariant);
+	ItemVariant insert(ItemVariant entity);
 
 	Item get(Integer id);
 
-	void update(ItemVariant itemVariant);
+	void update(ItemVariant entity);
 
 	void delete(Integer id);
 }

@@ -4,11 +4,11 @@ import ru.mail.ales2003.deals2017.datamodel.Contract;
 
 public interface IContractDao {
 
-	Contract insert(Contract contract);
+	Contract insert(Contract entity);
 
 	Contract get(Integer id);
 
-	void update(Contract contract);
+	void update(Contract entity);
 
 	void delete(Integer id);
 

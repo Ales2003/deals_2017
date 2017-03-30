@@ -15,6 +15,8 @@ public class CustomerServiceTest extends AbstractTest {
 	@Test
 	public void saveTest() {
 
+		System.out.println("creating a new customer");
+		
 		Customer customer = new Customer();
 		customer.setFirstName("Alex");
 		customer.setPatronymic("Vladislavovich");
@@ -24,12 +26,18 @@ public class CustomerServiceTest extends AbstractTest {
 		customer.setCustomerGroupId(1);
 		customer.setManagerId(2);
 		customer.setPhoneNumber("1235");
-
+		System.out.println("customer after creating: "+ customer);
+		
+		System.out.println("saving the customer in DB");
 		service.save(customer);
+		
+		System.out.println("customer after save in DB: " + customer);
+		
 		Integer savedCustomerId = customer.getId();
-
 		Customer customerFromDB = service.get(savedCustomerId);
 
+		System.out.println("testing");
+		
 		Assert.notNull(customerFromDB, "customer must be saved");
 
 		Assert.notNull(customerFromDB.getFirstName(), "first_name column must not by empty");
@@ -55,13 +63,19 @@ public class CustomerServiceTest extends AbstractTest {
 		Assert.notNull(customerFromDB.getCustomerGroupId(), "customer_group_id column must not by empty");
 		Assert.isTrue(customerFromDB.getCustomerGroupId().equals(customer.getCustomerGroupId()),
 				"customerGroupId from DB must by eq. to prepared customerGroupId");
-		
+
 		Assert.notNull(customerFromDB.getManagerId(), "manager_id column must not by empty");
 		Assert.isTrue(customerFromDB.getManagerId().equals(customer.getManagerId()),
 				"managerId from DB must by eq. to prepared managerId");
-		
+
 		Assert.notNull(customerFromDB.getPhoneNumber(), "phone_number column must not by empty");
 		Assert.isTrue(customerFromDB.getPhoneNumber().equals(customer.getPhoneNumber()),
 				"phoneNumber from DB must by eq. to prepared phoneNumber");
+
+		System.out.println("delete the customer from DB");
+		service.delete(savedCustomerId);
+		customerFromDB = service.get(savedCustomerId);
+		System.out.println("customer after delete: "+ customerFromDB);
+		
 	}
 }

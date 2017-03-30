@@ -4,7 +4,7 @@ import ru.mail.ales2003.deals2017.datamodel.Item;
 
 public interface IItemDao {
 	
-	Integer insert(Item item);
+	Item insert(Item item);
 
 	Item get(Integer id);
 

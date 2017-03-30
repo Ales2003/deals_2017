@@ -4,11 +4,11 @@ import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 
 public interface ICustomerGroupDao {
 	
-	Integer insert(CustomerGroup customerGroup);
+	CustomerGroup insert(CustomerGroup entity);
 
 	CustomerGroup get(Integer id);
 
-	void update(CustomerGroup customerGroup);
+	void update(CustomerGroup entity);
 
 	void delete(Integer id);
 }

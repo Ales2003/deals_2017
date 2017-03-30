@@ -55,7 +55,7 @@ public class ContractDaoImpl implements IContractDao {
 	}
 
 	@Override
-	public void update(Contract contract) {
+	public void update(Contract entity) {
 		// TODO Auto-generated method stub
 
 	}

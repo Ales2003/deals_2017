@@ -17,7 +17,7 @@ public class ItemDaoImpl implements IItemDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Integer insert(Item item) {
+	public Item insert(Item item) {
 		return null;
 	}
 

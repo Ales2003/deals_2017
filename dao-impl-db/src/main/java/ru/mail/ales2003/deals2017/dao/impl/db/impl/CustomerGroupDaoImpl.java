@@ -9,7 +9,7 @@ import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 
 	@Override
-	public Integer insert(CustomerGroup customerGroup) {
+	public CustomerGroup insert(CustomerGroup entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -21,7 +21,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 	}
 
 	@Override
-	public void update(CustomerGroup customerGroup) {
+	public void update(CustomerGroup entity) {
 		// TODO Auto-generated method stub
 
 	}

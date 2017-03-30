@@ -4,7 +4,7 @@ import ru.mail.ales2003.deals2017.datamodel.Manager;
 
 public interface IManagerDao {
 	
-	Integer insert(Manager manager);
+	Manager insert(Manager manager);
 
 	Manager get(Integer id);
 
