@@ -1,5 +1,7 @@
 package ru.mail.ales2003.deals2017.dao.impl.db.impl;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,10 +18,14 @@ public class ItemDaoImpl implements IItemDao {
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
+	// =============CREATION AREA===============
+
 	@Override
 	public Item insert(Item item) {
 		return null;
 	}
+
+	// =============READING AREA===============
 
 	@Override
 	public Item get(Integer id) {
@@ -32,10 +38,20 @@ public class ItemDaoImpl implements IItemDao {
 	}
 
 	@Override
+	public List<Item> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// =============UPDATE AREA===============
+
+	@Override
 	public void update(Item item) {
 		// TODO Auto-generated method stub
 
 	}
+
+	// =============DELETE AREA===============
 
 	@Override
 	public void delete(Integer id) {

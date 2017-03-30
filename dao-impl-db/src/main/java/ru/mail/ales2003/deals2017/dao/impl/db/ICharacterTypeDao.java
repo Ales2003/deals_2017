@@ -10,10 +10,10 @@ public interface ICharacterTypeDao {
 
 	CharacterType get(Integer id);
 
+	List<CharacterType> getAll();
+
 	void update(CharacterType entity);
 
 	void delete(Integer id);
-
-	List<CharacterType> getAll();
 
 }

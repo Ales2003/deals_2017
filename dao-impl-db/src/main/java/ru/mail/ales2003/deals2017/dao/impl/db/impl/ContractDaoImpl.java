@@ -3,6 +3,7 @@ package ru.mail.ales2003.deals2017.dao.impl.db.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,14 +17,15 @@ import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.IContractDao;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
-import ru.mail.ales2003.deals2017.datamodel.Customer;
 
 @Repository
 public class ContractDaoImpl implements IContractDao {
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
-	
+
+	// =============CREATION AREA===============
+
 	@Override
 	public Contract insert(Contract entity) {
 		final String INSERT_SQL = "insert into contract (сreated) values(?)";
@@ -44,6 +46,8 @@ public class ContractDaoImpl implements IContractDao {
 		return entity;
 	}
 
+	// =============READING AREA===============
+
 	@Override
 	public Contract get(Integer id) {
 		try {
@@ -55,10 +59,20 @@ public class ContractDaoImpl implements IContractDao {
 	}
 
 	@Override
+	public List<Contract> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// =============UPDATE AREA===============
+
+	@Override
 	public void update(Contract entity) {
 		// TODO Auto-generated method stub
 
 	}
+
+	// =============DELETE AREA===============
 
 	@Override
 	public void delete(Integer id) {

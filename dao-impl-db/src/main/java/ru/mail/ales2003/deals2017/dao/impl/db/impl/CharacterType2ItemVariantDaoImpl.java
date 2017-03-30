@@ -7,11 +7,11 @@ import javax.inject.Inject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.IManagerDao;
-import ru.mail.ales2003.deals2017.datamodel.Manager;
+import ru.mail.ales2003.deals2017.dao.impl.db.ICharacterType2ItemVariantDao;
+import ru.mail.ales2003.deals2017.datamodel.CharacterType2ItemVariant;
 
 @Repository
-public class ManagerDaoImpl implements IManagerDao {
+public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVariantDao {
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
@@ -19,7 +19,7 @@ public class ManagerDaoImpl implements IManagerDao {
 	// =============CREATION AREA===============
 
 	@Override
-	public Manager insert(Manager manager) {
+	public CharacterType2ItemVariant insert(CharacterType2ItemVariant entity) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -27,13 +27,13 @@ public class ManagerDaoImpl implements IManagerDao {
 	// =============READING AREA===============
 
 	@Override
-	public Manager get(Integer id) {
+	public CharacterType2ItemVariant get(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Manager> getAll() {
+	public List<CharacterType2ItemVariant> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -41,7 +41,7 @@ public class ManagerDaoImpl implements IManagerDao {
 	// =============UPDATE AREA===============
 
 	@Override
-	public void update(Manager manager) {
+	public void update(CharacterType2ItemVariant entity) {
 		// TODO Auto-generated method stub
 
 	}

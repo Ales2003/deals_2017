@@ -10,9 +10,10 @@ public interface ICharacterType2ItemVariantDao {
 
 	CharacterType2ItemVariant get(Integer id);
 
+	List<CharacterType2ItemVariant> getAll();
+
 	void update(CharacterType2ItemVariant entity);
 
 	void delete(Integer id);
 
-	List<CharacterType2ItemVariant> getAll();
 }

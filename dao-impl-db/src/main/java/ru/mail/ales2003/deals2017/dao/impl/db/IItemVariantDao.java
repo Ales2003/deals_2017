@@ -1,13 +1,16 @@
 package ru.mail.ales2003.deals2017.dao.impl.db;
 
-import ru.mail.ales2003.deals2017.datamodel.Item;
+import java.util.List;
+
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
 public interface IItemVariantDao {
 
 	ItemVariant insert(ItemVariant entity);
 
-	Item get(Integer id);
+	ItemVariant get(Integer id);
+
+	List<ItemVariant> getAll();
 
 	void update(ItemVariant entity);
 
