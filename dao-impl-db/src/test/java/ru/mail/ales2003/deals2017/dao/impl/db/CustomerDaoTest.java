@@ -56,7 +56,7 @@ public class CustomerDaoTest extends AbstractTest {
 
 		Assert.notNull(customerFromDB, "customer must be saved");
 
-		Assert.notNull(customerFromDB.getFirstName(), "first_name column must not by empty");
+		Assert.notNull(customerFromDB.getFirstName(), "'first_name' column must not by empty");
 		Assert.isTrue(customerFromDB.getFirstName().equals(customer.getFirstName()),
 				"firstName from DB must by eq. to prepared firstName");
 
