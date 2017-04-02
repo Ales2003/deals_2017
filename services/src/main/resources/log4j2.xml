@@ -18,28 +18,18 @@
 	</Appenders>
 
 	<Loggers>
-		<Root level="debug">
+		<Root level="info">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="RollingFile" />
 		</Root>
 
-		<!-- 
-		<Logger level="info" name="ru.mail.ales2003.deals2017.services.impl"
-			additivity="true">
-			<AppenderRef ref="RollingFile" />
-			<AppenderRef ref="Console" />
-		</Logger>
+		<!-- <Logger level="info" name="ru.mail.ales2003.deals2017.services.impl" 
+			additivity="true"> <AppenderRef ref="RollingFile" /> <AppenderRef ref="Console" 
+			/> </Logger> <Logger level="fatal" name="ru.mail.ales2003.deals2017.services.impl" 
+			additivity="false"> <AppenderRef ref="RollingFile" /> </Logger> <Logger level="fatal" 
+			name="emaillogger" additivity="false"> <AppenderRef ref="RollingFile" /> 
+			</Logger> -->
 
-		<Logger level="fatal" name="ru.mail.ales2003.deals2017.services.impl"
-			additivity="false">
-			<AppenderRef ref="RollingFile" />
-		</Logger>
-
-		<Logger level="fatal" name="emaillogger" additivity="false">
-			<AppenderRef ref="RollingFile" />
-		</Logger>
-		 -->
-		
 	</Loggers>
 
 

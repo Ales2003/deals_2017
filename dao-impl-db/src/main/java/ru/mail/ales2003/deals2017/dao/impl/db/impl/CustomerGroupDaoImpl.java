@@ -22,9 +22,9 @@ import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 
 @Repository
 public class CustomerGroupDaoImpl implements ICustomerGroupDao {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerGroupDaoImpl.class);
-	
+
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
@@ -60,19 +60,23 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 			return customerGroups;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);;
+			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);
+			
 			return null;
 		}
 	}
 
 	@Override
 	public CustomerGroup get(Integer id) {
+		final String READ_BY_ID_SQL = "select * from customer_group where id = ? ";
 		try {
-			return jdbcTemplate.queryForObject("select * from customer_group where id = ? ", new Object[] { id },
+			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method CustomerGroup get(Integer id)", e);;
-			return null;
+			LOGGER.error("Error: method CustomerGroup get(Integer id)", e);
+			
+			throw e;
+			//return null;
 		}
 	}
 

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.ICustomerGroupDao;
@@ -23,9 +24,13 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 	@Override
 	public CustomerGroup get(Integer id) {
-		CustomerGroup customerGroup = customerGroupDao.get(id);
-		LOGGER.info("Read one CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
-		return customerGroup;
+		try {
+			CustomerGroup customerGroup = customerGroupDao.get(id);
+			LOGGER.info("Read one CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			return customerGroup;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	@Override
 	public void delete(Integer id) {
 		customerGroupDao.delete(id);
-		LOGGER.info("Deleted   CustomerGroup by id: " + id);
+		LOGGER.info("Deleted CustomerGroup by id: " + id);
 
 	}
 
