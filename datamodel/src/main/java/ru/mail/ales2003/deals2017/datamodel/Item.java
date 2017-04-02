@@ -1,11 +1,13 @@
 package ru.mail.ales2003.deals2017.datamodel;
 
+import java.math.BigDecimal;
+
 public class Item {
 
 	private Integer id;
 	private String name;
 	private String description;
-	private Double basicPrice;
+	private BigDecimal basicPrice;
 
 	public Integer getId() {
 		return id;
@@ -31,11 +33,11 @@ public class Item {
 		this.description = description;
 	}
 
-	public Double getBasicPrice() {
+	public BigDecimal getBasicPrice() {
 		return basicPrice;
 	}
 
-	public void setBasicPrice(Double basicPrice) {
+	public void setBasicPrice(BigDecimal basicPrice) {
 		this.basicPrice = basicPrice;
 	}
 

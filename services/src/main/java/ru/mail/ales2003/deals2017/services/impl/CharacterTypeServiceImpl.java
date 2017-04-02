@@ -45,7 +45,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			LOGGER.info("Inserted new CharacterType: id={}, name={}", entity.getId(), entity.getName());
 		} else {
 			characterTypeDao.update(entity);
-			LOGGER.info("Updated new CharacterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Updated CharacterType: id={}, name={}", entity.getId(), entity.getName());
 		}
 	}
 

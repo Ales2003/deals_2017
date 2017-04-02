@@ -1,5 +1,8 @@
 package ru.mail.ales2003.deals2017.dao.impl.db.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -7,6 +10,9 @@ import javax.inject.Inject;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.IItemDao;
@@ -22,7 +28,20 @@ public class ItemDaoImpl implements IItemDao {
 
 	@Override
 	public Item insert(Item item) {
-		return null;
+		final String INSERT_SQL = "insert into item (name, description, basic_price) values(?,?,?)";
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
+				ps.setString(1, item.getName());
+				ps.setString(2, item.getDescription());
+				ps.setBigDecimal(3, item.getBasicPrice());
+				return ps;
+			}
+		}, keyHolder);
+		item.setId(keyHolder.getKey().intValue());
+		return item;
 	}
 
 	// =============READING AREA===============
@@ -47,8 +66,18 @@ public class ItemDaoImpl implements IItemDao {
 
 	@Override
 	public void update(Item item) {
-		// TODO Auto-generated method stub
-
+		final String UPDATE_SQL = "update item set name = ?, description = ?, basic_price = ? where id = ?";
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
+				ps.setString(1, item.getName());
+				ps.setString(2, item.getDescription());
+				ps.setBigDecimal(3, item.getBasicPrice());
+				ps.setInt(4, item.getId());
+				return ps;
+			}
+		});
 	}
 
 	// =============DELETE AREA===============

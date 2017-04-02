@@ -49,7 +49,7 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 			LOGGER.info("Inserted new CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		} else {
 			customerGroupDao.update(customerGroup);
-			LOGGER.info("Updated new CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			LOGGER.info("Updated CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		}
 	}
 
