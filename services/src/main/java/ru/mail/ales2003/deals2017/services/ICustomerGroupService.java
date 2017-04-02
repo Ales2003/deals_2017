@@ -13,10 +13,10 @@ public interface ICustomerGroupService {
 	List<CustomerGroup> getAll();
 
 	@Transactional
-	void save(CustomerGroup customerGroup);
+	void save(CustomerGroup entity);
 
 	@Transactional
-	void saveMultiple(CustomerGroup... customerGroup);
+	void saveMultiple(CustomerGroup... entityAray);
 
 	@Transactional
 	void delete(Integer id);

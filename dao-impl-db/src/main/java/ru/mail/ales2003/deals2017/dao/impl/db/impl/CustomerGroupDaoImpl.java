@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,11 +19,12 @@ import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.ICustomerGroupDao;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
-import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 
 @Repository
 public class CustomerGroupDaoImpl implements ICustomerGroupDao {
-
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerGroupDaoImpl.class);
+	
 	@Inject
 	private JdbcTemplate jdbcTemplate;
 
@@ -53,11 +56,11 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 	public List<CustomerGroup> getAll() {
 		try {
 
-			List<CustomerGroup> customerGroup = jdbcTemplate.query("select * from customer_group",
+			List<CustomerGroup> customerGroups = jdbcTemplate.query("select * from customer_group",
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
-			return customerGroup;
+			return customerGroups;
 		} catch (EmptyResultDataAccessException e) {
-			
+			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);;
 			return null;
 		}
 	}
@@ -68,6 +71,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 			return jdbcTemplate.queryForObject("select * from customer_group where id = ? ", new Object[] { id },
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: method CustomerGroup get(Integer id)", e);;
 			return null;
 		}
 	}
@@ -76,12 +80,12 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 
 	@Override
 	public void update(CustomerGroup entity) {
-		final String INSERT_SQL = "update customer_group set name = ? where id = ?";
+		final String UPDATE_SQL = "update customer_group set name = ? where id = ?";
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
 				ps.setString(1, entity.getName().name());
 				ps.setInt(2, entity.getId());
 				return ps;
