@@ -1,9 +1,10 @@
 package ru.mail.ales2003.deals2017.datamodel;
 
 public class CustomerGroup {
-	
+
 	private Integer id;
-	private String name;
+
+	private CustomerType name;
 
 	public Integer getId() {
 		return id;
@@ -13,11 +14,11 @@ public class CustomerGroup {
 		this.id = id;
 	}
 
-	public String getName() {
+	public CustomerType getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(CustomerType name) {
 		this.name = name;
 	}
 
@@ -26,6 +27,4 @@ public class CustomerGroup {
 		return "CustomerGroup [id=" + id + ", name=" + name + "]";
 	}
 
-	
-	
 }

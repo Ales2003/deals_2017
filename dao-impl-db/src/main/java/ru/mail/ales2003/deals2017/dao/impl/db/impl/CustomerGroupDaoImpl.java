@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.ICustomerGroupDao;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
+import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 
 @Repository
 public class CustomerGroupDaoImpl implements ICustomerGroupDao {
@@ -36,7 +37,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, entity.getName());
+				ps.setString(1, entity.getName().name());
 				return ps;
 			}
 		}, keyHolder);
@@ -56,6 +57,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 			return customerGroup;
 		} catch (EmptyResultDataAccessException e) {
+			
 			return null;
 		}
 	}
@@ -74,13 +76,14 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 
 	@Override
 	public void update(CustomerGroup entity) {
-		final String INSERT_SQL = "insert into customer_group (name) values(?)";
+		final String INSERT_SQL = "update customer_group set name = ? where id = ?";
 
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, entity.getName());
+				ps.setString(1, entity.getName().name());
+				ps.setInt(2, entity.getId());
 				return ps;
 			}
 		});
