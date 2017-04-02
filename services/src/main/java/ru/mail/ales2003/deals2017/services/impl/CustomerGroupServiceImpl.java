@@ -42,19 +42,15 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	@Override
 	public void save(CustomerGroup customerGroup) {
 		if (customerGroup.getId() == null) {
-
 			if (customerGroup.getName() == null) {
 				customerGroup.setName(CustomerType.INDIVIDUAL);
 			}
-
 			customerGroupDao.insert(customerGroup);
-
 			LOGGER.info("Inserted new CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		} else {
 			customerGroupDao.update(customerGroup);
 			LOGGER.info("Updated new CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		}
-
 	}
 
 	@Override
@@ -70,7 +66,5 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	public void delete(Integer id) {
 		customerGroupDao.delete(id);
 		LOGGER.info("Deleted CustomerGroup by id: " + id);
-
 	}
-
 }

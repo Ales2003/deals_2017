@@ -33,9 +33,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 	@Override
 	public CustomerGroup insert(CustomerGroup entity) {
 		final String INSERT_SQL = "insert into customer_group (name) values(?)";
-
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -44,27 +42,11 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 				return ps;
 			}
 		}, keyHolder);
-
 		entity.setId(keyHolder.getKey().intValue());
-
 		return entity;
 	}
 
 	// =============READING AREA===============
-
-	@Override
-	public List<CustomerGroup> getAll() {
-		try {
-
-			List<CustomerGroup> customerGroups = jdbcTemplate.query("select * from customer_group",
-					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
-			return customerGroups;
-		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);
-			
-			return null;
-		}
-	}
 
 	@Override
 	public CustomerGroup get(Integer id) {
@@ -74,9 +56,20 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("Error: method CustomerGroup get(Integer id)", e);
-			
 			throw e;
-			//return null;
+			// return null;
+		}
+	}
+
+	@Override
+	public List<CustomerGroup> getAll() {
+		try {
+			List<CustomerGroup> customerGroups = jdbcTemplate.query("select * from customer_group",
+					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
+			return customerGroups;
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);
+			return null;
 		}
 	}
 
@@ -85,7 +78,6 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 	@Override
 	public void update(CustomerGroup entity) {
 		final String UPDATE_SQL = "update customer_group set name = ? where id = ?";
-
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -102,7 +94,6 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 	@Override
 	public void delete(Integer id) {
 		jdbcTemplate.update("delete from customer_group where id=" + id);
-
 	}
 
 }

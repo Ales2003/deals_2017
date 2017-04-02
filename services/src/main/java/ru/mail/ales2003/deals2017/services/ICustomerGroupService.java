@@ -16,7 +16,7 @@ public interface ICustomerGroupService {
 	void save(CustomerGroup entity);
 
 	@Transactional
-	void saveMultiple(CustomerGroup... entityAray);
+	void saveMultiple(CustomerGroup... entityArray);
 
 	@Transactional
 	void delete(Integer id);
