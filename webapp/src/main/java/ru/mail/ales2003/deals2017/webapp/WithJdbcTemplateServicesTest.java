@@ -23,7 +23,7 @@ public class WithJdbcTemplateServicesTest {
         customer.setCompanyName(null);
         customer.setAddress("Grodno");
         customer.setPhoneNumber("123345");
-        customer.setCustomerGroupId(1);
+        customer.setCustomerGroupId(58);
         customer.setManagerId(1);
 		service.save(customer);
 
@@ -46,7 +46,7 @@ public class WithJdbcTemplateServicesTest {
         customer2.setCompanyName(null);
         customer2.setAddress("Grodno");
         customer2.setPhoneNumber("123345");
-        customer2.setCustomerGroupId(1);
+        customer2.setCustomerGroupId(58);
         customer2.setManagerId(1);
 		service.save(customer2);
 		System.out.println(customer2);

@@ -155,6 +155,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		deleteFromDb(type_1.getId());
 		Assert.notNull(typeFromDb, "type must be saved");
 		Assert.isNull(service.get(type_1.getId()), "type must be deleted");
+		
 		LOGGER.debug("Finish deleteTest method");
 	}
 }

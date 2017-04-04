@@ -21,13 +21,21 @@ public class NumericTest {
 		service.save(item);
 		
 		Item itemNew = service.get(item.getId());
+		System.out.println("=======Item before saving in DB");
 		System.out.println(item);
+		System.out.println("=======Item from DB after saving: item before saving equals item from DB");
 		System.out.println(itemNew);
 		
-		BigDecimal l = item.getBasicPrice().add(BigDecimal.valueOf(10.2525));
-		System.out.println( l);
-		item.setBasicPrice(l);
+		BigDecimal bD = item.getBasicPrice();
+		System.out.println( bD);
+		bD =bD.add(BigDecimal.valueOf(10.2525));
+		System.out.println( bD);
+		item.setBasicPrice(bD);
 		service.save(item);
+		System.out.println("=======Item before saving in DB: field price was changed with 4 symbols after coma");
+		System.out.println(item);
 		itemNew = service.get(item.getId());
+		System.out.println("=======Item from DB after saving: field price became with 2 symbols after coma how NUMERIC requires");
+		System.out.println(itemNew);
 	}
 }

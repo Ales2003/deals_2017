@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,6 +22,8 @@ import ru.mail.ales2003.deals2017.datamodel.Item;
 
 @Repository
 public class ItemDaoImpl implements IItemDao {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypeDaoImpl.class);
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
@@ -70,7 +74,11 @@ public class ItemDaoImpl implements IItemDao {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
+				// Value of "id" ield is not required here
+				// PreparedStatement ps =
+				// connection.prepareStatement(UPDATE_SQL, new String[] { "id"
+				// });
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
 				ps.setString(1, item.getName());
 				ps.setString(2, item.getDescription());
 				ps.setBigDecimal(3, item.getBasicPrice());

@@ -7,6 +7,9 @@ import java.util.Date;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ru.mail.ales2003.deals2017.datamodel.Contract;
+import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
+import ru.mail.ales2003.deals2017.datamodel.PayForm;
+import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.services.IContractService;
 
 public class DateTest {
@@ -15,12 +18,15 @@ public class DateTest {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("web-context.xml");
 
 		IContractService service = context.getBean(IContractService.class);
-		
-		
+
 		Contract c = new Contract();
 		Timestamp t = new Timestamp(new Date().getTime());
 		System.out.println(t);
 		c.setСreated(t);
+		c.setContractStatus(ContractStatus.CONTRACT_PREPARATION);
+		c.setPayForm(PayForm.CASH);
+		c.setPayStatus(PayStatus.UNPAID);
+		c.setCustomerId(1);
 		service.save(c);
 		Contract d = service.get(c.getId());
 		Timestamp l = d.getСreated();

@@ -27,12 +27,12 @@ public class DealsTransactionsTest {
 		Customer customer1 = new Customer();
 		customer1.setFirstName("Customer1");
 		customer1.setManagerId(1);
-		customer1.setCustomerGroupId(1);
+		customer1.setCustomerGroupId(58);
 		
 		Customer customer2 = new Customer();
 		customer2.setFirstName("Customer2");
 		customer2.setManagerId(2);
-		customer2.setCustomerGroupId(2);
+		customer2.setCustomerGroupId(58);
 		
 		customerService.saveMultiple(customer1, customer2);
 		

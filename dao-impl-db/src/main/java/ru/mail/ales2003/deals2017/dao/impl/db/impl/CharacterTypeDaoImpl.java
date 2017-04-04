@@ -55,7 +55,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method CharacterType get(Integer id)", e);
+			LOGGER.error("Error: CharacterType with id = " + id + " don't exist)", e);
 			throw e;
 			// return null;
 		}

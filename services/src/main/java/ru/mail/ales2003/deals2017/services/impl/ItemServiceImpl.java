@@ -11,7 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.IItemDao;
-import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.services.IItemService;
 
@@ -19,7 +18,7 @@ import ru.mail.ales2003.deals2017.services.IItemService;
 public class ItemServiceImpl implements IItemService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
-	
+
 	// dependency injection (внедряем зависимость в этот класс - ссылку на бин
 	// имплементатора IItemDao)
 	@Inject
@@ -36,7 +35,8 @@ public class ItemServiceImpl implements IItemService {
 	public Item get(Integer id) {
 		try {
 			Item item = itemDao.get(id);
-			LOGGER.info("Read one Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(), item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Read one Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
+					item.getDescription(), item.getBasicPrice());
 			return item;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
@@ -53,10 +53,12 @@ public class ItemServiceImpl implements IItemService {
 	public void save(Item item) {
 		if (item.getId() == null) {
 			itemDao.insert(item);
-			LOGGER.info("Inserted new Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(), item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Inserted new Item: id={}, name={}, description={}, basicPrice={}", item.getId(),
+					item.getName(), item.getDescription(), item.getBasicPrice());
 		} else {
 			itemDao.update(item);
-			LOGGER.info("Updated Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(), item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Updated Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
+					item.getDescription(), item.getBasicPrice());
 		}
 
 	}

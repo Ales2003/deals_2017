@@ -4,6 +4,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.IItemDao;
 import ru.mail.ales2003.deals2017.dao.impl.db.impl.ItemDaoImpl;
+import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.services.IItemService;
 import ru.mail.ales2003.deals2017.services.impl.ItemServiceImpl;
 
@@ -18,8 +19,7 @@ public class WithBeanInjectionServicesTest {
 		 * как ресурсы
 		 */
 
-		ClassPathXmlApplicationContext context = 
-				new ClassPathXmlApplicationContext("web-context.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("web-context.xml");
 		System.out.println(context);
 
 		System.out.println("======Тестируем несколько методов context====");
@@ -28,9 +28,9 @@ public class WithBeanInjectionServicesTest {
 		System.out.println(item);
 		// печатаем имя класса
 		System.out.println(item.getClass());
-		//печатаем объект Item
+		// печатаем объект Item
 		System.out.println(item.get(1));
-		
+
 		// !!! когда имплементаций несколько, контекст не отдаст бин по
 		// интерфейсу, поэтому должен указываться класс, как здесь:
 		IItemDao impl = context.getBean(ItemDaoImpl.class);
@@ -42,11 +42,11 @@ public class WithBeanInjectionServicesTest {
 		// содержит
 		System.out.println(context.containsBeanDefinition("iItemDao"));
 
-		// а класс ItemDao является бином, поэтому контекст словил
+		// а класс ItemDaoImpl является бином, поэтому контекст словил
 		System.out.println(context.containsBeanDefinition("itemDaoImpl"));
 
 		System.out.println("======Получаем массив бинов и распечатывем их имена====");
-	
+
 		String[] beanDefinitionNames = context.getBeanDefinitionNames();
 		System.out.println("Бобы в банке:");
 		for (String beanName : beanDefinitionNames) {
@@ -54,11 +54,17 @@ public class WithBeanInjectionServicesTest {
 		}
 
 		System.out.println("======Тестируем app.properties====");
-		IItemService itemService = context.getBean(ItemServiceImpl.class);
-		// why  wrong??
-		//itemService.key1;
-		
-		
+		System.out.println(context.containsBeanDefinition("itemServiceImpl"));
+	IItemService itemService = context.getBean(IItemService.class);
+		// why wrong??
+		// itemService.key1;
+
+		Item i = itemService.get(13);
+		i.setDescription("New describtion");
+		itemService.save(i);
+		String s = itemService.get(13).getDescription();
+		System.out.println(s);
+
 	}
 
 }
