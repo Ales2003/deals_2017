@@ -55,7 +55,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: CharacterType with id = " + id + " don't exist in storage)", e);
+			LOGGER.error("Error: characterType with id = " + id + " don't exist in storage)", e);
 			//throw e;
 			return null;
 		}
@@ -69,7 +69,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
 			return characterTypes;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: All сharacterTypes don't exist in storage", e);
+			LOGGER.error("Error: all сharacterTypes don't exist in storage", e);
 			return null;
 		}
 	}

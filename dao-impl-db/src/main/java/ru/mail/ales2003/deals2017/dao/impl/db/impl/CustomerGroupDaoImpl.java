@@ -55,9 +55,9 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method CustomerGroup get(Integer id)", e);
-			throw e;
-			// return null;
+			LOGGER.error("Error: customerGroup with id = " + id + " don't exist in storage)", e);
+			//throw e;
+			return null;
 		}
 	}
 
@@ -68,7 +68,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 			return customerGroups;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: method List<CustomerGroup> getAll()", e);
+			LOGGER.error("Error: all customerGroups don't exist in storage", e);
 			return null;
 		}
 	}

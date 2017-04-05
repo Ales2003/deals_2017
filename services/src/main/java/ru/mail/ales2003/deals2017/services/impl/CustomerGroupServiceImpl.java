@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.ICustomerGroupDao;
@@ -24,47 +23,62 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 	@Override
 	public CustomerGroup get(Integer id) {
-		try {
-			CustomerGroup customerGroup = customerGroupDao.get(id);
-			LOGGER.info("Read one CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
-			return customerGroup;
-		} catch (EmptyResultDataAccessException e) {
+		if (customerGroupDao.get(id) == null) {
+			LOGGER.error("Error: customerGroup with id = " + id + " don't exist in storage)");
 			return null;
+		} else {
+			CustomerGroup customerGroup = customerGroupDao.get(id);
+			LOGGER.info("Read one customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			return customerGroup;
 		}
 	}
 
 	@Override
 	public List<CustomerGroup> getAll() {
-		LOGGER.info("Read all CustomerGroups");
-		return customerGroupDao.getAll();
+
+		if (customerGroupDao.getAll() == null) {
+			LOGGER.error("Error: all customerGroups don't exist in storage");
+			return null;
+		} else {
+			LOGGER.info("Read all customerGroups");
+			return customerGroupDao.getAll();
+		}
 	}
 
 	@Override
 	public void save(CustomerGroup customerGroup) {
-		if (customerGroup.getId() == null) {
+		if (customerGroup == null) {
+			LOGGER.error("Error: as the customerGroup was sent a null reference");
+			return;
+		} else if (customerGroup.getId() == null) {
 			if (customerGroup.getName() == null) {
 				customerGroup.setName(CustomerType.INDIVIDUAL);
 			}
 			customerGroupDao.insert(customerGroup);
-			LOGGER.info("Inserted new CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			LOGGER.info("Inserted new customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		} else {
 			customerGroupDao.update(customerGroup);
-			LOGGER.info("Updated CustomerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			LOGGER.info("Updated customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
 		}
 	}
 
 	@Override
 	public void saveMultiple(CustomerGroup... customerGroupArray) {
 		for (CustomerGroup customerGroup : customerGroupArray) {
-			LOGGER.debug("Inserted new CustomerGroup from array: " + customerGroup);
+			LOGGER.debug("Inserted new customerGroup from array: " + customerGroup);
 			save(customerGroup);
 		}
-		LOGGER.info("Inserted CustomerGroups from array");
+		LOGGER.info("Inserted customerGroups from array");
 	}
 
 	@Override
 	public void delete(Integer id) {
-		customerGroupDao.delete(id);
-		LOGGER.info("Deleted CustomerGroup by id: " + id);
+		if (id == null) {
+			LOGGER.error("Error: as the id was sent a null reference");
+			return;
+		} else {
+			customerGroupDao.delete(id);
+			LOGGER.info("Deleted customerGroup by id: " + id);
+		}
 	}
 }
