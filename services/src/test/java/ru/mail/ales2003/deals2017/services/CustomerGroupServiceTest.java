@@ -37,7 +37,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 	public void runAfterTestMethod() {
 		LOGGER.debug("Start completion of the method");
 		for (CustomerGroup cg : service.getAll()) {
-			service.delete(cg.getId());
+			deleteFromDb(cg.getId());
 		}
 		LOGGER.debug("Finish completion of the method");
 	}
@@ -55,8 +55,8 @@ public class CustomerGroupServiceTest extends AbstractTest {
 	}
 
 	/*
-	 * Two objects with the same Id are compared: created in Java and extracted
-	 * from the database
+	 * Two objects with the same Id are compared: created in Java and saved in &
+	 * extracted from the database
 	 */
 	@Test
 	public void insertTest() {
@@ -71,7 +71,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 
 	/*
 	 * Test for the insertion of several objects, for each are compared two
-	 * objects with the same Id: created in Java and extracted from the database
+	 * objects with the same Id: created in Java and saved in & extracted from the database
 	 */
 
 	@Test
@@ -91,7 +91,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 
 	/*
 	 * Three objects with the same Id are compared: created in Java, modified in
-	 * Java and extracted from the database
+	 * Java and saved in & extracted from the database
 	 */
 
 	@Test
@@ -134,10 +134,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		List<CustomerGroup> groupsFromDb = service.getAll();
 		Assert.isTrue(groups.size() == groupsFromDb.size(),
 				"count of from Db groups must by eq. to count of inserted groups");
-		System.out.println(group_1.getId());
-		System.out.println(group_2.getId());
-		System.out.println(groupsFromDb.get(0).getId());
-		System.out.println(groupsFromDb.get(1).getId());
+		
 		for (int i = 0; i < groups.size(); i++) {
 			// False if compared to ==, since the references to objects
 			Assert.isTrue(groups.get(i).getId().equals(groupsFromDb.get(i).getId()),

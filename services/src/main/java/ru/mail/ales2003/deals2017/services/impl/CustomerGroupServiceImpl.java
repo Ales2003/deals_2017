@@ -35,7 +35,6 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 	@Override
 	public List<CustomerGroup> getAll() {
-
 		if (customerGroupDao.getAll() == null) {
 			LOGGER.error("Error: all customerGroups don't exist in storage");
 			return null;
