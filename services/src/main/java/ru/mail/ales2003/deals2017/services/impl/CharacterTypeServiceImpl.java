@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.ICharacterTypeDao;
@@ -23,44 +22,58 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public CharacterType get(Integer id) {
-		try {
-			CharacterType entity = characterTypeDao.get(id);
-			LOGGER.info("Read one CharacterType: id={}, name={}", entity.getId(), entity.getName());
-			return entity;
-		} catch (EmptyResultDataAccessException e) {
+		if (characterTypeDao.get(id) == null) {
+			LOGGER.error("Error: characterType with id = " + id + " don't exist in storage)");
 			return null;
+		} else {
+			CharacterType entity = characterTypeDao.get(id);
+			LOGGER.info("Read one сharacterType: id={}, name={}", entity.getId(), entity.getName());
+			return entity;
 		}
 	}
 
 	@Override
 	public List<CharacterType> getAll() {
-		LOGGER.info("Read all CharacterTypes");
-		return characterTypeDao.getAll();
+		if (characterTypeDao.getAll() == null) {
+			LOGGER.error("Error: all characterTypes don't exist in storage");
+			return null;
+		} else {
+			LOGGER.info("Read all сharacterTypes");
+			return characterTypeDao.getAll();
+		}
 	}
 
 	@Override
 	public void save(CharacterType entity) {
-		if (entity.getId() == null) {
+		if (entity == null) {
+			LOGGER.error("Error: as the characterType was sent a null reference");
+			return;
+		} else if (entity.getId() == null) {
 			characterTypeDao.insert(entity);
-			LOGGER.info("Inserted new CharacterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Inserted new characterType: id={}, name={}", entity.getId(), entity.getName());
 		} else {
 			characterTypeDao.update(entity);
-			LOGGER.info("Updated CharacterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Updated characterType: id={}, name={}", entity.getId(), entity.getName());
 		}
 	}
 
 	@Override
 	public void saveMultiple(CharacterType... entityArray) {
-		for (CharacterType characterType : entityArray) {
-			LOGGER.debug("Inserted new CharacterType from array: " + characterType);
-			save(characterType);
+		for (CharacterType entity : entityArray) {
+			LOGGER.info("Inserted new caracterType from array: " + entity);
+			save(entity);
 		}
-		LOGGER.info("Inserted CharacterTypes from array");
+		LOGGER.info("Inserted characterTypes from array");
 	}
 
 	@Override
 	public void delete(Integer id) {
+		if(id==null){
+			LOGGER.error("Error: as the id was sent a null reference");
+			return;
+		} else {
 		characterTypeDao.delete(id);
-		LOGGER.info("Deleted CharacterType by id: " + id);
+		LOGGER.info("Deleted characterType by id: " + id);
+		}
 	}
 }

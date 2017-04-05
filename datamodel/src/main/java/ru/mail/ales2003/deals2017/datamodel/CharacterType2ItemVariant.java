@@ -5,7 +5,7 @@ public class CharacterType2ItemVariant {
 	private Integer id;
 	private Integer itemVariantId;
 	private Attribute name;
-	private Double value;
+	private String value;
 	private Integer characterTypeId;
 
 	public Integer getId() {
@@ -32,11 +32,11 @@ public class CharacterType2ItemVariant {
 		this.name = name;
 	}
 
-	public Double getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Double value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

@@ -28,7 +28,7 @@ public class ContractDaoImpl implements IContractDao {
 
 	@Override
 	public Contract insert(Contract entity) {
-		final String INSERT_SQL = "insert into contract (сreated, contract_status, pay_form, pay_status, customer_id) values(?, ?, ?, ?, ?)";
+		final String INSERT_SQL = "insert into contract (сreated, contract_status, pay_form, pay_status, customer_id, total_price) values(?, ?, ?, ?, ?, ?)";
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -41,6 +41,7 @@ public class ContractDaoImpl implements IContractDao {
 				ps.setString(3, entity.getPayForm().name());
 				ps.setString(4, entity.getPayStatus().name());
 				ps.setInt(5, entity.getCustomerId());
+				ps.setBigDecimal(6, entity.getTotalPrice());
 				
 				return ps;
 			}

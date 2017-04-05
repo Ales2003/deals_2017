@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.datamodel;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class Contract {
@@ -10,6 +11,7 @@ public class Contract {
 	private PayForm payForm;
 	private PayStatus payStatus;
 	private Integer customerId;
+	private BigDecimal totalPrice;
 
 	public Integer getId() {
 		return id;
@@ -59,10 +61,19 @@ public class Contract {
 		this.customerId = customerId;
 	}
 
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
 	@Override
 	public String toString() {
 		return "Contract [id=" + id + ", сreated=" + сreated + ", contractStatus=" + contractStatus + ", payForm="
-				+ payForm + ", payStatus=" + payStatus + ", customerId=" + customerId + "]";
+				+ payForm + ", payStatus=" + payStatus + ", customerId=" + customerId + ", totalPrice=" + totalPrice
+				+ "]";
 	}
 
 }
