@@ -88,4 +88,15 @@ public class CustomerServiceImpl implements ICustomerService {
 			LOGGER.info("Deleted customer by id: " + id);
 		}
 	}
+
+	//I need create so method
+/*	private String getCustomerInfo(Customer customer){
+		
+		String customerInfo = 	new String();
+		customerInfo = ("id={}, first_name={}, patronymic={}, last_name={}, companyName={}, address={}, phoneNumber={}, customerGroupId={}, managerId={}",
+				customer.getId(), customer.getFirstName(), customer.getPatronymic(), customer.getLastName(),
+					customer.getCompanyName(), customer.getAddress(), customer.getPhoneNumber(),
+					customer.getCustomerGroupId(), customer.getManagerId());
+		return customerInfo; 
+	};*/
 }
