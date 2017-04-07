@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.impl.db.IItemDao;
@@ -33,46 +32,61 @@ public class ItemServiceImpl implements IItemService {
 
 	@Override
 	public Item get(Integer id) {
-		try {
+		if (itemDao.get(id) == null) {
+			LOGGER.error("Error: item with id = " + id + " don't exist in storage)");
+			return null;
+		} else {
 			Item item = itemDao.get(id);
-			LOGGER.info("Read one Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
+			LOGGER.info("Read one item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
 					item.getDescription(), item.getBasicPrice());
 			return item;
-		} catch (EmptyResultDataAccessException e) {
-			return null;
 		}
 	}
 
 	@Override
 	public List<Item> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		if (itemDao.getAll() == null) {
+			LOGGER.error("Error: all items don't exist in storage");
+			return null;
+		} else {
+			LOGGER.info("Read all items");
+			return itemDao.getAll();
+		}
 	}
 
 	@Override
 	public void save(Item item) {
-		if (item.getId() == null) {
+		if (item == null) {
+			LOGGER.error("Error: as the item was sent a null reference");
+			return;
+		} else if (item.getId() == null) {
 			itemDao.insert(item);
-			LOGGER.info("Inserted new Item: id={}, name={}, description={}, basicPrice={}", item.getId(),
+			LOGGER.info("Inserted new item: id={}, name={}, description={}, basicPrice={}", item.getId(),
 					item.getName(), item.getDescription(), item.getBasicPrice());
 		} else {
 			itemDao.update(item);
-			LOGGER.info("Updated Item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
+			LOGGER.info("Updated item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
 					item.getDescription(), item.getBasicPrice());
 		}
-
 	}
 
 	@Override
-	public void saveMultiple(Item... item) {
-		// TODO Auto-generated method stub
-
+	public void saveMultiple(Item... itemArray) {
+		for (Item item : itemArray) {
+			LOGGER.debug("Inserted new item from array: " + item);
+			save(item);
+		}
+		LOGGER.info("Inserted items from array");
 	}
 
 	@Override
 	public void delete(Integer id) {
-		// TODO Auto-generated method stub
-
+		if (id == null) {
+			LOGGER.error("Error: as the id was sent a null reference");
+			return;
+		} else {
+			itemDao.delete(id);
+			LOGGER.info("Deleted item by id: " + id);
+		}
 	}
-
 }

@@ -49,20 +49,20 @@ public class CustomerServiceTest extends AbstractTest {
 		manager = new Manager();
 		managerService.save(manager);
 		managerFromDb = managerService.get(manager.getId());
-		LOGGER.debug("manager was created with id={}", managerFromDb.getId());
+		LOGGER.debug("Manager was created with id={}", managerFromDb.getId());
 
 		LOGGER.debug("Creating customerGroup in Db");
 		customerGroup = new CustomerGroup();
 		customerGroupService.save(customerGroup);
 		customerGroupFromDb = customerGroupService.get(customerGroup.getId());
-		LOGGER.debug("customerGroup was created with id={}", customerGroup.getId());
+		LOGGER.debug("CustomerGroup was created with id={}", customerGroup.getId());
 
 		LOGGER.debug("Creating customers in JVM");
 		instance_1 = getInstance("Nikita", "Sergeevich", "Samohval", "Company1", "Grodno", "+37529...",
 				customerGroupFromDb.getId(), managerFromDb.getId());
 		instance_2 = getInstance("Andrei", "Ivanovich", "Ratich", "Company2", "Minsk", "+37529...",
 				customerGroupFromDb.getId(), managerFromDb.getId());
-		LOGGER.debug("customers in JVM was created");
+		LOGGER.debug("Customers in JVM was created");
 
 		LOGGER.debug("Finish preparation of the method");
 	}

@@ -85,6 +85,16 @@ public class CustomerDaoImpl implements ICustomerDao {
 		}
 	}
 
+	// To think whether it is necessary
+
+	/*
+	 * public List<Customer> getWithManagerAndGroup() { try { List<Customer> rs
+	 * = jdbcTemplate.query("select * from customer,  ", new
+	 * BeanPropertyRowMapper<Customer>(Customer.class)); return rs; } catch
+	 * (EmptyResultDataAccessException e) {
+	 * LOGGER.error("Error: all customers don't exist in storage", e); return
+	 * null; } }
+	 */
 	// =============UPDATE AREA===============
 
 	@Override
@@ -116,7 +126,5 @@ public class CustomerDaoImpl implements ICustomerDao {
 	@Override
 	public void delete(Integer id) {
 		jdbcTemplate.update("delete from customer where id=" + id);
-
 	}
-
 }

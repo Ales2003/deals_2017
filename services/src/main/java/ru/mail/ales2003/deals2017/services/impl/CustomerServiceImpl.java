@@ -89,7 +89,8 @@ public class CustomerServiceImpl implements ICustomerService {
 		}
 	}
 
-	//I need create so method
+	//I need create so method maybe 
+	//!!!maybe with StringFormat???
 /*	private String getCustomerInfo(Customer customer){
 		
 		String customerInfo = 	new String();
