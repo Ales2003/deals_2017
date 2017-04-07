@@ -42,18 +42,6 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Finish completion of the method");
 	}
 
-	// method creates a new instance & gives it name
-	private CharacterType getInstance(String name) {
-		CharacterType instance = new CharacterType();
-		instance.setName(name);
-		return instance;
-	}
-
-	// method deletes an instance by id
-	private void deleteFromDb(Integer id) {
-		service.delete(id);
-	}
-
 	/*
 	 * Two objects with the same Id are compared: created in Java and extracted
 	 * from the database
@@ -73,7 +61,6 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	 * Test for the insertion of several objects, for each are compared two
 	 * objects with the same Id: created in Java and extracted from the database
 	 */
-
 	@Test
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
@@ -93,7 +80,6 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	 * Three objects with the same Id are compared: created in Java, modified in
 	 * Java and extracted from the database
 	 */
-
 	@Test
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
@@ -111,6 +97,10 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  updateTest method");
 	}
 
+	/*
+	 * Test for the getting an object. Two objects with the same Id are
+	 * compared: created in Java and saved in & extracted from the database
+	 */
 	@Test
 	public void getTest() {
 		LOGGER.debug("Start getTest method");
@@ -123,6 +113,11 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  getTest method");
 	}
 
+	/*
+	 * Test for the getting of several objects, for each are compared two
+	 * objects with the same Id: created in Java and saved in & extracted from
+	 * the database
+	 */
 	@Test
 	public void getAllTest() {
 		LOGGER.debug("Start getAllTest method");
@@ -147,6 +142,10 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Finish getAllTest method");
 	}
 
+	/*
+	 * Test for the deleting. One object is created, saved in DB and deleted.
+	 * Then the object is checked for absence in the database
+	 */
 	@Test
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
@@ -158,4 +157,21 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Finish deleteTest method");
 
 	}
+
+	/*
+	 * method creates a new instance & gives it name
+	 */
+	private CharacterType getInstance(String name) {
+		CharacterType instance = new CharacterType();
+		instance.setName(name);
+		return instance;
+	}
+
+	/*
+	 * method deletes an instance by id
+	 */
+	private void deleteFromDb(Integer id) {
+		service.delete(id);
+	}
+
 }

@@ -42,18 +42,6 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		LOGGER.debug("Finish completion of the method");
 	}
 
-	// method creates a new instance & gives it name
-	private CustomerGroup getInstance(CustomerType name) {
-		CustomerGroup instance = new CustomerGroup();
-		instance.setName(name);
-		return instance;
-	}
-
-	// method deletes an instance by id
-	private void deleteFromDb(Integer id) {
-		service.delete(id);
-	}
-
 	/*
 	 * Two objects with the same Id are compared: created in Java and saved in &
 	 * extracted from the database
@@ -71,9 +59,9 @@ public class CustomerGroupServiceTest extends AbstractTest {
 
 	/*
 	 * Test for the insertion of several objects, for each are compared two
-	 * objects with the same Id: created in Java and saved in & extracted from the database
+	 * objects with the same Id: created in Java and saved in & extracted from
+	 * the database
 	 */
-
 	@Test
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
@@ -93,7 +81,6 @@ public class CustomerGroupServiceTest extends AbstractTest {
 	 * Three objects with the same Id are compared: created in Java, modified in
 	 * Java and saved in & extracted from the database
 	 */
-
 	@Test
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
@@ -112,6 +99,10 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  updateTest method");
 	}
 
+	/*
+	 * Test for the getting an object. Two objects with the same Id are
+	 * compared: created in Java and saved in & extracted from the database
+	 */
 	@Test
 	public void getTest() {
 		LOGGER.debug("Start getTest method");
@@ -124,6 +115,11 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  getTest method");
 	}
 
+	/*
+	 * Test for the getting of several objects, for each are compared two
+	 * objects with the same Id: created in Java and saved in & extracted from
+	 * the database
+	 */
 	@Test
 	public void getAllTest() {
 		LOGGER.debug("Start getAllTest method");
@@ -134,7 +130,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		List<CustomerGroup> groupsFromDb = service.getAll();
 		Assert.isTrue(groups.size() == groupsFromDb.size(),
 				"count of from Db groups must by eq. to count of inserted groups");
-		
+
 		for (int i = 0; i < groups.size(); i++) {
 			// False if compared to ==, since the references to objects
 			Assert.isTrue(groups.get(i).getId().equals(groupsFromDb.get(i).getId()),
@@ -145,6 +141,10 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		LOGGER.debug("Finish getAllTest method");
 	}
 
+	/*
+	 * Test for the deleting. One object is created, saved in DB and deleted.
+	 * Then the object is checked for absence in the database
+	 */
 	@Test
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
@@ -154,5 +154,21 @@ public class CustomerGroupServiceTest extends AbstractTest {
 		Assert.notNull(groupFromDb, "group must be saved");
 		Assert.isNull(service.get(group_1.getId()), "group must be deleted");
 		LOGGER.debug("Finish deleteTest method");
+	}
+
+	/*
+	 * method creates a new instance & gives it name
+	 */
+	private CustomerGroup getInstance(CustomerType name) {
+		CustomerGroup instance = new CustomerGroup();
+		instance.setName(name);
+		return instance;
+	}
+
+	/*
+	 * method deletes an instance by id
+	 */
+	private void deleteFromDb(Integer id) {
+		service.delete(id);
 	}
 }

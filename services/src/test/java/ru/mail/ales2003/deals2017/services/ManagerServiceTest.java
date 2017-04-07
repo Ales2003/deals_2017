@@ -44,21 +44,6 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish completion of the method");
 	}
 
-	// method creates a new instance & gives it args
-	private Manager getInstance(String firstName, String patronymic, String lastName, String position) {
-		Manager instance = new Manager();
-		instance.setFirstName(firstName);
-		instance.setPatronymic(patronymic);
-		instance.setLastName(lastName);
-		instance.setPosition(position);
-		return instance;
-	}
-
-	// method deletes an instance by id
-	private void deleteFromDb(Integer id) {
-		service.delete(id);
-	}
-
 	/*
 	 * Two objects with the same Id are compared: created in Java and saved in &
 	 * extracted from the database
@@ -90,7 +75,6 @@ public class ManagerServiceTest extends AbstractTest {
 	 * objects with the same Id: created in Java and saved in & extracted from
 	 * the database
 	 */
-
 	@Test
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
@@ -126,6 +110,10 @@ public class ManagerServiceTest extends AbstractTest {
 				"values of the corresponding columns must by eq.");
 	}
 
+	/*
+	 * Three objects with the same Id are compared: created in Java, modified in
+	 * Java and saved in & extracted from the database
+	 */
 	@Test
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
@@ -160,6 +148,10 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  updateTest method");
 	}
 
+	/*
+	 * Test for the getting an object. Two objects with the same Id are
+	 * compared: created in Java and saved in & extracted from the database
+	 */
 	@Test
 	public void getTest() {
 		LOGGER.debug("Start getTest method");
@@ -182,6 +174,11 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish  getTest method");
 	}
 
+	/*
+	 * Test for the getting of several objects, for each are compared two
+	 * objects with the same Id: created in Java and saved in & extracted from
+	 * the database
+	 */
 	@Test
 	public void getAllTest() {
 		LOGGER.debug("Start getAllTest method");
@@ -197,6 +194,7 @@ public class ManagerServiceTest extends AbstractTest {
 			// False if compared to ==, since the references to objects
 			Assert.isTrue(instances.get(i).getId().equals(instancesFromDb.get(i).getId()),
 					"id of every instance from Db must by eq. to appropriate prepared instance id");
+
 			Assert.isTrue(
 					instances.get(i).getFirstName().equals(instancesFromDb.get(i).getFirstName())
 							&& instances.get(i).getPatronymic().equals(instancesFromDb.get(i).getPatronymic())
@@ -207,6 +205,10 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish getAllTest method");
 	}
 
+	/*
+	 * Test for the deleting. One object is created, saved in DB and deleted.
+	 * Then the object is checked for absence in the database
+	 */
 	@Test
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
@@ -216,6 +218,25 @@ public class ManagerServiceTest extends AbstractTest {
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 		Assert.isNull(service.get(instance_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteTest method");
+	}
+
+	/*
+	 * method creates a new instance & gives it args
+	 */
+	private Manager getInstance(String firstName, String patronymic, String lastName, String position) {
+		Manager instance = new Manager();
+		instance.setFirstName(firstName);
+		instance.setPatronymic(patronymic);
+		instance.setLastName(lastName);
+		instance.setPosition(position);
+		return instance;
+	}
+
+	/*
+	 * method deletes an instance by id
+	 */
+	private void deleteFromDb(Integer id) {
+		service.delete(id);
 	}
 
 }

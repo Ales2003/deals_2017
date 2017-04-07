@@ -27,7 +27,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			return null;
 		} else {
 			CharacterType entity = characterTypeDao.get(id);
-			LOGGER.info("Read one сharacterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Read one characterType: id={}, name={}", entity.getId(), entity.getName());
 			return entity;
 		}
 	}
@@ -38,7 +38,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			LOGGER.error("Error: all characterTypes don't exist in storage");
 			return null;
 		} else {
-			LOGGER.info("Read all сharacterTypes");
+			LOGGER.info("Read all characterTypes");
 			return characterTypeDao.getAll();
 		}
 	}

@@ -56,7 +56,7 @@ public class CustomerGroupDaoImpl implements ICustomerGroupDao {
 					new BeanPropertyRowMapper<CustomerGroup>(CustomerGroup.class));
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("Error: customerGroup with id = " + id + " don't exist in storage)", e);
-			//throw e;
+			// throw e;
 			return null;
 		}
 	}
