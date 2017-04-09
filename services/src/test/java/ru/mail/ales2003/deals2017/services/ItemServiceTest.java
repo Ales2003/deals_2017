@@ -42,7 +42,7 @@ public class ItemServiceTest extends AbstractTest {
 		instance_2 = getInstance("Air conditioner", "A machine that keeps the air in a building cool",
 				new BigDecimal("300.00"));
 
-		LOGGER.debug("Item in JVM was created");
+		LOGGER.debug("Items in JVM were created");
 
 		LOGGER.debug("Finish preparation of the method");
 	}

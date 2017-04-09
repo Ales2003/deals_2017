@@ -16,7 +16,7 @@ public interface IItemService {
 	void save(Item item);
 
 	@Transactional
-	void saveMultiple(Item... item);
+	void saveMultiple(Item... itemArray);
 
 	@Transactional
 	void delete(Integer id);

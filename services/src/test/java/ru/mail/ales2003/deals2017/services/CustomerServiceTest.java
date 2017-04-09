@@ -62,7 +62,7 @@ public class CustomerServiceTest extends AbstractTest {
 				customerGroupFromDb.getId(), managerFromDb.getId());
 		instance_2 = getInstance("Andrei", "Ivanovich", "Ratich", "Company2", "Minsk", "+37529...",
 				customerGroupFromDb.getId(), managerFromDb.getId());
-		LOGGER.debug("Customers in JVM was created");
+		LOGGER.debug("Customers in JVM were created");
 
 		LOGGER.debug("Finish preparation of the method");
 	}
@@ -78,8 +78,8 @@ public class CustomerServiceTest extends AbstractTest {
 		LOGGER.debug("Customers were deleted from Db ");
 
 		LOGGER.debug("Start deleting customerGroups from Db");
-		for (CustomerGroup cg : customerGroupService.getAll()) {
-			customerGroupService.delete(cg.getId());
+		for (CustomerGroup cG : customerGroupService.getAll()) {
+			customerGroupService.delete(cG.getId());
 		}
 		LOGGER.debug("CustomerGroups were deleted from Db ");
 

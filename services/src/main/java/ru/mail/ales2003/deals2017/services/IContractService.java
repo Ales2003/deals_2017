@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.mail.ales2003.deals2017.datamodel.Contract;
-import ru.mail.ales2003.deals2017.datamodel.Contract2ItemVariant;
 
 public interface IContractService {
 
@@ -15,11 +14,12 @@ public interface IContractService {
 
 	void save(Contract contract);
 
-	/*// saves contract + list of entities in given contract
-	//TO DO 
-	//Contract2ItemVariant get (Integer id)
-	//List<Contract2ItemVariant> getAll(Contract contract), 
-	void save(Contract contract, Contract2ItemVariant... entity);*/
+	/*
+	 * // saves contract + list of entities in given contract //TO DO
+	 * //Contract2ItemVariant get (Integer id) //List<Contract2ItemVariant>
+	 * getAll(Contract contract), void save(Contract contract,
+	 * Contract2ItemVariant... entity);
+	 */
 
 	@Transactional
 	void saveMultiple(Contract... contract);
