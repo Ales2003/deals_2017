@@ -204,13 +204,26 @@ public class CustomerServiceTest extends AbstractTest {
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
 
+		/*
+		 * System.out.println("instance_1: "+instance_1.getFirstName());
+		 * System.out.println("modifiedInstance: "+modifiedInstance.getFirstName
+		 * ());
+		 * System.out.println("instance_1FromDb: "+instance_1FromDb.getFirstName
+		 * ());
+		 * 
+		 * System.out.println(instance_1.getFirstName().equals(modifiedInstance.
+		 * getFirstName()));
+		 * System.out.println(instance_1FromDb.getFirstName().equals(
+		 * modifiedInstance.getFirstName()));
+		 */
+
 		Assert.isTrue(
-				!(instance_1FromDb.getFirstName().equals(modifiedInstance.getFirstName())
-						&& instance_1.getPatronymic().equals(modifiedInstance.getPatronymic())
-						&& instance_1.getLastName().equals(modifiedInstance.getLastName())
-						&& instance_1.getCompanyName().equals(modifiedInstance.getCompanyName())
-						&& instance_1.getAddress().equals(modifiedInstance.getAddress())
-						&& instance_1.getPhoneNumber().equals(modifiedInstance.getPhoneNumber())),
+				!(instance_1.getFirstName().equals(modifiedInstance.getFirstName()))
+						&& !(instance_1.getPatronymic().equals(modifiedInstance.getPatronymic()))
+						&& !(instance_1.getLastName().equals(modifiedInstance.getLastName()))
+						&& !(instance_1.getCompanyName().equals(modifiedInstance.getCompanyName()))
+						&& !(instance_1.getAddress().equals(modifiedInstance.getAddress()))
+						&& !(instance_1.getPhoneNumber().equals(modifiedInstance.getPhoneNumber())),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
 
 		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),

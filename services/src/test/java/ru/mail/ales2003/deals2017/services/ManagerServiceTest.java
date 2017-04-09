@@ -131,9 +131,9 @@ public class ManagerServiceTest extends AbstractTest {
 				"id of initial instance must by eq. to modified instance id");
 		Assert.isTrue(
 				!(instance_1.getFirstName().equals(modifiedInstance.getFirstName())
-						&& instance_1.getPatronymic().equals(modifiedInstance.getPatronymic())
-						&& instance_1.getLastName().equals(modifiedInstance.getLastName())
-						&& instance_1.getPosition().equals(modifiedInstance.getPosition())),
+						&& !(instance_1.getPatronymic().equals(modifiedInstance.getPatronymic()))
+						&& !(instance_1.getLastName().equals(modifiedInstance.getLastName()))
+						&& !(instance_1.getPosition().equals(modifiedInstance.getPosition()))),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
 
 		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),
