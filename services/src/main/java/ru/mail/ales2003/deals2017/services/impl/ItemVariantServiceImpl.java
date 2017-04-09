@@ -91,6 +91,10 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	// =============Operations with product attributes===============
 	// Add to interface
 
+	/*
+	 * This method saves the characteristic of the ItemVariant using the ready
+	 * Dao and classes from Datamodel
+	 */
 	public void saveWithAttribute(CharacterType2ItemVariant attribute) {
 
 		if (attribute == null) {
@@ -109,6 +113,10 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 		}
 	}
 
+	/*
+	 * This method saves list of characteristics of the ItemVariant using the
+	 * ready Dao and classes from Datamodel
+	 */
 	public void saveMultipleWithAttribute(CharacterType2ItemVariant... attributeArray) {
 		for (CharacterType2ItemVariant attribute : attributeArray) {
 			LOGGER.debug("Inserted new attribute from array: " + attribute);
@@ -123,8 +131,15 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 		return attributes;
 	}
 
-	// in DataModel create classes ItemVariantFullDescription,
-	// ItemVariantAttributes
+	// in DataModel create classes ItemVariantAttributes:
+	// fields 	Integer ItemId;
+	// 			String ItemName;
+	// List<ItemVariantAttributes> attributes,
+	// & ItemVariantFullDescription:
+	// fields	Integer AttributeId;
+	// 			Attribute attributeName;
+	//			String attributeValue
+	// 			String measureName
 
 	// TO DO ItemVariantAttributes- SQL in DAO
 	// TO DO ItemName SQL in DAO
