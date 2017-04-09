@@ -4,7 +4,7 @@ public class CharacterType2ItemVariant {
 
 	private Integer id;
 	private Integer itemVariantId;
-	private Attribute name;
+	private Attribute attribute;
 	private String value;
 	private Integer characterTypeId;
 
@@ -24,12 +24,12 @@ public class CharacterType2ItemVariant {
 		this.itemVariantId = itemVariantId;
 	}
 
-	public Attribute getName() {
-		return name;
+	public Attribute getAttribute() {
+		return attribute;
 	}
 
-	public void setName(Attribute name) {
-		this.name = name;
+	public void setAttribute(Attribute attribute) {
+		this.attribute = attribute;
 	}
 
 	public String getValue() {
@@ -50,8 +50,8 @@ public class CharacterType2ItemVariant {
 
 	@Override
 	public String toString() {
-		return "CharacterType2Variant [id=" + id + ", itemVariantId=" + itemVariantId + ", name=" + name + ", value="
-				+ value + ", characterTypeId=" + characterTypeId + "]";
+		return "CharacterType2ItemVariant [id=" + id + ", itemVariantId=" + itemVariantId + ", attribute=" + attribute
+				+ ", value=" + value + ", characterTypeId=" + characterTypeId + "]";
 	}
 
 }

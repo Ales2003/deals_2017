@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ru.mail.ales2003.deals2017.dao.impl.db.ICharacterType2ItemVariantDao;
 import ru.mail.ales2003.deals2017.dao.impl.db.IItemVariantDao;
+import ru.mail.ales2003.deals2017.datamodel.CharacterType2ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
 
@@ -19,6 +22,9 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 
 	@Inject
 	public IItemVariantDao itemVariantDao;
+
+	@Inject
+	ICharacterType2ItemVariantDao attributeDao;
 
 	@Override
 	public ItemVariant get(Integer id) {
@@ -68,7 +74,6 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 			save(itemVariant);
 		}
 		LOGGER.info("Inserted itemVariants from array");
-
 	}
 
 	@Override
@@ -82,5 +87,52 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 		}
 
 	}
+
+	// =============Operations with product attributes===============
+	// Add to interface
+
+	public void saveWithAttribute(CharacterType2ItemVariant attribute) {
+
+		if (attribute == null) {
+			LOGGER.error("Error: as the item was sent a null reference");
+			return;
+		} else if (attribute.getId() == null) {
+			attributeDao.insert(attribute);
+			LOGGER.info("Inserted new attribute: id={}, itemVariantId={}, attribute={}, characterTypeId={}, value={}",
+					attribute.getId(), attribute.getItemVariantId(), attribute.getAttribute(),
+					attribute.getCharacterTypeId(), attribute.getValue());
+		} else {
+			attributeDao.update(attribute);
+			LOGGER.info("Updated attribute: id={}, itemVariantId={}, attribute={}, characterTypeId={}, value={}",
+					attribute.getId(), attribute.getItemVariantId(), attribute.getAttribute(),
+					attribute.getCharacterTypeId(), attribute.getValue());
+		}
+	}
+
+	public void saveMultipleWithAttribute(CharacterType2ItemVariant... attributeArray) {
+		for (CharacterType2ItemVariant attribute : attributeArray) {
+			LOGGER.debug("Inserted new attribute from array: " + attribute);
+			saveWithAttribute(attribute);
+		}
+		LOGGER.info("Inserted attributes from array");
+	}
+
+	public List<CharacterType2ItemVariant> getAttributesByItemVariantId(Integer id) {
+		List<CharacterType2ItemVariant> attributes = new ArrayList<>();
+		// TO DO + add in SQL in DAO
+		return attributes;
+	}
+
+	// in DataModel create classes ItemVariantFullDescription,
+	// ItemVariantAttributes
+
+	// TO DO ItemVariantAttributes- SQL in DAO
+	// TO DO ItemName SQL in DAO
+	/*
+	 * public ItemVariantFullDescription getItemVariantFullDescription(Integer
+	 * Id) {
+	 * 
+	 * }
+	 */
 
 }
