@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.impl.db.impl;
+package ru.mail.ales2003.deals2017.dao.db.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

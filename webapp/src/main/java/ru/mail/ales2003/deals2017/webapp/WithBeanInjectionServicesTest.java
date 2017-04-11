@@ -3,7 +3,7 @@ package ru.mail.ales2003.deals2017.webapp;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import ru.mail.ales2003.deals2017.dao.api.IItemDao;
-import ru.mail.ales2003.deals2017.dao.impl.db.impl.ItemDaoImpl;
+import ru.mail.ales2003.deals2017.dao.db.impl.ItemDaoImpl;
 //import ru.mail.ales2003.deals2017.dao.impl.db.impl.ItemDaoImpl;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.services.IItemService;

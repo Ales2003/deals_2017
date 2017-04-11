@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.impl.db.impl;
+package ru.mail.ales2003.deals2017.dao.db.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,13 +17,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.api.IManagerDao;
-import ru.mail.ales2003.deals2017.datamodel.Manager;
+import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeDao;
+import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 
 @Repository
-public class ManagerDaoImpl implements IManagerDao {
+public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ManagerDaoImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypeDaoImpl.class);
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
@@ -31,47 +31,45 @@ public class ManagerDaoImpl implements IManagerDao {
 	// =============CREATION AREA===============
 
 	@Override
-	public Manager insert(Manager manager) {
-		final String INSERT_SQL = "insert into  manager (first_name, patronymic, last_name, position) values(?,?,?,?)";
+	public CharacterType insert(CharacterType entity) {
+		final String INSERT_SQL = "insert into character_type (name) values(?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, manager.getFirstName());
-				ps.setString(2, manager.getPatronymic());
-				ps.setString(3, manager.getLastName());
-				ps.setString(4, manager.getPosition());
+				ps.setString(1, entity.getName());
 				return ps;
 			}
 		}, keyHolder);
-		manager.setId(keyHolder.getKey().intValue());
-		return manager;
+		entity.setId(keyHolder.getKey().intValue());
+		return entity;
 	}
 
 	// =============READING AREA===============
 
 	@Override
-	public Manager get(Integer id) {
-		final String READ_BY_ID_SQL = "select * from manager where id = ? ";
+	public CharacterType get(Integer id) {
+		final String READ_BY_ID_SQL = "select * from character_type where id = ? ";
 		try {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
-					new BeanPropertyRowMapper<Manager>(Manager.class));
+					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: manager with id = " + id + " don't exist in storage)", e);
-			// throw e;
+			LOGGER.error("Error: characterType with id = " + id + " don't exist in storage)", e);
+			//throw e;
 			return null;
 		}
 	}
 
 	@Override
-	public List<Manager> getAll() {
+	public List<CharacterType> getAll() {
 		try {
-			List<Manager> managers = jdbcTemplate.query("select * from manager",
-					new BeanPropertyRowMapper<Manager>(Manager.class));
-			return managers;
+			final String READ_ALL_SQL = "select * from character_type";
+			List<CharacterType> characterTypes = jdbcTemplate.query(READ_ALL_SQL,
+					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
+			return characterTypes;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all managers don't exist in storage", e);
+			LOGGER.error("Error: all сharacterTypes don't exist in storage", e);
 			return null;
 		}
 	}
@@ -79,17 +77,14 @@ public class ManagerDaoImpl implements IManagerDao {
 	// =============UPDATE AREA===============
 
 	@Override
-	public void update(Manager manager) {
-		final String UPDATE_SQL = "update manager set first_name = ?, patronymic = ?, last_name = ?, position = ? where id = ?";
+	public void update(CharacterType entity) {
+		final String UPDATE_SQL = "update character_type set name = ? where id = ?";
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
-				ps.setString(1, manager.getFirstName());
-				ps.setString(2, manager.getPatronymic());
-				ps.setString(3, manager.getLastName());
-				ps.setString(4, manager.getPosition());
-				ps.setInt(5, manager.getId());
+				ps.setString(1, entity.getName());
+				ps.setInt(2, entity.getId());
 				return ps;
 			}
 		});
@@ -99,6 +94,7 @@ public class ManagerDaoImpl implements IManagerDao {
 
 	@Override
 	public void delete(Integer id) {
-		jdbcTemplate.update("delete from manager where id=" + id);
+		jdbcTemplate.update("delete from character_type where id=" + id);
 	}
+
 }
