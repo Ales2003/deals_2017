@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.ICharacterType2ItemVariantDao;
-import ru.mail.ales2003.deals2017.dao.impl.db.IItemVariantDao;
+import ru.mail.ales2003.deals2017.dao.api.ICharacterType2ItemVariantDao;
+import ru.mail.ales2003.deals2017.dao.api.IItemVariantDao;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType2ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;

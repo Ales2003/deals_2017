@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.IContract2ItemVariantDao;
+import ru.mail.ales2003.deals2017.dao.api.IContract2ItemVariantDao;
 import ru.mail.ales2003.deals2017.datamodel.Contract2ItemVariant;
 
 @Repository

@@ -16,7 +16,18 @@
 
 	<dependencies>
 	
-	
+	<dependency>
+			<groupId>ru.mail.ales2003.deals2017</groupId>
+			<artifactId>datamodel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+		</dependency>
 	
 	</dependencies>
 

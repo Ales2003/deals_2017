@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 public class Contract {
 
 	private Integer id;
-	private Timestamp сreated;
+	private Timestamp created;
 	private ContractStatus contractStatus;
 	private PayForm payForm;
 	private PayStatus payStatus;
@@ -21,12 +21,12 @@ public class Contract {
 		this.id = id;
 	}
 
-	public Timestamp getСreated() {
-		return сreated;
+	public Timestamp getCreated() {
+		return created;
 	}
 
-	public void setСreated(Timestamp сreated) {
-		this.сreated = сreated;
+	public void setCreated(Timestamp created) {
+		this.created = created;
 	}
 
 	public ContractStatus getContractStatus() {
@@ -71,7 +71,7 @@ public class Contract {
 
 	@Override
 	public String toString() {
-		return "Contract [id=" + id + ", сreated=" + сreated + ", contractStatus=" + contractStatus + ", payForm="
+		return "Contract [id=" + id + ", сreated=" + created + ", contractStatus=" + contractStatus + ", payForm="
 				+ payForm + ", payStatus=" + payStatus + ", customerId=" + customerId + ", totalPrice=" + totalPrice
 				+ "]";
 	}

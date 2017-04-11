@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.impl.db;
+package ru.mail.ales2003.deals2017.dao.api;
 
 import java.util.List;
 

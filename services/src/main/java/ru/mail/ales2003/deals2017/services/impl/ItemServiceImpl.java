@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.IItemDao;
+import ru.mail.ales2003.deals2017.dao.api.IItemDao;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.services.IItemService;
 

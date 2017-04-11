@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.IManagerDao;
+import ru.mail.ales2003.deals2017.dao.api.IManagerDao;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.services.IManagerService;
 

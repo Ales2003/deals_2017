@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.mail.ales2003.deals2017.dao.api.custom.classes.ItemInContract;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 
 public interface IContractService {
@@ -12,7 +13,17 @@ public interface IContractService {
 
 	List<Contract> getAll();
 
+	@Transactional
 	void save(Contract contract);
+
+	@Transactional
+	void saveMultiple(Contract... contract);
+
+	@Transactional
+	void delete(Integer id);
+	
+	/*//!!!!!!!!!!!!!!!!++++++++++++++++++
+	public List<ItemInContract> ic();*/
 
 	/*
 	 * // saves contract + list of entities in given contract //TO DO
@@ -21,8 +32,4 @@ public interface IContractService {
 	 * Contract2ItemVariant... entity);
 	 */
 
-	@Transactional
-	void saveMultiple(Contract... contract);
-
-	void delete(Integer id);
 }

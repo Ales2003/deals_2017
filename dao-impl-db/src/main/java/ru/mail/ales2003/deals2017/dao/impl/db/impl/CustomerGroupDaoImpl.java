@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.impl.db.ICustomerGroupDao;
+import ru.mail.ales2003.deals2017.dao.api.ICustomerGroupDao;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 
 @Repository
