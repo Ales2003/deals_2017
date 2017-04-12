@@ -3,8 +3,8 @@ package ru.mail.ales2003.deals2017.datamodel;
 public class I18N {
 
 	private Integer id;
-	private Table table;
-	private Integer entityId;
+	private Table tableName;
+	private Integer memberId;
 	private Language language;
 	private String value;
 
@@ -16,20 +16,22 @@ public class I18N {
 		this.id = id;
 	}
 
-	public Table getTable() {
-		return table;
+	public Table getTableName() {
+		return tableName;
 	}
 
-	public void setTable(Table table) {
-		this.table = table;
+	public void setTableName(Table tableName) {
+		this.tableName = tableName;
 	}
 
-	public Integer getEntityId() {
-		return entityId;
+	
+
+	public Integer getMemberId() {
+		return memberId;
 	}
 
-	public void setEntityId(Integer entityId) {
-		this.entityId = entityId;
+	public void setMemberId(Integer memberId) {
+		this.memberId = memberId;
 	}
 
 	public Language getLanguage() {
@@ -50,8 +52,11 @@ public class I18N {
 
 	@Override
 	public String toString() {
-		return "I18N [id=" + id + ", table=" + table + ", entityId=" + entityId + ", language=" + language + ", value="
-				+ value + "]";
+		return "I18N [id=" + id + ", tableName=" + tableName + ", memberId=" + memberId + ", language=" + language
+				+ ", value=" + value + "]";
 	}
 
+	
+
+	
 }

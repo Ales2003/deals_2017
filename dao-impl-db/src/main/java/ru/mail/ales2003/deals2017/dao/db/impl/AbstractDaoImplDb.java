@@ -1,50 +1,81 @@
 package ru.mail.ales2003.deals2017.dao.db.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.GenericDao;
 
+@Repository
 public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 
-	// ?? What is the sense in final variable?
-	// TO IMPLEMENT in child
-	private static Logger LOGGER;
-
-	private Class tClassName;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDaoImplDb.class);
 
 	@Inject
-	private JdbcTemplate jdbcTemplate;
+	protected JdbcTemplate jdbcTemplate;
 
-	private String entityName;
+	// Methods to implementing for CREATION AREA
+	protected abstract String getInsertQuery();
+	protected abstract T setEntityId(T entity, Integer id);
+	protected abstract void prepareStatementForInsert(PreparedStatement statement, T entity);
 
-	// TO IMPLEMENT
-	public abstract String getSelectQuery();
+	// Methods to implementing for CREATION AREA
+	protected abstract String getSelectQuery();
+	protected abstract Class<T> getMappedClass();
+
+	// Methods to implementing for UPDATING AREA
+	protected abstract String getUpdateQuery();
+	protected abstract void prepareStatementForUpdate(PreparedStatement ps, T entity);
+
+	// Methods to implementing for DELETING AREA
+	protected abstract String getDeleteQuery();
 
 	// =============CREATION AREA===============
 
 	@Override
 	public T insert(T entity) {
 
+		final String INSERT_SQL = getInsertQuery();
+
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
+				prepareStatementForInsert(ps, entity);
+				return ps;
+			}
+		}, keyHolder);
+		Integer id = keyHolder.getKey().intValue();
+		setEntityId(entity, id);
 		return entity;
 	}
 
-	@SuppressWarnings("unchecked")
+	// =============READING AREA===============
+
 	@Override
 	public T get(PK id) {
-		// final String READ_BY_ID_SQL = "select * from manager where id = ? ";
-		final String READ_BY_ID_SQL = getSelectQuery() + "where id = ?";
+		final String READ_BY_ID_SQL = getSelectQuery() + " where id = ?";
 		try {
 			return (T) jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
-					new BeanPropertyRowMapper<T>(tClassName));
+					(RowMapper<T>) new BeanPropertyRowMapper<T>(getMappedClass()));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: " + entityName + " with id = " + id + " don't exist in storage)", e);
+			LOGGER.error("Error: entity[class:" + getMappedClass().getCanonicalName() + "] with id = " + id
+					+ " don't exist in storage", e);
 			// throw e;
 			return null;
 		}
@@ -52,20 +83,36 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 
 	@Override
 	public List<T> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			List<T> entitys = jdbcTemplate.query(getSelectQuery(), new BeanPropertyRowMapper<T>(getMappedClass()));
+			return entitys;
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: all entitys[class:" + getMappedClass().getCanonicalName() + "] don't exist in storage",
+					e);
+			return null;
+		}
 	}
+
+	// =============UPDATE AREA===============
 
 	@Override
 	public void update(T entity) {
-		// TODO Auto-generated method stub
-
+		final String UPDATE_SQL = getUpdateQuery();
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
+				prepareStatementForUpdate(ps, entity);
+				return ps;
+			}
+		});
 	}
+
+	// =============DELETE AREA===============
 
 	@Override
 	public void delete(PK id) {
-		// TODO Auto-generated method stub
-
+		final String DELETE_BY_ID_SQL = getDeleteQuery();
+		jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
 	}
-
 }
