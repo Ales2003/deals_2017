@@ -1,6 +1,6 @@
 package ru.mail.ales2003.deals2017.datamodel;
 
-public class Contract2ItemVariant {
+public class ItemVariantInContract {
 
 	private Integer id;
 	private Integer quantity;

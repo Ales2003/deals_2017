@@ -4,21 +4,35 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
 public interface IItemVariantService {
 
-	ItemVariant get(Integer id);
+	ItemVariant getItemVariant(Integer itemVariantId);
 
-	List<ItemVariant> getAll();
-
-	@Transactional
-	void save(ItemVariant itemVariant);
+	List<ItemVariant> getAllItemVariants();
 
 	@Transactional
-	void saveMultiple(ItemVariant... itemVariantArray);
+	void saveItemVariant(ItemVariant itemVariant);
 
 	@Transactional
-	void delete(Integer id);
+	void saveItemVariantMultiple(ItemVariant... itemVariantArray);
+
+	@Transactional
+	void deleteItemVariant(Integer itemVariantId);
+
+	CharacterType getCharacterType(Integer characterTypreId);
+
+	List<CharacterType> getAllCharacterTypes();
+
+	@Transactional
+	void saveCharacterType(CharacterType characterType);
+
+	@Transactional
+	void saveCharacterTypeMultiple(CharacterType... characterTypeArray);
+
+	@Transactional
+	void deleteCharacterType(Integer characterTypeId);
 
 }

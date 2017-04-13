@@ -58,7 +58,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 		LOGGER.debug("Start completion of the method");
 
 		LOGGER.debug("Start deleting itemVariants from Db");
-		for (ItemVariant iV : service.getAll()) {
+		for (ItemVariant iV : service.getAllItemVariants()) {
 			deleteFromDb(iV.getId());
 		}
 		LOGGER.debug("ItemVariants were deleted from Db ");
@@ -77,10 +77,10 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * extracted from the database
 	 */
 	@Test
-	public void insertTest() {
+	public void insertItemVariantTest() {
 		LOGGER.debug("Start insertTest method");
-		service.save(instance_1);
-		instance_1FromDb = service.get(instance_1.getId());
+		service.saveItemVariant(instance_1);
+		instance_1FromDb = service.getItemVariant(instance_1.getId());
 
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 
@@ -100,13 +100,13 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * the database
 	 */
 	@Test
-	public void insertMultipleTest() {
+	public void insertItemVariantMultipleTest() {
 
 		LOGGER.debug("Start insertMultipleTest method");
 
-		service.saveMultiple(instance_1, instance_2);
-		instance_1FromDb = service.get(instance_1.getId());
-		instance_2FromDb = service.get(instance_2.getId());
+		service.saveItemVariantMultiple(instance_1, instance_2);
+		instance_1FromDb = service.getItemVariant(instance_1.getId());
+		instance_2FromDb = service.getItemVariant(instance_2.getId());
 
 		Assert.notNull(instance_1FromDb, "instance_1 must be saved");
 		Assert.notNull(instance_2FromDb, "instance_2 must be saved");
@@ -135,16 +135,16 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * Java and saved in & extracted from the database
 	 */
 	@Test
-	public void updateTest() {
+	public void updateItemVariantTest() {
 		LOGGER.debug("Start updateTest method");
-		service.save(instance_1);
+		service.saveItemVariant(instance_1);
 
-		modifiedInstance = service.get(instance_1.getId());
+		modifiedInstance = service.getItemVariant(instance_1.getId());
 		modifiedInstance.setVariantPrice(instance_1.getVariantPrice().add(new BigDecimal("2")));
 
-		service.save(modifiedInstance);
+		service.saveItemVariant(modifiedInstance);
 
-		instance_1FromDb = service.get(modifiedInstance.getId());
+		instance_1FromDb = service.getItemVariant(modifiedInstance.getId());
 
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
@@ -166,10 +166,10 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * compared: created in Java and saved in & extracted from the database
 	 */
 	@Test
-	public void getTest() {
+	public void getItemVariantTest() {
 		LOGGER.debug("Start getTest method");
-		service.save(instance_1);
-		instance_1FromDb = service.get(instance_1.getId());
+		service.saveItemVariant(instance_1);
+		instance_1FromDb = service.getItemVariant(instance_1.getId());
 
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 
@@ -190,13 +190,13 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * the database
 	 */
 	@Test
-	public void getAllTest() {
+	public void getAllItemVariantTest() {
 		LOGGER.debug("Start getAllTest method");
 		List<ItemVariant> instances = new ArrayList<>();
 		instances.add(instance_1);
 		instances.add(instance_2);
-		service.saveMultiple(instance_1, instance_2);
-		List<ItemVariant> instancesFromDb = service.getAll();
+		service.saveItemVariantMultiple(instance_1, instance_2);
+		List<ItemVariant> instancesFromDb = service.getAllItemVariants();
 		Assert.isTrue(instances.size() == instancesFromDb.size(),
 				"count of from Db instances must by eq. to count of inserted instances");
 
@@ -218,19 +218,18 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * Then the object is checked for absence in the database
 	 */
 	@Test
-	public void deleteTest() {
+	public void deleteItemVariantTest() {
 		LOGGER.debug("Start deleteTest method");
-		service.save(instance_1);
-		instance_1FromDb = service.get(instance_1.getId());
+		service.saveItemVariant(instance_1);
+		instance_1FromDb = service.getItemVariant(instance_1.getId());
 		deleteFromDb(instance_1.getId());
 		Assert.notNull(instance_1FromDb, "instance must be saved");
-		Assert.isNull(service.get(instance_1.getId()), "instance must be deleted");
+		Assert.isNull(service.getItemVariant(instance_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteTest method");
 	}
 
 	// =============To do tests for attributDao===============
-	
-	
+
 	/*
 	 * method creates a new instance & gives it args
 	 */
@@ -245,7 +244,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * method deletes an instance by id
 	 */
 	private void deleteFromDb(Integer id) {
-		service.delete(id);
+		service.deleteItemVariant(id);
 	}
 
 }

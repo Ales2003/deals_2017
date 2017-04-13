@@ -8,10 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.mail.ales2003.deals2017.dao.api.IContract2ItemVariantDao;
 import ru.mail.ales2003.deals2017.dao.api.IContractDao;
+import ru.mail.ales2003.deals2017.dao.api.IItemVariantInContractDao;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
-import ru.mail.ales2003.deals2017.datamodel.Contract2ItemVariant;
+import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
 import ru.mail.ales2003.deals2017.services.IContractService;
 
 @Service
@@ -23,20 +23,10 @@ public class ContractServiceImpl implements IContractService {
 	private IContractDao contractDao;
 
 	@Inject
-	private IContract2ItemVariantDao contract2ItemVariantDao;
-
-	public void addItemVariantToContract(Contract2ItemVariant entity) {
-		if (entity.getId() == null) {
-			contract2ItemVariantDao.insert(entity);
-			LOGGER.info(" ......");
-		} else {
-			contract2ItemVariantDao.update(entity);
-			LOGGER.info(" ......");
-		}
-	}
+	private IItemVariantInContractDao itemVariantInContractDao;
 
 	@Override
-	public Contract get(Integer id) {
+	public Contract getContract(Integer id) {
 		if (contractDao.get(id) == null) {
 			LOGGER.error("Error: contract with id = " + id + " don't exist in storage)");
 			return null;
@@ -51,7 +41,7 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public List<Contract> getAll() {
+	public List<Contract> getAllContract() {
 		if (contractDao.getAll() == null) {
 			LOGGER.error("Error: all contracts don't exist in storage");
 			return null;
@@ -62,7 +52,7 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public void save(Contract contract) {
+	public void saveContract(Contract contract) {
 		if (contract == null) {
 			LOGGER.error("Error: as the customer was sent a null reference");
 			return;
@@ -82,16 +72,16 @@ public class ContractServiceImpl implements IContractService {
 	}
 
 	@Override
-	public void saveMultiple(Contract... contractArray) {
+	public void saveContractMultiple(Contract... contractArray) {
 		for (Contract contract : contractArray) {
 			LOGGER.debug("Inserted new contract from array: " + contract);
-			save(contract);
+			saveContract(contract);
 		}
 		LOGGER.info("Inserted contracts from array");
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void deleteContract(Integer id) {
 		if (id == null) {
 			LOGGER.error("Error: as the id was sent a null reference");
 			return;
@@ -99,6 +89,38 @@ public class ContractServiceImpl implements IContractService {
 			contractDao.delete(id);
 			LOGGER.info("Deleted contract by id: " + id);
 		}
+	}
+
+	// Goods management and handling in a contract
+
+	@Override
+	public ItemVariantInContract getItemInContract(Integer itemInContractId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ItemVariantInContract> getAllItemInContract() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveItemInContract(ItemVariantInContract itemInContract) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void saveItemInContractMultiple(ItemVariantInContract... itemInContractArray) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteItemInContract(Integer itemInContractid) {
+		// TODO Auto-generated method stub
+
 	}
 
 	// !!!!!!!!!!!!!!+=============

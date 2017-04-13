@@ -3,7 +3,6 @@ package ru.mail.ales2003.deals2017.services;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.classes.ItemInContract;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
@@ -86,7 +84,7 @@ public class ContractServiceTest extends AbstractTest {
 		LOGGER.debug("Contracts in JVM were created");
 
 		LOGGER.debug("Finish preparation of the method");
-		
+
 	}
 
 	@After
@@ -94,8 +92,8 @@ public class ContractServiceTest extends AbstractTest {
 		LOGGER.debug("Start completion of the method");
 
 		LOGGER.debug("Start deleting contracts from Db");
-		for (Contract cnt : service.getAll()) {
-			service.delete(cnt.getId());
+		for (Contract cnt : service.getAllContract()) {
+			service.deleteContract(cnt.getId());
 		}
 		LOGGER.debug("Contracts were deleted from Db ");
 
@@ -127,8 +125,8 @@ public class ContractServiceTest extends AbstractTest {
 	@Test
 	public void insertTest() {
 		LOGGER.debug("Start insertTest method");
-		service.save(instance_1);
-		instance_1FromDb = service.get(instance_1.getId());
+		service.saveContract(instance_1);
+		instance_1FromDb = service.getContract(instance_1.getId());
 
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 		System.out.println(instance_1);
@@ -149,17 +147,15 @@ public class ContractServiceTest extends AbstractTest {
 				"values of the corresponding columns must by eq.");
 		LOGGER.debug("Finish insertTest method");
 
-		
 	}
-	//!!!!!!!!!!!!!!!!!!!!!============
-/*	@Test
-	public void mapperTest() {
-		List<ItemInContract> list = service.ic();
-		
-		System.out.println(service.ic());
-	}
-	*/
-	
+	// !!!!!!!!!!!!!!!!!!!!!============
+	/*
+	 * @Test public void mapperTest() { List<ItemInContract> list =
+	 * service.ic();
+	 * 
+	 * System.out.println(service.ic()); }
+	 */
+
 	/*
 	 * method creates a new instance & gives it args
 	 */
@@ -179,7 +175,7 @@ public class ContractServiceTest extends AbstractTest {
 	 * method deletes an instance by id
 	 */
 	private void deleteFromDb(Integer id) {
-		service.delete(id);
+		service.deleteContract(id);
 	}
 
 }

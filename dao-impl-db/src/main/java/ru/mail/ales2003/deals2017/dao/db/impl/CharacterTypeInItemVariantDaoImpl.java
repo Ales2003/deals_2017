@@ -17,13 +17,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.api.ICharacterType2ItemVariantDao;
-import ru.mail.ales2003.deals2017.datamodel.CharacterType2ItemVariant;
+import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeInItemVariantDao;
+import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 
 @Repository
-public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVariantDao {
+public class CharacterTypeInItemVariantDaoImpl implements ICharacterTypeInItemVariantDao {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterType2ItemVariantDaoImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypeInItemVariantDaoImpl.class);
 
 	@Inject
 	private JdbcTemplate jdbcTemplate;
@@ -31,8 +31,8 @@ public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVari
 	// =============CREATION AREA===============
 
 	@Override
-	public CharacterType2ItemVariant insert(CharacterType2ItemVariant entity) {
-		final String INSERT_SQL = "insert into character_type2item_variant (item_variant_id, attribute, character_type_id, value) values(?,?,?,?)";
+	public CharacterTypeInItemVariant insert(CharacterTypeInItemVariant entity) {
+		final String INSERT_SQL = "insert into character_type_in_item_variant (item_variant_id, attribute, character_type_id, value) values(?,?,?,?)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
@@ -52,27 +52,27 @@ public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVari
 	// =============READING AREA===============
 
 	@Override
-	public CharacterType2ItemVariant get(Integer id) {
-		final String READ_BY_ID_SQL = "select * from character_type2item_variant where id = ? ";
+	public CharacterTypeInItemVariant get(Integer id) {
+		final String READ_BY_ID_SQL = "select * from character_type_in_item_variant where id = ? ";
 		try {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
-					new BeanPropertyRowMapper<CharacterType2ItemVariant>(CharacterType2ItemVariant.class));
+					new BeanPropertyRowMapper<CharacterTypeInItemVariant>(CharacterTypeInItemVariant.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: characterType2itemVariant with id = " + id + " don't exist in storage)", e);
+			LOGGER.error("Error: characterTypeInItemVariant with id = " + id + " don't exist in storage)", e);
 			// throw e;
 			return null;
 		}
 	}
 
 	@Override
-	public List<CharacterType2ItemVariant> getAll() {
+	public List<CharacterTypeInItemVariant> getAll() {
 		try {
-			final String READ_ALL_SQL = "select * from character_type2item_variant";
-			List<CharacterType2ItemVariant> characterTypes = jdbcTemplate.query(READ_ALL_SQL,
-					new BeanPropertyRowMapper<CharacterType2ItemVariant>(CharacterType2ItemVariant.class));
+			final String READ_ALL_SQL = "select * from character_type_in_item_variant";
+			List<CharacterTypeInItemVariant> characterTypes = jdbcTemplate.query(READ_ALL_SQL,
+					new BeanPropertyRowMapper<CharacterTypeInItemVariant>(CharacterTypeInItemVariant.class));
 			return characterTypes;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all characterType2ItemVariants don't exist in storage", e);
+			LOGGER.error("Error: all characterTypeInItemVariants don't exist in storage", e);
 			return null;
 		}
 	}
@@ -80,8 +80,8 @@ public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVari
 	// =============UPDATE AREA===============
 
 	@Override
-	public void update(CharacterType2ItemVariant entity) {
-		final String UPDATE_SQL = "update character_type2item_variant set item_variant_id = ?, attribute = ?, character_type_id = ?, value =?  where id = ?";
+	public void update(CharacterTypeInItemVariant entity) {
+		final String UPDATE_SQL = "update character_type_in_item_variant set item_variant_id = ?, attribute = ?, character_type_id = ?, value =?  where id = ?";
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -100,7 +100,7 @@ public class CharacterType2ItemVariantDaoImpl implements ICharacterType2ItemVari
 
 	@Override
 	public void delete(Integer id) {
-		jdbcTemplate.update("delete from character_type2item_variant where id=" + id);
+		jdbcTemplate.update("delete from character_type_in_item_variant where id=" + id);
 
 	}
 

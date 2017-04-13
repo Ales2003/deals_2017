@@ -9,9 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.mail.ales2003.deals2017.dao.api.ICharacterType2ItemVariantDao;
+import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeInItemVariantDao;
 import ru.mail.ales2003.deals2017.dao.api.IItemVariantDao;
-import ru.mail.ales2003.deals2017.datamodel.CharacterType2ItemVariant;
+import ru.mail.ales2003.deals2017.datamodel.CharacterType;
+import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
 
@@ -24,10 +25,10 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	public IItemVariantDao itemVariantDao;
 
 	@Inject
-	ICharacterType2ItemVariantDao attributeDao;
+	ICharacterTypeInItemVariantDao attributeDao;
 
 	@Override
-	public ItemVariant get(Integer id) {
+	public ItemVariant getItemVariant(Integer id) {
 		if (itemVariantDao.get(id) == null) {
 			LOGGER.error("Error: itemVariant with id = " + id + " don't exist in storage)");
 			return null;
@@ -40,7 +41,7 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	}
 
 	@Override
-	public List<ItemVariant> getAll() {
+	public List<ItemVariant> getAllItemVariants() {
 		if (itemVariantDao.getAll() == null) {
 			LOGGER.error("Error: all itemVariants don't exist in storage");
 			return null;
@@ -51,7 +52,7 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	}
 
 	@Override
-	public void save(ItemVariant itemVariant) {
+	public void saveItemVariant(ItemVariant itemVariant) {
 		if (itemVariant == null) {
 			LOGGER.error("Error: as the item was sent a null reference");
 			return;
@@ -68,16 +69,16 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	}
 
 	@Override
-	public void saveMultiple(ItemVariant... itemVariantArray) {
+	public void saveItemVariantMultiple(ItemVariant... itemVariantArray) {
 		for (ItemVariant itemVariant : itemVariantArray) {
 			LOGGER.debug("Inserted new itemVariant from array: " + itemVariant);
-			save(itemVariant);
+			saveItemVariant(itemVariant);
 		}
 		LOGGER.info("Inserted itemVariants from array");
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void deleteItemVariant(Integer id) {
 		if (id == null) {
 			LOGGER.error("Error: as the id was sent a null reference");
 			return;
@@ -88,14 +89,43 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 
 	}
 
-	// =============Operations with product attributes===============
+	// Attributes management and handling in an item variant
 	// Add to interface
+	@Override
+	public CharacterType getCharacterType(Integer characterTypreId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CharacterType> getAllCharacterTypes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveCharacterType(CharacterType characterType) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void saveCharacterTypeMultiple(CharacterType... characterTypeArray) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteCharacterType(Integer characterTypeId) {
+		// TODO Auto-generated method stub
+
+	}
 
 	/*
 	 * This method saves the characteristic of the ItemVariant using the ready
 	 * Dao and classes from Datamodel
 	 */
-	public void saveWithAttribute(CharacterType2ItemVariant attribute) {
+	public void saveWithAttribute(CharacterTypeInItemVariant attribute) {
 
 		if (attribute == null) {
 			LOGGER.error("Error: as the item was sent a null reference");
@@ -117,29 +147,29 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	 * This method saves list of characteristics of the ItemVariant using the
 	 * ready Dao and classes from Datamodel
 	 */
-	public void saveMultipleWithAttribute(CharacterType2ItemVariant... attributeArray) {
-		for (CharacterType2ItemVariant attribute : attributeArray) {
+	public void saveMultipleWithAttribute(CharacterTypeInItemVariant... attributeArray) {
+		for (CharacterTypeInItemVariant attribute : attributeArray) {
 			LOGGER.debug("Inserted new attribute from array: " + attribute);
 			saveWithAttribute(attribute);
 		}
 		LOGGER.info("Inserted attributes from array");
 	}
 
-	public List<CharacterType2ItemVariant> getAttributesByItemVariantId(Integer id) {
-		List<CharacterType2ItemVariant> attributes = new ArrayList<>();
+	public List<CharacterTypeInItemVariant> getAttributesByItemVariantId(Integer id) {
+		List<CharacterTypeInItemVariant> attributes = new ArrayList<>();
 		// TO DO + add in SQL in DAO
 		return attributes;
 	}
 
 	// in DataModel create classes ItemVariantAttributes:
-	// fields 	Integer ItemId;
-	// 			String ItemName;
+	// fields Integer ItemId;
+	// String ItemName;
 	// List<ItemVariantAttributes> attributes,
 	// & ItemVariantFullDescription:
-	// fields	Integer AttributeId;
-	// 			Attribute attributeName;
-	//			String attributeValue
-	// 			String measureName
+	// fields Integer AttributeId;
+	// Attribute attributeName;
+	// String attributeValue
+	// String measureName
 
 	// TO DO ItemVariantAttributes- SQL in DAO
 	// TO DO ItemName SQL in DAO
