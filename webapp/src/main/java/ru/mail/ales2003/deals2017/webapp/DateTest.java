@@ -28,8 +28,8 @@ public class DateTest {
 		c.setPayForm(PayForm.CASH);
 		c.setPayStatus(PayStatus.UNPAID);
 		c.setCustomerId(1);
-		service.save(c);
-		Contract d = service.get(c.getId());
+		service.saveContract(c);
+		Contract d = service.getContract(c.getId());
 		Timestamp l = d.getCreated();
 		System.out.println("Полная форма");
 		System.out.println(l);

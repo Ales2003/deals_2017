@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.classes.ItemInContract;
+import ru.mail.ales2003.deals2017.dao.api.custom.entities.Detail;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;

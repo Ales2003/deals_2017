@@ -20,7 +20,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.IContractDao;
-import ru.mail.ales2003.deals2017.dao.api.custom.classes.ItemInContract;
+import ru.mail.ales2003.deals2017.dao.api.custom.entities.Detail;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 
 @Repository
@@ -116,18 +116,18 @@ public class ContractDaoImpl implements IContractDao {
 
 	// !!!=============CUSTOM MAPPING AREA===============
 
-	public List<ItemInContract> findAll() {
+	public List<Detail> findAll() {
 
-		String sql = "SELECT * FROM CONTRACT";
+		String sql = "SELECT * FROM item_variant as iv left join character_type_in_item_variant as ctiiv where iv.id=ctiiv.item_variant_id left join character_type as ct where ct.id=ctiiv.character_type_id where iv.id=86";
 
-		List<ItemInContract> items = new ArrayList<>();
+		List<Detail> items = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
 		for (Map row : rows) {
-			ItemInContract item = new ItemInContract();
-			item.setContractId((Integer) (row.get("id")));
+			Detail item = new Detail();
+		/*	item.setContractId((Integer) (row.get("id")));
 			item.setCustomerId((Integer) (row.get("customer_id")));
-			items.add(item);
+			items.add(item);*/
 		}
 
 		return items;
