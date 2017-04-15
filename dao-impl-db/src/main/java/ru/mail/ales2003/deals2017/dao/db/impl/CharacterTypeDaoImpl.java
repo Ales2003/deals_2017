@@ -38,7 +38,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, entity.getName());
+				ps.setString(1, entity.getName().name());
 				return ps;
 			}
 		}, keyHolder);
@@ -83,7 +83,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
-				ps.setString(1, entity.getName());
+				ps.setString(1, entity.getName().name());
 				ps.setInt(2, entity.getId());
 				return ps;
 			}

@@ -3,7 +3,7 @@ package ru.mail.ales2003.deals2017.datamodel;
 public class CharacterType {
 
 	private Integer id;
-	private String name;
+	private Measure name;
 
 	public Integer getId() {
 		return id;
@@ -13,11 +13,11 @@ public class CharacterType {
 		this.id = id;
 	}
 
-	public String getName() {
+	public Measure getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(Measure name) {
 		this.name = name;
 	}
 
@@ -25,5 +25,6 @@ public class CharacterType {
 	public String toString() {
 		return "CharacterType [id=" + id + ", name=" + name + "]";
 	}
+
 
 }

@@ -7,13 +7,9 @@ public class ItemVariantSpecification {
 
 	private Integer id;
 
-	private String name;
-
-	private String description;
-
-	private BigDecimal basicPrice;
-
-	private List<Detail> details;
+	private ItemVariantBasicInfo inform;
+	
+	private List<ItemVariantDetail> details;
 
 	public Integer getId() {
 		return id;
@@ -23,36 +19,25 @@ public class ItemVariantSpecification {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public ItemVariantBasicInfo getInform() {
+		return inform;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setInform(ItemVariantBasicInfo inform) {
+		this.inform = inform;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public BigDecimal getBasicPrice() {
-		return basicPrice;
-	}
-
-	public void setBasicPrice(BigDecimal basicPrice) {
-		this.basicPrice = basicPrice;
-	}
-
-	public List<Detail> getDetails() {
+	public List<ItemVariantDetail> getDetails() {
 		return details;
 	}
 
-	public void setDetails(List<Detail> details) {
+	public void setDetails(List<ItemVariantDetail> details) {
 		this.details = details;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemVariantSpecification [id=" + id + ", inform=" + inform + ", details=" + details + "]";
 	}
 
 }

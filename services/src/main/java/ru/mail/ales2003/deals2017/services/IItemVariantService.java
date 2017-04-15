@@ -22,17 +22,7 @@ public interface IItemVariantService {
 	@Transactional
 	void deleteItemVariant(Integer itemVariantId);
 
-	CharacterType getCharacterType(Integer characterTypreId);
-
-	List<CharacterType> getAllCharacterTypes();
-
-	@Transactional
-	void saveCharacterType(CharacterType characterType);
-
-	@Transactional
-	void saveCharacterTypeMultiple(CharacterType... characterTypeArray);
-
-	@Transactional
-	void deleteCharacterType(Integer characterTypeId);
+	
+	
 
 }

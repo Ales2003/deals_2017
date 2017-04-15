@@ -18,7 +18,11 @@
 		для связывания свойств должен использоваться механизм на осно ве аннотаций. -->
 	<context:annotation-config />
 
-	<context:component-scan base-package="ru.mail.ales2003.deals2017.dao.db.impl" />
+	<!-- multiple packages in context:component-scan, spring config -->
+	<context:component-scan
+		base-package="ru.mail.ales2003.deals2017.dao.db.impl,
+		ru.mail.ales2003.deals2017.dao.db.impl.custom" />
+
 
 	<!-- adding placeholder for db properties -->
 	<context:property-placeholder

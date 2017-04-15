@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeInItemVariantDao;
 import ru.mail.ales2003.deals2017.dao.api.IItemVariantDao;
-import ru.mail.ales2003.deals2017.datamodel.CharacterType;
+import ru.mail.ales2003.deals2017.dao.api.custom.IItemVariantBasicInfoDao;
+import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
 import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
@@ -25,8 +26,13 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	public IItemVariantDao itemVariantDao;
 
 	@Inject
+	public IItemVariantBasicInfoDao basicInfoDao;
+
+	@Inject
 	ICharacterTypeInItemVariantDao attributeDao;
 
+	// ItemVariant management and handling
+	// =============READING AREA===============
 	@Override
 	public ItemVariant getItemVariant(Integer id) {
 		if (itemVariantDao.get(id) == null) {
@@ -51,6 +57,7 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 		}
 	}
 
+	// =============CREATION/UPDATE AREA===============
 	@Override
 	public void saveItemVariant(ItemVariant itemVariant) {
 		if (itemVariant == null) {
@@ -77,6 +84,7 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 		LOGGER.info("Inserted itemVariants from array");
 	}
 
+	// =============DELETE AREA===============
 	@Override
 	public void deleteItemVariant(Integer id) {
 		if (id == null) {
@@ -90,36 +98,15 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	}
 
 	// Attributes management and handling in an item variant
-	// Add to interface
-	@Override
-	public CharacterType getCharacterType(Integer characterTypreId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public List<CharacterType> getAllCharacterTypes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	// =============READING AREA===============
+	public ItemVariantBasicInfo getItemVariantWithBasicInfo(Integer itemVariantId) {
 
-	@Override
-	public void saveCharacterType(CharacterType characterType) {
-		// TODO Auto-generated method stub
+		return basicInfoDao.getItemVariantWithBasicInfo(itemVariantId);
 
-	}
+	};
 
-	@Override
-	public void saveCharacterTypeMultiple(CharacterType... characterTypeArray) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteCharacterType(Integer characterTypeId) {
-		// TODO Auto-generated method stub
-
-	}
+	// =============CREATION AREA===============
 
 	/*
 	 * This method saves the characteristic of the ItemVariant using the ready

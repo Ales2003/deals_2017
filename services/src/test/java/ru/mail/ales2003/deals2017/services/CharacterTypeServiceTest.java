@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
+import ru.mail.ales2003.deals2017.datamodel.Measure;
 
 public class CharacterTypeServiceTest extends AbstractTest {
 
@@ -27,8 +28,8 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	@Before
 	public void runBeforeTestMethod() {
 		LOGGER.debug("Start preparation of the method");
-		type_1 = getInstance("mm");
-		type_2 = getInstance("kg");
+		type_1 = getInstance(Measure.MM);
+		type_2 = getInstance(Measure.KG);
 		LOGGER.debug("Finish preparation of the method");
 	}
 
@@ -85,7 +86,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Start updateTest method");
 		service.save(type_1);
 		CharacterType modifiedType = service.get(type_1.getId());
-		modifiedType.setName("m");
+		modifiedType.setName(Measure.MM);
 		service.save(modifiedType);
 		CharacterType typeFromDb = service.get(modifiedType.getId());
 		Assert.isTrue((type_1.getId().equals(modifiedType.getId())),
@@ -161,7 +162,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	/*
 	 * method creates a new instance & gives it name
 	 */
-	private CharacterType getInstance(String name) {
+	private CharacterType getInstance(Measure name) {
 		CharacterType instance = new CharacterType();
 		instance.setName(name);
 		return instance;
