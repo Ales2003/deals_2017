@@ -24,8 +24,8 @@ public class ItemVariantBasicInfoDaoImpl implements IItemVariantBasicInfoDao {
 
 	// =============READING AREA===============
 	@Override
-	public ItemVariantBasicInfo getItemVariantWithBasicInfo(Integer itemVariantId) {
-		final String READ_BY_ID_SQL = "select v.id as id, i.name as name, i.description as descr, v.variant_price as price"
+	public ItemVariantBasicInfo getBasicInfo(Integer itemVariantId) {
+		final String READ_BY_ID_SQL = "select v.id as id, i.name as name, i.description as description, v.variant_price as price"
 				+ " from item_variant as v left join item as i on i.id=v.item_id where v.id = ?";
 
 		try {
@@ -38,9 +38,18 @@ public class ItemVariantBasicInfoDaoImpl implements IItemVariantBasicInfoDao {
 	}
 
 	@Override
-	public List<ItemVariantBasicInfo> getItemVariantsWithBasicInfo() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ItemVariantBasicInfo> getAllBasicInfo() {
+		final String READ_BY_ID_SQL = "select v.id as id, i.name as name, i.description as description, v.variant_price as price"
+				+ " from item_variant as v left join item as i on i.id=v.item_id";
+
+		try {
+			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(READ_BY_ID_SQL, 
+					new ItemVariantBasicInfoMapper());
+			 return basicInfos;
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: all item variants don't exist in storage)", e);
+			return null;
+		}
 	}
 
 	/*

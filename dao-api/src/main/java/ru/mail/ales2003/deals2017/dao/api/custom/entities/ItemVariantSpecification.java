@@ -1,14 +1,13 @@
 package ru.mail.ales2003.deals2017.dao.api.custom.entities;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class ItemVariantSpecification {
 
 	private Integer id;
 
-	private ItemVariantBasicInfo inform;
-	
+	private ItemVariantBasicInfo info;
+
 	private List<ItemVariantDetail> details;
 
 	public Integer getId() {
@@ -19,12 +18,12 @@ public class ItemVariantSpecification {
 		this.id = id;
 	}
 
-	public ItemVariantBasicInfo getInform() {
-		return inform;
+	public ItemVariantBasicInfo getInfo() {
+		return info;
 	}
 
-	public void setInform(ItemVariantBasicInfo inform) {
-		this.inform = inform;
+	public void setInfo(ItemVariantBasicInfo info) {
+		this.info = info;
 	}
 
 	public List<ItemVariantDetail> getDetails() {
@@ -37,7 +36,7 @@ public class ItemVariantSpecification {
 
 	@Override
 	public String toString() {
-		return "ItemVariantSpecification [id=" + id + ", inform=" + inform + ", details=" + details + "]";
+		return "ItemVariantSpecification [id=" + id + ", info=" + info.toString() + ", details=" + details.toString() + "]";
 	}
 
 }

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.II18NDao;
 import ru.mail.ales2003.deals2017.datamodel.I18N;
-import ru.mail.ales2003.deals2017.datamodel.Language;
-import ru.mail.ales2003.deals2017.datamodel.Table;
 import ru.mail.ales2003.deals2017.services.II18NService;
 
 @Service
@@ -45,7 +43,6 @@ public class I18NServiceImpl implements II18NService {
 			return i18nDao.getAll();
 		}
 	}
-
 
 	@Override
 	public void save(I18N item) {

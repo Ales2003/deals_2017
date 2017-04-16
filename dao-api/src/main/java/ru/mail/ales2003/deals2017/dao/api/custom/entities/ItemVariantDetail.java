@@ -5,7 +5,7 @@ import ru.mail.ales2003.deals2017.datamodel.Measure;
 
 public class ItemVariantDetail {
 
-	private Integer id;
+	private Integer itemVariantId;
 
 	private Attribute attributeName;
 
@@ -13,12 +13,12 @@ public class ItemVariantDetail {
 
 	private Measure attributeMeasure;
 
-	public Integer getId() {
-		return id;
+	public Integer getItemVariantId() {
+		return itemVariantId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setItemVariantId(Integer itemVariantId) {
+		this.itemVariantId = itemVariantId;
 	}
 
 	public Attribute getAttributeName() {
@@ -47,8 +47,8 @@ public class ItemVariantDetail {
 
 	@Override
 	public String toString() {
-		return "ItemVariantDetail [id=" + id + ", attributeName=" + attributeName + ", attributeValue=" + attributeValue
-				+ ", attributeMeasure=" + attributeMeasure + "]";
+		return "ItemVariantDetail [itemVariantId=" + itemVariantId + ", attributeName=" + attributeName
+				+ ", attributeValue=" + attributeValue + ", attributeMeasure=" + attributeMeasure + "]";
 	}
 
 }

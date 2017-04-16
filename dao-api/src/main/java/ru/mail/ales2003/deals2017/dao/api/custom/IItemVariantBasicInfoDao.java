@@ -18,11 +18,11 @@ public interface IItemVariantBasicInfoDao {
 	 * @return - The method returns a basic inform about items variant: id of
 	 *         items variant, items name, items description, price of items variant. 
 	 */
-	ItemVariantBasicInfo getItemVariantWithBasicInfo(Integer itemVariantId);
+	ItemVariantBasicInfo getBasicInfo(Integer itemVariantId);
 
 	/**
 	 * @return - The method returns a list of the basic inform about each item.
 	 */
-	List<ItemVariantBasicInfo> getItemVariantsWithBasicInfo();
+	List<ItemVariantBasicInfo> getAllBasicInfo();
 
 }
