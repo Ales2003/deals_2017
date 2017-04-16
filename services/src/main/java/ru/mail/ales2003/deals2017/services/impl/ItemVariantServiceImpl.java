@@ -15,6 +15,7 @@ import ru.mail.ales2003.deals2017.dao.api.custom.IItemVariantDetailDao;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantSpecification;
+import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
 import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
@@ -194,24 +195,25 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 			LOGGER.error("Error: itemVariant with id = {} don't exist in storage", itemVariantId);
 			return null;
 		} else {
-			LOGGER.info("Read itemVariant with id = {} with basic info: {}", itemVariantId, basicInfoDao.getBasicInfo(itemVariantId).toString());
+			LOGGER.info("Read itemVariant with id = {} with basic info: {}", itemVariantId,
+					basicInfoDao.getBasicInfo(itemVariantId).toString());
 			ItemVariantBasicInfo basicInfo = basicInfoDao.getBasicInfo(itemVariantId);
 			return basicInfo;
 		}
 	}
 
 	@Override
-	public List<ItemVariantBasicInfo> getAllBasicInfo() {
-		if (basicInfoDao.getAllBasicInfo() == null) {
+	public List<ItemVariantBasicInfo> getBasicInfoForEach() {
+		if (basicInfoDao.getBasicInfoForEach() == null) {
 			LOGGER.error("Error: all itemVariants don't exist in storage");
 			return null;
 		} else {
 			LOGGER.info("Read all itemVariants with basic info:");
 
-			for (ItemVariantBasicInfo bI : basicInfoDao.getAllBasicInfo()) {
+			for (ItemVariantBasicInfo bI : basicInfoDao.getBasicInfoForEach()) {
 				LOGGER.info("itemVariantBasicInfo = {}", bI.toString());
 			}
-			return basicInfoDao.getAllBasicInfo();
+			return basicInfoDao.getBasicInfoForEach();
 		}
 	}
 
@@ -245,6 +247,20 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 				LOGGER.info("detail = {}", vD.toString());
 			}
 			return specification;
+		}
+	}
+
+	@Override
+	public List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter) {
+		if (basicInfoDao.getFilteredBasicInfo(filter) == null) {
+			LOGGER.error("Error: filteredItemVariant with such parameters is missing in the store. Parameters= {}", filter);
+			return null;
+		} else {
+			LOGGER.info("Read filteredItemVariant with filter: {}", filter);
+			for (ItemVariantBasicInfo bI : basicInfoDao.getFilteredBasicInfo(filter)) {
+				LOGGER.info("filteredItemVariantBasicInfo = {}", bI.toString());
+			}
+			return basicInfoDao.getFilteredBasicInfo(filter);
 		}
 	}
 }

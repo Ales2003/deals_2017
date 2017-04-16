@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantSpecification;
+import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
 import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
@@ -43,11 +44,18 @@ public interface IItemVariantService {
 
 	// Methods for reading with an improved result
 
+	// returns basic info for one item variant
 	ItemVariantBasicInfo getBasicInfo(Integer itemVariantId);
-	
-	List<ItemVariantBasicInfo> getAllBasicInfo();
 
+	// returns list basic info for each item variant
+	List<ItemVariantBasicInfo> getBasicInfoForEach();
+
+	// returns details for one item variant
 	List<ItemVariantDetail> getDetails(Integer itemVariantId);
-	
+
+	// returns basic info + details for one item variant
 	ItemVariantSpecification getSpecification(Integer itemVariantId);
+
+	// returns basic info with filtering by basic parameters
+	List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter);
 }
