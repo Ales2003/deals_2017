@@ -48,6 +48,30 @@ public class ItemVariantBasicInfoDaoImpl implements IItemVariantBasicInfoDao {
 			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(READ_BY_ID_SQL,
 					new ItemVariantBasicInfoMapper());
 			return basicInfos;
+<<<<<<< HEAD
+=======
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: all item variants don't exist in storage)", e);
+			return null;
+		}
+	}
+
+	@Override
+	public List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter) {
+		IItemVariantFilter givenFilter = new ItemVariantBasicInfoFilter();
+		givenFilter = filter;
+		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
+		Object [] paramsArray = givenFilter.getQueryParamsArray();
+		
+		try {
+			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
+					new ItemVariantBasicInfoMapper());
+			if (basicInfos.size()==0){
+				LOGGER.error("Error: all item 22variants don't exist in storage)");
+				throw new EmptyResultDataAccessException(0);
+			}
+						return basicInfos;
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("Error: all item variants don't exist in storage)", e);
 			return null;

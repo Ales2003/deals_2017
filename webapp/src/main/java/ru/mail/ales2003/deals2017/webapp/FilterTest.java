@@ -20,7 +20,11 @@ public class FilterTest {
 		ItemVariantBasicInfoFilter filter = new ItemVariantBasicInfoFilter();
 		String itemVariantDescription = "good";  
 		String itemVariantName = "Table";
+<<<<<<< HEAD
 		BigDecimal itemVariantPrice = new BigDecimal("105.00");
+=======
+		BigDecimal itemVariantPrice = new BigDecimal("102.54");
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 		
 		PaginationParams paginationParams = new PaginationParams();
 		
@@ -32,12 +36,17 @@ public class FilterTest {
 		filter.setPaginationParams(paginationParams);
 		filter.setSortingParams(sortingParams);
 		filter.filterInitialize();
+<<<<<<< HEAD
 
 		System.out.println("filter:" + filter);
 		List<ItemVariantBasicInfo> listAll = service.getBasicInfoForEach();
 		for (ItemVariantBasicInfo itemVariantBasicInfo : listAll) {
 			System.out.println(  itemVariantBasicInfo);
 		}
+=======
+//		LOGGER.info("!!!!!!!!!!!!!!!!!!!!!!!!!!==============filter: {}",filter);
+		System.out.println("filter:" + filter);
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 		List<ItemVariantBasicInfo> list = service.getFilteredBasicInfo(filter);
 		if (list == null){
 			System.out.println("EMPTY");

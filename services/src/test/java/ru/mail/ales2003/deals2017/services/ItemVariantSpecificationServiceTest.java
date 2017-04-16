@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +161,11 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	 * Test for the getting an object. Given object from Db is checked for the
 	 * existence and filling of fields.
 	 */
+<<<<<<< HEAD
 	// @Ignore
+=======
+	@Ignore
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 	@Test
 	public void getBasicInfoTest() {
 		LOGGER.debug("Start getBasicInfoTest method");
@@ -179,7 +184,11 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	 * Test for the getting of several objects, for each are checked for the
 	 * existence and filling of fields
 	 */
+<<<<<<< HEAD
 	// @Ignore
+=======
+	@Ignore
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 	@Test
 	public void getAllBasicInfoTest() {
 		LOGGER.debug("Start getAllBasicInfoTest method");
@@ -194,8 +203,12 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		}
 		LOGGER.debug("Finish  getAllBasicInfoTest method");
 	}
+<<<<<<< HEAD
 
 	// @Ignore
+=======
+	@Ignore
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 	@Test
 	public void getDetailsTest() {
 		LOGGER.debug("Start getDetailsTest method");
@@ -211,8 +224,12 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		}
 		LOGGER.debug("Finish  getDetailsTest method");
 	}
+<<<<<<< HEAD
 
 	// @Ignore
+=======
+	@Ignore
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 	@Test
 	public void getSpecificationTest() {
 		LOGGER.debug("Start getSpecificationTest method");
@@ -235,6 +252,7 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	public void getFilteredBasicInfoTest() {
 		LOGGER.debug("Start getFilteredBasicInfoTest method");
 		ItemVariantBasicInfoFilter filter = new ItemVariantBasicInfoFilter();
+<<<<<<< HEAD
 		String itemVariantDescription = itemFromDb.getDescription();
 		String itemVariantName = itemFromDb.getName();
 		BigDecimal itemVariantPrice = itemVariant_1FromDb.getVariantPrice();
@@ -243,16 +261,35 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 
 		SortingParams sortingParams = new SortingParams();
 
+=======
+		String itemVariantDescription = itemFromDb.getDescription();  
+		String itemVariantName = itemFromDb.getName();
+		BigDecimal itemVariantPrice = itemVariant_1FromDb.getVariantPrice();
+		
+		PaginationParams paginationParams = new PaginationParams();
+		
+		
+		SortingParams sortingParams =new SortingParams();
+		
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 		filter.setItemVariantDescription(itemVariantDescription);
 		filter.setItemVariantName(itemVariantName);
 		filter.setItemVariantPrice(itemVariantPrice);
 		filter.setPaginationParams(paginationParams);
 		filter.setSortingParams(sortingParams);
+<<<<<<< HEAD
 
 		filter.filterInitialize();
 
 		List<ItemVariantBasicInfo> i = itemVariantService.getFilteredBasicInfo(filter);
 
+=======
+		
+		filter.filterInitialize();
+	
+		List<ItemVariantBasicInfo> i  = itemVariantService.getFilteredBasicInfo(filter);
+		
+>>>>>>> e37b0e8d462f17858915525dfdb2336e91521f74
 		itemVariantService.getBasicInfoForEach();
 		LOGGER.debug("Finish  getFilteredBasicInfoTest method");
 	}
