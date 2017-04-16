@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.custom.IItemVariantBasicInfoDao;
 import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
+import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
+import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantBasicInfoFilter;
 import ru.mail.ales2003.deals2017.dao.db.impl.mapper.ItemVariantBasicInfoMapper;
 
 @Repository
@@ -38,28 +40,40 @@ public class ItemVariantBasicInfoDaoImpl implements IItemVariantBasicInfoDao {
 	}
 
 	@Override
-	public List<ItemVariantBasicInfo> getAllBasicInfo() {
+	public List<ItemVariantBasicInfo> getBasicInfoForEach() {
 		final String READ_BY_ID_SQL = "select v.id as id, i.name as name, i.description as description, v.variant_price as price"
 				+ " from item_variant as v left join item as i on i.id=v.item_id";
 
 		try {
-			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(READ_BY_ID_SQL, 
+			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(READ_BY_ID_SQL,
 					new ItemVariantBasicInfoMapper());
-			 return basicInfos;
+			return basicInfos;
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("Error: all item variants don't exist in storage)", e);
 			return null;
 		}
 	}
 
-	/*
-	 * @Override public ItemVariantSpecification getByItemVariant(Integer
-	 * itemVariantId) { try { return
-	 * jdbcTemplate.queryForObject("select * from contract where id = ? ", new
-	 * Object[] { id }, new BeanPropertyRowMapper<Contract>(Contract.class)); }
-	 * catch (EmptyResultDataAccessException e) {
-	 * LOGGER.error("Error: contract with id = " + id +
-	 * " don't exist in storage)", e); return null; } return null;}
-	 */
+	@Override
+	public List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter) {
+		IItemVariantFilter givenFilter = new ItemVariantBasicInfoFilter();
+		givenFilter = filter;
+		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
+		Object[] paramsArray = givenFilter.getQueryParamsArray();
 
+		try {
+			List<ItemVariantBasicInfo> basicInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
+					new ItemVariantBasicInfoMapper());
+			if (basicInfos.size() == 0) {
+				LOGGER.error("Error: all item variants don't exist in storage)");
+				//throw new EmptyResultDataAccessException(1);
+				return null;
+			} else {
+				return basicInfos;
+			}
+		} catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Error: all item variants don't exist in storage)", e);
+			return null;
+		}
+	}
 }
