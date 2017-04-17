@@ -86,7 +86,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Start updateTest method");
 		service.save(type_1);
 		CharacterType modifiedType = service.get(type_1.getId());
-		modifiedType.setName(Measure.MM);
+		modifiedType.setName(Measure.KG);
 		service.save(modifiedType);
 		CharacterType typeFromDb = service.get(modifiedType.getId());
 		Assert.isTrue((type_1.getId().equals(modifiedType.getId())),
