@@ -34,7 +34,9 @@ public class ItemVariantBasicInfoController {
 			IItemVariantFilter basicInfoFilter = new ItemVariantBasicInfoFilter();
 
 			try {
-				basicInfoFilter.setItemVariantName("Table");
+				
+				basicInfoFilter.setItemVariantName(name);
+				basicInfoFilter.filterInitialize();
 			} catch (IllegalArgumentException e) {
 				String msg = String.format("Name [%s] is not supported. Please use one of: %s", name,
 						"Table, Chea, Window, Door");

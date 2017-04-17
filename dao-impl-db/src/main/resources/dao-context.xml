@@ -22,7 +22,8 @@
 	<context:component-scan
 		base-package="ru.mail.ales2003.deals2017.dao.db.impl,
 		ru.mail.ales2003.deals2017.dao.db.impl.custom,
-		ru.mail.ales2003.deals2017.dao.db.impl.mapper" />
+		ru.mail.ales2003.deals2017.dao.db.impl.mapper,
+		ru.mail.ales2003.deals2017.dao.db.filters.impl" />
 
 
 	<!-- adding placeholder for db properties -->
