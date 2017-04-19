@@ -250,7 +250,7 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		filter.setSortingParams(sortingParams);
 
 
-		filter.filterInitialize();
+		//filter.filterInitialize();
 
 		List<ItemVariantBasicInfo> i = itemVariantService.getFilteredBasicInfo(filter);
 

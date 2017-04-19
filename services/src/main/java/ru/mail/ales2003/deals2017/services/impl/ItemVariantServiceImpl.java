@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -253,7 +254,8 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	@Override
 	public List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter) {
 		if (basicInfoDao.getFilteredBasicInfo(filter) == null) {
-			LOGGER.error("Error: filteredItemVariant with such parameters is missing in the store. Parameters= {}", filter);
+			LOGGER.error("Error: filteredItemVariant with such parameters is missing in the store. Parameters= {}",
+					filter);
 			return null;
 		} else {
 			LOGGER.info("Read filteredItemVariant with filter: {}", filter);
@@ -263,4 +265,68 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 			return basicInfoDao.getFilteredBasicInfo(filter);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.mail.ales2003.deals2017.services.IItemVariantService#getSpecification(
+	 * ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter)
+	 */
+	@Override
+	public List<ItemVariantSpecification> getFilteredSpecifications(IItemVariantFilter filter) {
+		List<ItemVariantSpecification> specifications = new ArrayList<>();
+		List<ItemVariantBasicInfo> basicInfos = new ArrayList<>();
+		basicInfos = basicInfoDao.getFilteredBasicInfo(filter);
+		if (basicInfos == null) {
+			LOGGER.error("Error: all filtered item variants don't exist in storage");
+			return null;
+		} else {
+			LOGGER.info("Read all filtered item variants with specifications:");
+			ItemVariantSpecification specification = new ItemVariantSpecification();
+			for (ItemVariantBasicInfo bI : basicInfos) {
+				specification.setInfo(bI);
+				specification.setDetails(detailsDao.getDetails(bI.getItemVariantId()));
+				LOGGER.info("item variant with specifification = {}", specification.toString());
+				specifications.add(specification);
+			}
+			return specifications;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.mail.ales2003.deals2017.services.IItemVariantService#getSpecifications
+	 * ()
+	 */
+	@Override
+	public List<ItemVariantSpecification> getSpecifications() {
+		
+		List<ItemVariantSpecification> specifications = new ArrayList<>();
+		
+		List<ItemVariantBasicInfo> basicInfos = new ArrayList<>();
+		
+		basicInfos = basicInfoDao.getBasicInfoForEach();
+		
+		if (basicInfos == null) {
+			LOGGER.error("Error: all item variants don't exist in storage");
+			return null;
+		
+		} else {
+			LOGGER.info("Read all item variants with specifications:");
+		
+			ItemVariantSpecification specification = new ItemVariantSpecification();
+			for (ItemVariantBasicInfo bI : basicInfos) {
+			
+				specification.setInfo(bI);
+				specification.setDetails(detailsDao.getDetails(bI.getItemVariantId()));
+				LOGGER.info("item variant with specifification = {}", specification.toString());
+				specifications.add(0, specification);;
+			}
+			return specifications;
+		}
+	}
+
 }

@@ -68,7 +68,7 @@ public class CustomerDaoImpl implements ICustomerDao {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<Customer>(Customer.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: customer with id = " + id + " don't exist in storage)", e);
+			LOGGER.error("Error: customer with id = " + id + " don't exist in storage", e);
 			return null;
 		}
 	}

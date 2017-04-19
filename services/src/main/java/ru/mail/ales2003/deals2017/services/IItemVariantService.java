@@ -11,6 +11,10 @@ import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
 import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
+/**
+ * @author admin
+ *
+ */
 public interface IItemVariantService {
 
 	// Item variant entities management and handling
@@ -53,9 +57,29 @@ public interface IItemVariantService {
 	// returns details for one item variant
 	List<ItemVariantDetail> getDetails(Integer itemVariantId);
 
-	// returns basic info + details for one item variant
+	// returns basic info + details = specification for one item variant
 	ItemVariantSpecification getSpecification(Integer itemVariantId);
 
 	// returns basic info with filtering by basic parameters
 	List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter);
+	
+	// returns basic info + details = specification for each item variant
+	
+	
+	
+	/**
+	 * @param filter
+	 * @return basic info with details (specification) for each filtered item variant
+	 */
+	List<ItemVariantSpecification> getFilteredSpecifications(IItemVariantFilter filter);
+
+	
+	
+	/**
+	 * @param filter
+	 * @return basic info with details (specification) for each item variant
+	 */
+	List<ItemVariantSpecification> getSpecifications();
+	
+	
 }

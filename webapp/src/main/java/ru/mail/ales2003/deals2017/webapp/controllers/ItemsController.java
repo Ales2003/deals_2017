@@ -18,7 +18,7 @@ import ru.mail.ales2003.deals2017.webapp.models.ItemModel;
 
 @RestController
 @RequestMapping("/items")
-public class ItemController {
+public class ItemsController {
 
 	@Inject
 	private IItemService itemService;

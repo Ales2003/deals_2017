@@ -34,13 +34,9 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public List<CharacterType> getAll() {
-		if (characterTypeDao.getAll() == null) {
-			LOGGER.error("Error: all characterTypes don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all characterTypes");
-			return characterTypeDao.getAll();
-		}
+		LOGGER.info("[%s]. Store returns [%s] entitys.", CharacterType.class.getSimpleName(),
+				characterTypeDao.getAll().size());
+		return characterTypeDao.getAll();
 	}
 
 	@Override
@@ -68,12 +64,12 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public void delete(Integer id) {
-		if(id==null){
+		if (id == null) {
 			LOGGER.error("Error: as the id was sent a null reference");
 			return;
 		} else {
-		characterTypeDao.delete(id);
-		LOGGER.info("Deleted characterType by id: " + id);
+			characterTypeDao.delete(id);
+			LOGGER.info("Deleted characterType by id: " + id);
 		}
 	}
 }

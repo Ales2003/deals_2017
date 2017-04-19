@@ -61,6 +61,7 @@ public class ItemVariantBasicInfoDaoImpl implements IItemVariantBasicInfoDao {
 	public List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter) {
 		IItemVariantFilter givenFilter = new ItemVariantBasicInfoFilter();
 		givenFilter = filter;
+		givenFilter.filterInitialize();
 		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
 		Object[] paramsArray = givenFilter.getQueryParamsArray();
 

@@ -67,10 +67,12 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			final String READ_ALL_SQL = "select * from character_type";
 			List<CharacterType> characterTypes = jdbcTemplate.query(READ_ALL_SQL,
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
+			LOGGER.debug("[%s]. Store returns [%s] entitys.", CharacterType.class.getSimpleName(), characterTypes.size());
 			return characterTypes;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all сharacterTypes don't exist in storage", e);
-			return null;
+			LOGGER.error("[%s]. Store returns incorrect entity count.", CharacterType.class.getSimpleName());
+			//return null;
+			throw e;
 		}
 	}
 

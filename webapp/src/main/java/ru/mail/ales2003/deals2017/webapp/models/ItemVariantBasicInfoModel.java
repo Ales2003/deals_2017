@@ -1,12 +1,14 @@
 package ru.mail.ales2003.deals2017.webapp.models;
 
+import java.math.BigDecimal;
+
 public class ItemVariantBasicInfoModel {
 
 	private String itemName;
 
 	private String itemDescription;
 
-	private String itemVariantPrice;
+	private BigDecimal itemVariantPrice;
 
 	/**
 	 * @return the itemName
@@ -41,16 +43,17 @@ public class ItemVariantBasicInfoModel {
 	/**
 	 * @return the itemVariantPrice
 	 */
-	public String getItemVariantPrice() {
+	public BigDecimal getItemVariantPrice() {
 		return itemVariantPrice;
 	}
 
 	/**
-	 * @param itemVariantPrice
-	 *            the itemVariantPrice to set
+	 * @param itemVariantPrice the itemVariantPrice to set
 	 */
-	public void setItemVariantPrice(String itemVariantPrice) {
+	public void setItemVariantPrice(BigDecimal itemVariantPrice) {
 		this.itemVariantPrice = itemVariantPrice;
 	}
+
+
 
 }
