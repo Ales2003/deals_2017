@@ -12,7 +12,8 @@
 	<mvc:annotation-driven />
 
 	<context:component-scan
-		base-package="ru.mail.ales2003.deals2017.webapp.controllers" />
+		base-package="ru.mail.ales2003.deals2017.webapp.controllers,
+		ru.mail.ales2003.deals2017.webapp.translate" />
 
 	<!-- <import resource="classpath:services-context.xml" /> -->
 

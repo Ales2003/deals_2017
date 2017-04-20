@@ -34,7 +34,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public List<CharacterType> getAll() {
-		LOGGER.info("[%s]. Store returns [%s] entitys.", CharacterType.class.getSimpleName(),
+		LOGGER.info("{} store returns {} entitys.", CharacterType.class.getSimpleName(),
 				characterTypeDao.getAll().size());
 		return characterTypeDao.getAll();
 	}

@@ -3,8 +3,6 @@ package ru.mail.ales2003.deals2017.webapp.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.PropertyResourceBundle;
 
 import javax.inject.Inject;
 
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
+import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 
 @RestController
 @RequestMapping("/charactertypes")
@@ -29,9 +28,10 @@ public class CharacterTypesController {
 
 	// this variable need to get his value instead hard but dynamically - from a
 	// request header.
-	Locale locale = new Locale("ru_RU");
+	Locale locale = new Locale("en_US");
 
-	PropertyResourceBundle pr = null;
+	@Inject
+	private Translator translator;
 
 	@Inject
 	private ICharacterTypeService service;
@@ -56,6 +56,7 @@ public class CharacterTypesController {
 		for (CharacterType entity : allEntitys) {
 			convertedEntitys.add(entity2model(entity));
 		}
+		//System.out.println(Locale.getDefault());
 		return new ResponseEntity<List<CharacterTypeModel>>(convertedEntitys, HttpStatus.OK);
 	}
 
@@ -68,7 +69,7 @@ public class CharacterTypesController {
 	private CharacterTypeModel entity2model(CharacterType entity) {
 		CharacterTypeModel entityModel = new CharacterTypeModel();
 		entityModel.setId(entity.getId());
-		entityModel.setName(entity.getName() == null ? null : translate(entity.getName().name(), locale));
+		entityModel.setName(entity.getName() == null ? null : translator.translate(entity.getName().name(), locale));
 		return entityModel;
 	}
 
@@ -78,25 +79,20 @@ public class CharacterTypesController {
 	 * @param locale
 	 * @return translated variable
 	 */
-	private String translate(String key, Locale locale) {
-
-		String translated;
-		try {
-			pr = (PropertyResourceBundle) PropertyResourceBundle
-					.getBundle("ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", locale);
-			if (pr == null)
-				throw new MissingResourceException("Property file not found!",
-						"ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
-			translated = pr.getString(key);
-			// Perhaps extra - it works without it - he starts using the key in
-			// the absence of a pair.
-			if (translated == null)
-				throw new MissingResourceException("Key not found!",
-						"ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
-		} catch (MissingResourceException e) {
-			LOGGER.error("{}, className = {}, key = {}.", e.getMessage(), e.getClassName(), e.getKey());
-			return key;
-		}
-		return translated;
-	}
+	/*
+	 * private String translate(String key, Locale locale) {
+	 * PropertyResourceBundle pr = null; String translated; try { pr =
+	 * (PropertyResourceBundle) PropertyResourceBundle .getBundle(
+	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames",
+	 * locale); if (pr == null) throw new
+	 * MissingResourceException("Property file not found!",
+	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
+	 * translated = pr.getString(key); // Perhaps extra - it works without it -
+	 * he starts using the key in // the absence of a pair. if (translated ==
+	 * null) throw new MissingResourceException("Key not found!",
+	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
+	 * } catch (MissingResourceException e) {
+	 * LOGGER.error("{}, className = {}, key = {}.", e.getMessage(),
+	 * e.getClassName(), e.getKey()); return key; } return translated; }
+	 */
 }
