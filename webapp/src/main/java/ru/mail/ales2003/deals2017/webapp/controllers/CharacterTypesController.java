@@ -1,6 +1,7 @@
 package ru.mail.ales2003.deals2017.webapp.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,13 +12,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
+import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
+import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 
 @RestController
@@ -28,7 +33,7 @@ public class CharacterTypesController {
 
 	// this variable need to get his value instead hard but dynamically - from a
 	// request header.
-	Locale locale = new Locale("en_US");
+	Locale locale = new Locale("ru_RU");
 
 	@Inject
 	private Translator translator;
@@ -45,7 +50,7 @@ public class CharacterTypesController {
 		try {
 			allEntitys = service.getAll();
 		} catch (EmptyResultDataAccessException e) {
-			String msg = String.format("[%s]. Store returns incorrect entity count.", CharacterType.class);
+			String msg = String.format("[%s] store returns incorrect entity count.", CharacterType.class);
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if (allEntitys.isEmpty()) {
@@ -56,10 +61,44 @@ public class CharacterTypesController {
 		for (CharacterType entity : allEntitys) {
 			convertedEntitys.add(entity2model(entity));
 		}
-		//System.out.println(Locale.getDefault());
+		// System.out.println(Locale.getDefault());
 		return new ResponseEntity<List<CharacterTypeModel>>(convertedEntitys, HttpStatus.OK);
 	}
 
+	/**
+	 * @param entityIdParam
+	 *            = entity id
+	 * @return CharacterTypeModel entity
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer entityIdParam) {
+		CharacterType entity = service.get(entityIdParam);
+		CharacterTypeModel entityModel = entity2model(entity);
+		return new ResponseEntity<CharacterTypeModel>(entityModel, HttpStatus.OK);
+	}
+
+	/**
+	 * @param entityModel
+	 * @return saved entity
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<?> createEntity(@RequestBody CharacterTypeModel entityModel) {
+		CharacterType entity = null;
+		try {
+			entity = model2entity(entityModel);
+		} catch (Exception e) {
+			String msg = String.format(
+					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
+					entityModel.getName(), MeasureArrayToString());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		service.save(entity);
+		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
+	}
+
+	//TO DO PUT & DELETE
+	
+	
 	/**
 	 * @param entity
 	 *            - the entity of the class CharacterType
@@ -73,6 +112,34 @@ public class CharacterTypesController {
 		return entityModel;
 	}
 
+	/**
+	 * @param entityModel the entity model of the class CharacterType.
+	 * @return the entity of the class CharacterType.
+	 */
+	private CharacterType model2entity(CharacterTypeModel entityModel) {
+		CharacterType entity = new CharacterType();
+		// method toUpperCase() allows you to insert in any register
+
+		entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));
+
+		return entity;
+	}
+
+	/**
+	 * @return  a string representation of the enumsarray from class Measure.  
+	 */
+	private String MeasureArrayToString() {
+		StringBuilder measureToStringBuilder = new StringBuilder("");
+		List<Measure> measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
+		for (Measure m : measures) {
+			measureToStringBuilder.append(""+m+", ");
+		}
+		String result = String.format("%s", measureToStringBuilder);
+		result = result.substring(0, result.length()-2); 
+		return result;
+	}
+
+	// transferred to ru.mail.ales2003.deals2017.webapp.translate
 	/**
 	 * @param name
 	 *            - variable to translate

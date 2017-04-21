@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Translator {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(Translator.class);
 
 	/**

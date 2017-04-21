@@ -54,7 +54,7 @@ public class ItemVariantBasicInfosController {
 			if (allBasicInfos == null) {
 				// maybe to offer all available combinations
 				String msg = String.format(
-						"Item variants with name [%s] and price  [%s] don't exist in store. Please use another combination.",
+						"Item variant with name [%s] and price  [%s] doesn't exist in storage. Please use another combination.",
 						name, price);
 				return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 			}
