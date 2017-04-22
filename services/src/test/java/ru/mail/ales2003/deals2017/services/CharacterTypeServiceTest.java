@@ -147,14 +147,16 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
 	 */
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
 		service.save(type_1);
 		CharacterType typeFromDb = service.get(type_1.getId());
 		deleteFromDb(type_1.getId());
 		Assert.notNull(typeFromDb, "type must be saved");
+		//here it is expected the IllegalArgumentException.
 		Assert.isNull(service.get(type_1.getId()), "type must be deleted");
+		
 		LOGGER.debug("Finish deleteTest method");
 
 	}

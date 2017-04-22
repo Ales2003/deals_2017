@@ -50,14 +50,17 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 
 	@Override
 	public CharacterType get(Integer id) {
+		if (id==null){
+			throw new IllegalArgumentException ("Error: as the id was sent a null reference");
+		}
 		final String READ_BY_ID_SQL = "select * from character_type where id = ? ";
 		try {
 			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: characterType with id = " + id + " don't exist in storage)", e);
-			//throw e;
-			return null;
+			String errMsg = String.format("characterType with id = [%s] don't exist in storage)", id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg, e);
 		}
 	}
 
@@ -67,7 +70,7 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 			final String READ_ALL_SQL = "select * from character_type";
 			List<CharacterType> characterTypes = jdbcTemplate.query(READ_ALL_SQL,
 					new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
-			LOGGER.debug("[%s]. Store returns [%s] entitys.", CharacterType.class.getSimpleName(), characterTypes.size());
+			LOGGER.debug("[{}]. Store returns [{}] entitys.", CharacterType.class.getSimpleName(), characterTypes.size());
 			return characterTypes;
 		} catch (EmptyResultDataAccessException e) {
 			LOGGER.error("[%s]. Store returns incorrect entity count.", CharacterType.class.getSimpleName());

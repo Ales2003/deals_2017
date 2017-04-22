@@ -25,6 +25,10 @@ import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 
+/**
+ * @author admin
+ *
+ */
 @RestController
 @RequestMapping("/charactertypes")
 public class CharacterTypesController {
@@ -33,7 +37,7 @@ public class CharacterTypesController {
 
 	// this variable need to get his value instead hard but dynamically - from a
 	// request header.
-	Locale locale = new Locale("ru_RU");
+	private Locale locale = new Locale("ru_RU");
 
 	@Inject
 	private Translator translator;
@@ -72,17 +76,24 @@ public class CharacterTypesController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer entityIdParam) {
-		CharacterType entity = service.get(entityIdParam);
+		CharacterType entity = null;
+		try {
+			entity = service.get(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 		CharacterTypeModel entityModel = entity2model(entity);
 		return new ResponseEntity<CharacterTypeModel>(entityModel, HttpStatus.OK);
 	}
 
 	/**
 	 * @param entityModel
-	 * @return saved entity
+	 * @return saved entity. The method only worries about the name and ignores
+	 *         Id: method can't update - only it can create.
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> createEntity(@RequestBody CharacterTypeModel entityModel) {
+	public ResponseEntity<?> create(@RequestBody CharacterTypeModel entityModel) {
 		CharacterType entity = null;
 		try {
 			entity = model2entity(entityModel);
@@ -96,9 +107,38 @@ public class CharacterTypesController {
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
 	}
 
-	//TO DO PUT & DELETE
-	
-	
+	/**
+	 * @param entityModel
+	 * @param entityIdParam
+	 * @return id saved in Db CharacterType entity.
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> update(@RequestBody CharacterTypeModel entityModel,
+			@PathVariable(value = "id") Integer entityIdParam) {
+		CharacterType entity = service.get(entityIdParam);
+		try {
+			// method toUpperCase() allows to insert in any register
+			entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));
+		} catch (Exception e) {
+			String msg = String.format(
+					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
+					entityModel.getName(), MeasureArrayToString());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		service.save(entity);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	/**
+	 * @param entityIdParam
+	 * @return IdModel of deleted entity.
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> delete(@PathVariable(value = "id") Integer entityIdParam) {
+		service.delete(entityIdParam);
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
 	/**
 	 * @param entity
 	 *            - the entity of the class CharacterType
@@ -113,29 +153,28 @@ public class CharacterTypesController {
 	}
 
 	/**
-	 * @param entityModel the entity model of the class CharacterType.
+	 * @param entityModel
+	 *            the entity model of the class CharacterType.
 	 * @return the entity of the class CharacterType.
 	 */
 	private CharacterType model2entity(CharacterTypeModel entityModel) {
 		CharacterType entity = new CharacterType();
-		// method toUpperCase() allows you to insert in any register
-
+		// method toUpperCase() allows to insert in any register
 		entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));
-
 		return entity;
 	}
 
 	/**
-	 * @return  a string representation of the enumsarray from class Measure.  
+	 * @return a string representation of the enumsarray from class Measure.
 	 */
 	private String MeasureArrayToString() {
 		StringBuilder measureToStringBuilder = new StringBuilder("");
 		List<Measure> measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
 		for (Measure m : measures) {
-			measureToStringBuilder.append(""+m+", ");
+			measureToStringBuilder.append("" + m + ", ");
 		}
 		String result = String.format("%s", measureToStringBuilder);
-		result = result.substring(0, result.length()-2); 
+		result = result.substring(0, result.length() - 2);
 		return result;
 	}
 

@@ -23,8 +23,9 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	@Override
 	public CharacterType get(Integer id) {
 		if (characterTypeDao.get(id) == null) {
-			LOGGER.error("Error: characterType with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("characterType with id = [%s] don't exist in storage)", id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException (errMsg);
 		} else {
 			CharacterType entity = characterTypeDao.get(id);
 			LOGGER.info("Read one characterType: id={}, name={}", entity.getId(), entity.getName());
