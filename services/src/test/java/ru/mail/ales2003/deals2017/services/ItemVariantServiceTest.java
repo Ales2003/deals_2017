@@ -28,8 +28,8 @@ public class ItemVariantServiceTest extends AbstractTest {
 
 	private ItemVariant instance_1;
 	private ItemVariant instance_2;
-	private ItemVariant instance_1FromDb;
-	private ItemVariant instance_2FromDb;
+	private ItemVariant instanceFromDb_1;
+	private ItemVariant instanceFromDb_2;
 	private ItemVariant modifiedInstance;
 
 	private Item item;
@@ -78,20 +78,20 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 */
 	@Test
 	public void insertItemVariantTest() {
-		LOGGER.debug("Start insertTest method");
+		LOGGER.debug("Start insertItemVariantTest method");
 		service.saveItemVariant(instance_1);
-		instance_1FromDb = service.getItemVariant(instance_1.getId());
+		instanceFromDb_1 = service.getItemVariant(instance_1.getId());
 
-		Assert.notNull(instance_1FromDb, "instance must be saved");
+		Assert.notNull(instanceFromDb_1, "instance must be saved");
 
-		Assert.isTrue((instance_1FromDb.getItemId() != null) && (instance_1FromDb.getVariantPrice() != null),
+		Assert.isTrue((instanceFromDb_1.getItemId() != null) && (instanceFromDb_1.getVariantPrice() != null),
 				"columns values must not by empty");
 
 		Assert.isTrue(
-				instance_1FromDb.getItemId().equals(instance_1.getItemId())
-						&& instance_1FromDb.getVariantPrice().equals(instance_1.getVariantPrice()),
+				instanceFromDb_1.getItemId().equals(instance_1.getItemId())
+						&& instanceFromDb_1.getVariantPrice().equals(instance_1.getVariantPrice()),
 				"values of the corresponding columns must by eq.");
-		LOGGER.debug("Finish insertTest method");
+		LOGGER.debug("Finish insertItemVariantTest method");
 	}
 
 	/*
@@ -102,32 +102,32 @@ public class ItemVariantServiceTest extends AbstractTest {
 	@Test
 	public void insertItemVariantMultipleTest() {
 
-		LOGGER.debug("Start insertMultipleTest method");
+		LOGGER.debug("Start insertItemVariantMultipleTest method");
 
 		service.saveItemVariantMultiple(instance_1, instance_2);
-		instance_1FromDb = service.getItemVariant(instance_1.getId());
-		instance_2FromDb = service.getItemVariant(instance_2.getId());
+		instanceFromDb_1 = service.getItemVariant(instance_1.getId());
+		instanceFromDb_2 = service.getItemVariant(instance_2.getId());
 
-		Assert.notNull(instance_1FromDb, "instance_1 must be saved");
-		Assert.notNull(instance_2FromDb, "instance_2 must be saved");
+		Assert.notNull(instanceFromDb_1, "instance_1 must be saved");
+		Assert.notNull(instanceFromDb_2, "instance_2 must be saved");
 
-		Assert.isTrue(instance_1FromDb.getItemId() != null && instance_1FromDb.getVariantPrice() != null,
+		Assert.isTrue(instanceFromDb_1.getItemId() != null && instanceFromDb_1.getVariantPrice() != null,
 				"columns must not by empty");
 
-		Assert.isTrue(instance_2FromDb.getItemId() != null && instance_2FromDb.getVariantPrice() != null,
+		Assert.isTrue(instanceFromDb_2.getItemId() != null && instanceFromDb_2.getVariantPrice() != null,
 				"columns must not by empty");
 
 		Assert.isTrue(
-				instance_1FromDb.getItemId().equals(instance_1.getItemId())
-						&& instance_1FromDb.getVariantPrice().equals(instance_1.getVariantPrice()),
+				instanceFromDb_1.getItemId().equals(instance_1.getItemId())
+						&& instanceFromDb_1.getVariantPrice().equals(instance_1.getVariantPrice()),
 				"values of the corresponding columns must by eq.");
 
 		Assert.isTrue(
-				instance_2FromDb.getItemId().equals(instance_2.getItemId())
-						&& instance_2FromDb.getVariantPrice().equals(instance_2.getVariantPrice()),
+				instanceFromDb_2.getItemId().equals(instance_2.getItemId())
+						&& instanceFromDb_2.getVariantPrice().equals(instance_2.getVariantPrice()),
 				"values of the corresponding columns must by eq.");
 
-		LOGGER.debug("Finish  insertMultipleTest method");
+		LOGGER.debug("Finish  insertItemVariantMultipleTest method");
 	}
 
 	/*
@@ -136,7 +136,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 */
 	@Test
 	public void updateItemVariantTest() {
-		LOGGER.debug("Start updateTest method");
+		LOGGER.debug("Start updateItemVariantTest method");
 		service.saveItemVariant(instance_1);
 
 		modifiedInstance = service.getItemVariant(instance_1.getId());
@@ -144,7 +144,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 
 		service.saveItemVariant(modifiedInstance);
 
-		instance_1FromDb = service.getItemVariant(modifiedInstance.getId());
+		instanceFromDb_1 = service.getItemVariant(modifiedInstance.getId());
 
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
@@ -152,13 +152,13 @@ public class ItemVariantServiceTest extends AbstractTest {
 		Assert.isTrue(!(instance_1.getVariantPrice().equals(modifiedInstance.getVariantPrice())),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
 
-		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),
+		Assert.isTrue((instanceFromDb_1.getId().equals(modifiedInstance.getId())),
 				"id of instance from Db must by eq. to id of  modified instances");
 
-		Assert.isTrue(instance_1FromDb.getVariantPrice().equals(modifiedInstance.getVariantPrice()),
+		Assert.isTrue(instanceFromDb_1.getVariantPrice().equals(modifiedInstance.getVariantPrice()),
 				"values of the corresponding columns of instance from Db and modified instances must by eq.");
 
-		LOGGER.debug("Finish  updateTest method");
+		LOGGER.debug("Finish  updateItemVariantTest method");
 	}
 
 	/*
@@ -167,21 +167,21 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 */
 	@Test
 	public void getItemVariantTest() {
-		LOGGER.debug("Start getTest method");
+		LOGGER.debug("Start getItemVariantTest method");
 		service.saveItemVariant(instance_1);
-		instance_1FromDb = service.getItemVariant(instance_1.getId());
+		instanceFromDb_1 = service.getItemVariant(instance_1.getId());
 
-		Assert.notNull(instance_1FromDb, "instance must be saved");
+		Assert.notNull(instanceFromDb_1, "instance must be saved");
 
-		Assert.isTrue((instance_1FromDb.getItemId() != null) && (instance_1FromDb.getVariantPrice() != null),
+		Assert.isTrue((instanceFromDb_1.getItemId() != null) && (instanceFromDb_1.getVariantPrice() != null),
 				"columns values must not by empty");
 
 		Assert.isTrue(
-				instance_1FromDb.getItemId().equals(instance_1.getItemId())
-						&& instance_1FromDb.getVariantPrice().equals(instance_1.getVariantPrice()),
+				instanceFromDb_1.getItemId().equals(instance_1.getItemId())
+						&& instanceFromDb_1.getVariantPrice().equals(instance_1.getVariantPrice()),
 				"values of the corresponding columns must by eq.");
 
-		LOGGER.debug("Finish  getTest method");
+		LOGGER.debug("Finish  getItemVariantTest method");
 	}
 
 	/*
@@ -191,7 +191,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 */
 	@Test
 	public void getAllItemVariantTest() {
-		LOGGER.debug("Start getAllTest method");
+		LOGGER.debug("Start getAllItemVariantTest method");
 		List<ItemVariant> instances = new ArrayList<>();
 		instances.add(instance_1);
 		instances.add(instance_2);
@@ -210,7 +210,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 							&& instances.get(i).getVariantPrice().equals(instancesFromDb.get(i).getVariantPrice()),
 					"column's values of every instance from Db must by eq. to appropriate prepared instance's column's values");
 		}
-		LOGGER.debug("Finish getAllTest method");
+		LOGGER.debug("Finish getAllItemVariantTest method");
 	}
 
 	/*
@@ -219,19 +219,19 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void deleteItemVariantTest() {
-		LOGGER.debug("Start deleteTest method");
+		LOGGER.debug("Start deleteItemVariantTest method");
 		service.saveItemVariant(instance_1);
-		instance_1FromDb = service.getItemVariant(instance_1.getId());
+		instanceFromDb_1 = service.getItemVariant(instance_1.getId());
 		deleteFromDb(instance_1.getId());
-		Assert.notNull(instance_1FromDb, "instance must be saved");
+		Assert.notNull(instanceFromDb_1, "instance must be saved");
 		Assert.isNull(service.getItemVariant(instance_1.getId()), "instance must be deleted");
-		LOGGER.debug("Finish deleteTest method");
+		LOGGER.debug("Finish deleteItemVariantTest method");
 	}
 
 	// =============To do tests for attributDao===============
 
 	/*
-	 * method creates a new instance & gives it args
+	 * method creates a new ItemVariant instance & gives it args
 	 */
 	private ItemVariant getInstance(Integer itemId, BigDecimal variantPrice) {
 		ItemVariant instance = new ItemVariant();

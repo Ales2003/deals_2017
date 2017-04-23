@@ -117,9 +117,9 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		attribute_4.setValue("220");
 		attribute_4.setCharacterTypeId(measureFromDb.getId());
 
-		itemVariantService.saveMultipleCharacterTypeInItemVariant(attribute_1, attribute_2, attribute_3, attribute_4);
+		itemVariantService.saveAttributeMultiple(attribute_1, attribute_2, attribute_3, attribute_4);
 
-		for (CharacterTypeInItemVariant entity : itemVariantService.getAllCharacterTypeInItemVariant()) {
+		for (CharacterTypeInItemVariant entity : itemVariantService.getAllAttributes()) {
 			LOGGER.debug("CharacterTypeInItemVariant was created with id={}", entity.getId());
 		}
 
@@ -131,8 +131,8 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		LOGGER.debug("Start completion of the method");
 
 		LOGGER.debug("Start deleting entities of CharacterTypeInItemVariant from Db");
-		for (CharacterTypeInItemVariant cTIIV : itemVariantService.getAllCharacterTypeInItemVariant()) {
-			itemVariantService.deleteCharacterTypeInItemVariant(cTIIV.getId());
+		for (CharacterTypeInItemVariant cTIIV : itemVariantService.getAllAttributes()) {
+			itemVariantService.deleteAttribute(cTIIV.getId());
 		}
 		LOGGER.debug("Entities of CharacterTypeInItemVariant were deleted from Db ");
 

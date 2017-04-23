@@ -26,7 +26,7 @@ public interface IItemVariantService {
 	ItemVariant getItemVariant(Integer itemVariantId);
 
 	/**
-	 * @return List&ltharacterType&gt itemVariants
+	 * @return List&ltCharacterType&gt itemVariants
 	 */
 	List<ItemVariant> getAllItemVariants();
 
@@ -49,20 +49,35 @@ public interface IItemVariantService {
 	@Transactional
 	void deleteItemVariant(Integer itemVariantId);
 
-	// ===========================Attributes management and handling in an item
-	// variant
+	// ==================Attributes management and handling in an item variant
 
-	CharacterTypeInItemVariant getCharacterTypeInItemVariant(Integer id);
+	/**
+	 * @param id
+	 * @return CharacterTypeInItemVariant entity
+	 */
+	CharacterTypeInItemVariant getAttribute(Integer id);
 
-	public List<CharacterTypeInItemVariant> getAllCharacterTypeInItemVariant();
+	/**
+	 * @return List&ltCharacterTypeInItemVariant&gt entitys
+	 */
+	public List<CharacterTypeInItemVariant> getAllAttributes();
 
+	/**
+	 * @param attribute
+	 */
 	@Transactional
-	void saveCharacterTypeInItemVariant(CharacterTypeInItemVariant attribute);
+	void saveAttribute(CharacterTypeInItemVariant attribute);
 
+	/**
+	 * @param attributeArray
+	 */
 	@Transactional
-	void saveMultipleCharacterTypeInItemVariant(CharacterTypeInItemVariant... attributeArray);
+	void saveAttributeMultiple(CharacterTypeInItemVariant... attributeArray);
 
-	public void deleteCharacterTypeInItemVariant(Integer id);
+	/**
+	 * @param id
+	 */
+	public void deleteAttribute(Integer id);
 
 	// ===========================Methods for reading with an improved result
 

@@ -38,27 +38,29 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	@Inject
 	public IItemVariantDetailDao detailsDao;
 
-	private String className = ItemVariant.class.getSimpleName();
+	private String itemVariantClassName = ItemVariant.class.getSimpleName();
+
+	private String attributeClassName = CharacterTypeInItemVariant.class.getSimpleName();
 
 	// ============================ItemVariant management and handling
+
 	// =============READING AREA===============
 	@Override
 	public ItemVariant getItemVariant(Integer id) {
 		if (itemVariantDao.get(id) == null) {
-			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", itemVariantClassName, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
 			ItemVariant entity = itemVariantDao.get(id);
-			LOGGER.info("Read one {}: id={}, itemId={}, variantPrice={}", className, entity.getId(), entity.getItemId(),
-					entity.getVariantPrice());
+			LOGGER.info("Read one {}: {}", itemVariantClassName, entity.toString());
 			return entity;
 		}
 	}
 
 	@Override
 	public List<ItemVariant> getAllItemVariants() {
-		LOGGER.info("{} storage returns {} entitys: ", className, itemVariantDao.getAll().size());
+		LOGGER.info("{} storage returns {} entitys: ", itemVariantClassName, itemVariantDao.getAll().size());
 		LOGGER.info("Read all itemVariants:");
 		for (ItemVariant iv : itemVariantDao.getAll()) {
 			LOGGER.info("itemVariant = {}", iv.toString());
@@ -70,26 +72,24 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	@Override
 	public void saveItemVariant(ItemVariant entity) {
 		if (entity == null) {
-			LOGGER.error("Error: as the {} was sent a null reference", className);
+			LOGGER.error("Error: as the {} was sent a null reference", itemVariantClassName);
 			return;
 		} else if (entity.getId() == null) {
 			itemVariantDao.insert(entity);
-			LOGGER.info("Inserted new {}: id={}, itemId={}, variantPrice={}", className, entity.getId(),
-					entity.getItemId(), entity.getVariantPrice());
+			LOGGER.info("Inserted new {}: {}", itemVariantClassName, entity.toString());
 		} else {
 			itemVariantDao.update(entity);
-			LOGGER.info("Updated {}: id={}, itemId={}, variantPrice={}", className, entity.getId(), entity.getItemId(),
-					entity.getVariantPrice());
+			LOGGER.info("Updated {}: {}", itemVariantClassName, entity.toString());
 		}
 	}
 
 	@Override
 	public void saveItemVariantMultiple(ItemVariant... entityArray) {
 		for (ItemVariant entity : entityArray) {
-			LOGGER.debug("Inserted new {} from array: {}", className, entity.toString());
+			LOGGER.debug("Inserted new {} from array: {}", itemVariantClassName, entity.toString());
 			saveItemVariant(entity);
 		}
-		LOGGER.info("Inserted {}s from array", className);
+		LOGGER.info("Inserted {}s from array", itemVariantClassName);
 	}
 
 	// =============DELETE AREA===============
@@ -100,7 +100,7 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 			return;
 		} else {
 			itemVariantDao.delete(id);
-			LOGGER.info("Deleted {} by id: {}", className, id);
+			LOGGER.info("Deleted {} by id: {}", itemVariantClassName, id);
 		}
 
 	}
@@ -110,29 +110,26 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	// =============READING AREA===============
 
 	@Override
-	public CharacterTypeInItemVariant getCharacterTypeInItemVariant(Integer id) {
+	public CharacterTypeInItemVariant getAttribute(Integer id) {
 		if (attributeDao.get(id) == null) {
-			LOGGER.error("Error: characterTypeInItemVariant with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", attributeClassName, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
 			CharacterTypeInItemVariant attribute = attributeDao.get(id);
-			LOGGER.info(
-					"Read one characterTypeInItemVariant: id={}, itemVariantId={}, attribute={}, value ={}, characterTypeId={}",
-					attribute.getId(), attribute.getItemVariantId(), attribute.getAttribute(), attribute.getValue(),
-					attribute.getCharacterTypeId());
+			LOGGER.info("Read one {}: {}", attributeClassName, attribute.toString());
 			return attribute;
 		}
 	}
 
 	@Override
-	public List<CharacterTypeInItemVariant> getAllCharacterTypeInItemVariant() {
-		if (attributeDao.getAll() == null) {
-			LOGGER.error("Error: all characterTypeInItemVariant don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all characterTypeInItemVariant");
-			return attributeDao.getAll();
+	public List<CharacterTypeInItemVariant> getAllAttributes() {
+		LOGGER.info("{} storage returns {} entitys.", attributeClassName, attributeDao.getAll().size());
+		LOGGER.info("Read all attributes:");
+		for (CharacterTypeInItemVariant a : attributeDao.getAll()) {
+			LOGGER.info("attribute = {}", a.toString());
 		}
+		return attributeDao.getAll();
 	}
 
 	// =============CREATION AREA===============
@@ -142,23 +139,17 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	 * Dao and classes from Datamodel
 	 */
 	@Override
-	public void saveCharacterTypeInItemVariant(CharacterTypeInItemVariant attribute) {
+	public void saveAttribute(CharacterTypeInItemVariant attribute) {
 
 		if (attribute == null) {
-			LOGGER.error("Error: as the item was sent a null reference");
+			LOGGER.error("Error: as the {} was sent a null reference", attributeClassName);
 			return;
 		} else if (attribute.getId() == null) {
 			attributeDao.insert(attribute);
-			LOGGER.info(
-					"Inserted new characterTypeInItemVariant: id={}, itemVariantId={}, attribute={}, characterTypeId={}, value={}",
-					attribute.getId(), attribute.getItemVariantId(), attribute.getAttribute(),
-					attribute.getCharacterTypeId(), attribute.getValue());
+			LOGGER.info("Inserted new {}: {}", attributeClassName, attribute.toString());
 		} else {
 			attributeDao.update(attribute);
-			LOGGER.info(
-					"Updated characterTypeInItemVariant: id={}, itemVariantId={}, attribute={}, characterTypeId={}, value={}",
-					attribute.getId(), attribute.getItemVariantId(), attribute.getAttribute(),
-					attribute.getCharacterTypeId(), attribute.getValue());
+			LOGGER.info("Updated {}: {}", attributeClassName, attribute.toString());
 		}
 	}
 
@@ -167,27 +158,28 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	 * ready Dao and classes from Datamodel
 	 */
 	@Override
-	public void saveMultipleCharacterTypeInItemVariant(CharacterTypeInItemVariant... attributeArray) {
+	public void saveAttributeMultiple(CharacterTypeInItemVariant... attributeArray) {
 		for (CharacterTypeInItemVariant attribute : attributeArray) {
-			LOGGER.debug("Inserted new characterTypeInItemVariant from array: " + attribute);
-			saveCharacterTypeInItemVariant(attribute);
+			LOGGER.info("Inserted new {} from array: {}", attributeClassName, attribute.toString());
+			saveAttribute(attribute);
 		}
-		LOGGER.info("Inserted characterTypeInItemVariant from array");
+		LOGGER.info("Inserted {}s from array", attributeClassName);
 	}
 
 	// =============DELETE AREA===============
 	@Override
-	public void deleteCharacterTypeInItemVariant(Integer id) {
+	public void deleteAttribute(Integer id) {
 		if (id == null) {
 			LOGGER.error("Error: as the id was sent a null reference");
 			return;
 		} else {
 			attributeDao.delete(id);
-			LOGGER.info("Deleted characterTypeInItemVariant by id: " + id);
+			LOGGER.info("Deleted {} by id: {}", attributeClassName, id);
 		}
 	}
 
 	// ========================== CUSTOM CLASSES management and handling
+
 	// =============READING AREA BASED CUSTOM CLASSES ===============
 	@Override
 	public ItemVariantBasicInfo getBasicInfo(Integer itemVariantId) {

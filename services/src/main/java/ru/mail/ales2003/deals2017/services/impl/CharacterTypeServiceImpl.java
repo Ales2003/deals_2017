@@ -30,7 +30,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			throw new IllegalArgumentException(errMsg);
 		} else {
 			CharacterType entity = characterTypeDao.get(id);
-			LOGGER.info("Read one {}: id={}, name={}", className, entity.getId(), entity.getName());
+			LOGGER.info("Read one {}: {}", className, entity.toString());
 			return entity;
 		}
 	}
@@ -52,10 +52,10 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			return;
 		} else if (entity.getId() == null) {
 			characterTypeDao.insert(entity);
-			LOGGER.info("Inserted new {}: id={}, name={}", className, entity.getId(), entity.getName());
+			LOGGER.info("Inserted new {}: {}", className, entity.toString());
 		} else {
 			characterTypeDao.update(entity);
-			LOGGER.info("Updated {}: id={}, name={}", className, entity.getId(), entity.getName());
+			LOGGER.info("Updated {}: {}", className, entity.toString());
 		}
 	}
 
