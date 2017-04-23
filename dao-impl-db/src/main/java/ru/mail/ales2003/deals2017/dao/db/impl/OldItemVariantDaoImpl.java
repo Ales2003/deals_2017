@@ -5,78 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.IItemVariantDao;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
-@Repository
-public class ItemVariantDaoImpl extends AbstractDaoImplDb<ItemVariant, Integer> implements IItemVariantDao {
+//@Repository
+public class OldItemVariantDaoImpl implements IItemVariantDao {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantDaoImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(OldItemVariantDaoImpl.class);
 
-	// =============CREATION AREA===============
-
-	@Override
-	protected String getInsertQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected ItemVariant setEntityId(ItemVariant entity, Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void prepareStatementForInsert(PreparedStatement preparedStatement, ItemVariant entity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	// =============READING AREA===============
-
-	@Override
-	protected String getSelectQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Class<ItemVariant> getMappedClass() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// =============UPDATE AREA===============
-
-	@Override
-	protected String getUpdateQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void prepareStatementForUpdate(PreparedStatement preparedStatement, ItemVariant entity) {
-		// TODO Auto-generated method stub
-
-	}
-
-	// =============DELETE AREA===============
-
-	@Override
-	protected String getDeleteQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Inject
+	private JdbcTemplate jdbcTemplate;
 
 	// =============CREATION AREA===============
 
