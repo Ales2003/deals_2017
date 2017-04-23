@@ -29,14 +29,6 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 		return entity;
 	}
 
-	// =============READING AREA===============
-
-	@Override
-	protected String getSelectQuery() {
-		final String READ_BY_ID_SQL = "select * from i18n";
-		return READ_BY_ID_SQL;
-	}
-
 	@Override
 	protected void prepareStatementForInsert(PreparedStatement ps, I18N entity) {
 		try {
@@ -45,13 +37,21 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 			ps.setString(3, entity.getLanguage().name());
 			ps.setString(4, entity.getValue());
 		} catch (SQLException e) {
-			LOGGER.error("Error: prepareStatementForInsert is broken", e);
+			LOGGER.error("Error: prepareStatementForInsert is broken: {}", e);
 			// !!!TO REFACTOR!!!
 			throw new RuntimeException(e);
 		}
 	}
 
-	@Override
+	// =============READING AREA===============
+
+		@Override
+	protected String getSelectQuery() {
+		final String READ_BY_ID_SQL = "select * from i18n";
+		return READ_BY_ID_SQL;
+	}
+
+		@Override
 	protected Class<I18N> getMappedClass() {
 		return I18N.class;
 	}
@@ -64,7 +64,7 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 		return UPDATE_SQL;
 	}
 
-	@Override
+		@Override
 	protected void prepareStatementForUpdate(PreparedStatement ps, I18N entity) {
 		try {
 			ps.setString(1, entity.getTableName().name());

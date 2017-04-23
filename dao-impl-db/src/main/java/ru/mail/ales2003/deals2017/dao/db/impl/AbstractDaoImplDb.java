@@ -28,24 +28,61 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	@Inject
 	protected JdbcTemplate jdbcTemplate;
 
-	// Methods to implementing for CREATION AREA
+	// =====================Methods to implementing for CREATION AREA
+	/**
+	 * @return String InsertQuery
+	 */
 	protected abstract String getInsertQuery();
-	protected abstract T setEntityId(T entity, Integer id);
-	protected abstract void prepareStatementForInsert(PreparedStatement statement, T entity);
 
-	// Methods to implementing for CREATION AREA
+	/**
+	 * @param entity
+	 * @param id
+	 * @return T entity
+	 */
+	protected abstract T setEntityId(T entity, Integer id);
+
+	/**
+	 * @param preparedStatement
+	 * @param entity
+	 */
+	protected abstract void prepareStatementForInsert(PreparedStatement preparedStatement, T entity);
+
+	// =====================Methods to implementing for READING AREA
+	/**
+	 * @return String SelectQuery
+	 */
 	protected abstract String getSelectQuery();
+
+	/**
+	 * @return Class<T> MappedClass
+	 */
 	protected abstract Class<T> getMappedClass();
 
-	// Methods to implementing for UPDATING AREA
+	// =====================Methods to implementing for UPDATING AREA
+	/**
+	 * @return String UpdateQuery
+	 */
 	protected abstract String getUpdateQuery();
-	protected abstract void prepareStatementForUpdate(PreparedStatement ps, T entity);
 
-	// Methods to implementing for DELETING AREA
+	/**
+	 * @param preparedStatement
+	 * @param entity
+	 */
+	protected abstract void prepareStatementForUpdate(PreparedStatement preparedStatement, T entity);
+
+	// =====================Methods to implementing for DELETING AREA
+
+	/**
+	 * @return String DeleteQuery
+	 */
 	protected abstract String getDeleteQuery();
 
 	// =============CREATION AREA===============
 
+	/**
+	 * @param entity
+	 * @return T entity
+	 */
 	@Override
 	public T insert(T entity) {
 
@@ -66,35 +103,48 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	}
 
 	// =============READING AREA===============
-
+	/**
+	 * @param id
+	 * @return T entity
+	 */
 	@Override
 	public T get(PK id) {
+		if (id == null) {
+			throw new IllegalArgumentException("Error: as the id was sent a null reference");
+		}
 		final String READ_BY_ID_SQL = getSelectQuery() + " where id = ?";
 		try {
 			return (T) jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					(RowMapper<T>) new BeanPropertyRowMapper<T>(getMappedClass()));
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: entity[class:" + getMappedClass().getCanonicalName() + "] with id = " + id
-					+ " don't exist in storage", e);
-			// throw e;
-			return null;
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage)",
+					getMappedClass().getCanonicalName(), id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg, e);
 		}
 	}
 
+	/**
+	 * @return List&ltT&gt entitys
+	 */
 	@Override
 	public List<T> getAll() {
 		try {
 			List<T> entitys = jdbcTemplate.query(getSelectQuery(), new BeanPropertyRowMapper<T>(getMappedClass()));
+			LOGGER.debug("[{}]. Store returns [{}] entitys.", getMappedClass().getCanonicalName(), entitys.size());
 			return entitys;
 		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all entitys[class:" + getMappedClass().getCanonicalName() + "] don't exist in storage",
-					e);
-			return null;
+			String errMsg = String.format("Class [%s]. Storage returns incorrect entity count.",
+					getMappedClass().getCanonicalName());
+			LOGGER.error("Error: {}", errMsg);
+			throw e;
 		}
 	}
 
 	// =============UPDATE AREA===============
-
+	/**
+	 * @param entity
+	 */
 	@Override
 	public void update(T entity) {
 		final String UPDATE_SQL = getUpdateQuery();
@@ -109,9 +159,13 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	}
 
 	// =============DELETE AREA===============
-
+	/**
+	 * @param id
+	 */
 	@Override
 	public void delete(PK id) {
+		// can also add deletion check
+
 		final String DELETE_BY_ID_SQL = getDeleteQuery();
 		jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
 	}

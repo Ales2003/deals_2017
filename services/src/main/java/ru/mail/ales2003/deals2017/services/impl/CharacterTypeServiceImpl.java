@@ -20,22 +20,25 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	@Inject
 	private ICharacterTypeDao characterTypeDao;
 
+	private String className = CharacterType.class.getSimpleName();
+	
+	
 	@Override
 	public CharacterType get(Integer id) {
 		if (characterTypeDao.get(id) == null) {
-			String errMsg = String.format("characterType with id = [%s] don't exist in storage)", id);
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException (errMsg);
 		} else {
 			CharacterType entity = characterTypeDao.get(id);
-			LOGGER.info("Read one characterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Read one {}: id={}, name={}", className, entity.getId(), entity.getName());
 			return entity;
 		}
 	}
 
 	@Override
 	public List<CharacterType> getAll() {
-		LOGGER.info("{} store returns {} entitys.", CharacterType.class.getSimpleName(),
+		LOGGER.info("{} storage returns {} entitys.", className,
 				characterTypeDao.getAll().size());
 		return characterTypeDao.getAll();
 	}
@@ -43,24 +46,24 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	@Override
 	public void save(CharacterType entity) {
 		if (entity == null) {
-			LOGGER.error("Error: as the characterType was sent a null reference");
+			LOGGER.error("Error: as the {} was sent a null reference", className);
 			return;
 		} else if (entity.getId() == null) {
 			characterTypeDao.insert(entity);
-			LOGGER.info("Inserted new characterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Inserted new {}: id={}, name={}", className, entity.getId(), entity.getName());
 		} else {
 			characterTypeDao.update(entity);
-			LOGGER.info("Updated characterType: id={}, name={}", entity.getId(), entity.getName());
+			LOGGER.info("Updated {}: id={}, name={}", className, entity.getId(), entity.getName());
 		}
 	}
 
 	@Override
 	public void saveMultiple(CharacterType... entityArray) {
 		for (CharacterType entity : entityArray) {
-			LOGGER.info("Inserted new caracterType from array: " + entity);
+			LOGGER.info("Inserted new {} from array: {}", className, entity);
 			save(entity);
 		}
-		LOGGER.info("Inserted characterTypes from array");
+		LOGGER.info("Inserted {}s from array", className);
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			return;
 		} else {
 			characterTypeDao.delete(id);
-			LOGGER.info("Deleted characterType by id: " + id);
+			LOGGER.info("Deleted {} by id: {}", className, id);
 		}
 	}
 }

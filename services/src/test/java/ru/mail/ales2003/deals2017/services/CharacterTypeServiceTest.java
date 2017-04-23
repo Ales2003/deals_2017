@@ -129,10 +129,6 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		List<CharacterType> typesFromDb = service.getAll();
 		Assert.isTrue(types.size() == typesFromDb.size(),
 				"count of from Db types must by eq. to count of inserted types");
-		System.out.println(type_1.getId());
-		System.out.println(type_2.getId());
-		System.out.println(typesFromDb.get(0).getId());
-		System.out.println(typesFromDb.get(1).getId());
 		for (int i = 0; i < types.size(); i++) {
 			// False if compared to ==, since the references to objects
 			Assert.isTrue(types.get(i).getId().equals(typesFromDb.get(i).getId()),
@@ -154,11 +150,9 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		CharacterType typeFromDb = service.get(type_1.getId());
 		deleteFromDb(type_1.getId());
 		Assert.notNull(typeFromDb, "type must be saved");
-		//here it is expected the IllegalArgumentException.
+		// here it is expected the IllegalArgumentException.
 		Assert.isNull(service.get(type_1.getId()), "type must be deleted");
-		
 		LOGGER.debug("Finish deleteTest method");
-
 	}
 
 	/*

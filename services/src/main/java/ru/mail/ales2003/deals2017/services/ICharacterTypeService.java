@@ -7,17 +7,33 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 
 public interface ICharacterTypeService {
-	
+
+	/**
+	 * @param id
+	 * @return CharacterType entity
+	 */
 	CharacterType get(Integer id);
 
+	/**
+	 * @return List&ltharacterType&gt entitys
+	 */
 	List<CharacterType> getAll();
 
+	/**
+	 * @param entity
+	 */
 	@Transactional
 	void save(CharacterType entity);
 
+	/**
+	 * @param entityArray
+	 */
 	@Transactional
 	void saveMultiple(CharacterType... entityArray);
 
+	/**
+	 * @param id
+	 */
 	@Transactional
 	void delete(Integer id);
 

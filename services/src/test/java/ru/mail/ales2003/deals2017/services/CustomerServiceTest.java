@@ -188,8 +188,8 @@ public class CustomerServiceTest extends AbstractTest {
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
 		service.save(instance_1);
-
 		modifiedInstance = service.get(instance_1.getId());
+
 		modifiedInstance.setFirstName("New" + instance_1.getFirstName());
 		modifiedInstance.setPatronymic("New" + instance_1.getPatronymic());
 		modifiedInstance.setLastName("New" + instance_1.getLastName());
@@ -317,8 +317,8 @@ public class CustomerServiceTest extends AbstractTest {
 		LOGGER.debug("Start deleteTest method");
 		service.save(instance_1);
 		instance_1FromDb = service.get(instance_1.getId());
-		deleteFromDb(instance_1.getId());
 		Assert.notNull(instance_1FromDb, "instance must be saved");
+		deleteFromDb(instance_1.getId());
 		Assert.isNull(service.get(instance_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteTest method");
 	}

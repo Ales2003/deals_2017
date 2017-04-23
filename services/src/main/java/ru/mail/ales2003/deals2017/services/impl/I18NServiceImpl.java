@@ -20,53 +20,87 @@ public class I18NServiceImpl implements II18NService {
 	@Inject
 	private II18NDao i18nDao;
 
+	private String className = I18N.class.getSimpleName();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.mail.ales2003.deals2017.services.II18NService#get(java.lang.Integer)
+	 */
 	@Override
 	public I18N get(Integer id) {
 		if (i18nDao.get(id) == null) {
-			LOGGER.error("Error: entity with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
-			I18N item = i18nDao.get(id);
-			LOGGER.info("Read one i18nItem: id={}, table_name={}, member_id={}, language={}, value={}", item.getId(),
-					item.getTableName(), item.getMemberId(), item.getLanguage(), item.getValue());
-			return item;
+			I18N entity = i18nDao.get(id);
+			LOGGER.info("Read one {}Item: id={}, table_name={}, member_id={}, language={}, value={}", className,
+					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
+					entity.getValue());
+			return entity;
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ru.mail.ales2003.deals2017.services.II18NService#getAll()
+	 */
 	@Override
 	public List<I18N> getAll() {
-		if (i18nDao.getAll() == null) {
-			LOGGER.error("Error: all i18nItems don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all i18nItems");
-			return i18nDao.getAll();
-		}
+		LOGGER.info("{} storage returns {} entitys.", className, i18nDao.getAll().size());
+		return i18nDao.getAll();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.mail.ales2003.deals2017.services.II18NService#save(ru.mail.ales2003.
+	 * deals2017.datamodel.I18N)
+	 */
 	@Override
-	public void save(I18N item) {
-		if (item == null) {
-			LOGGER.error("Error: as the i18nitem was sent a null reference");
+	public void save(I18N entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {}item was sent a null reference", className);
 			return;
-		} else if (item.getId() == null) {
-			i18nDao.insert(item);
-			LOGGER.info("Inserted new i18nItem: id={}, table_name={}, member_id={}, language={}, value={}",
-					item.getId(), item.getTableName(), item.getMemberId(), item.getLanguage(), item.getValue());
+		} else if (entity.getId() == null) {
+			i18nDao.insert(entity);
+			LOGGER.info("Inserted new {}Item: id={}, table_name={}, member_id={}, language={}, value={}", className,
+					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
+					entity.getValue());
 		} else {
-			i18nDao.update(item);
-			LOGGER.info("Updated i18nitem: id={}, table_name={}, member_id={}, language={}, value={}", item.getId(),
-					item.getTableName(), item.getMemberId(), item.getLanguage(), item.getValue());
+			i18nDao.update(entity);
+			LOGGER.info("Updated {}item: id={}, table_name={}, member_id={}, language={}, value={}", className,
+					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
+					entity.getValue());
 		}
-
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ru.mail.ales2003.deals2017.services.II18NService#saveMultiple(ru.mail.
+	 * ales2003.deals2017.datamodel.I18N[])
+	 */
 	@Override
-	public void saveMultiple(I18N... itemArray) {
-		// TODO Auto-generated method stub
-
+	public void saveMultiple(I18N... entityArray) {
+		for (I18N entity : entityArray) {
+			LOGGER.info("Inserted new {} from array: {}", className, entity);
+			save(entity);
+		}
+		LOGGER.info("Inserted {}s from array", className);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ru.mail.ales2003.deals2017.services.II18NService#delete(java.lang.
+	 * Integer)
+	 */
 	@Override
 	public void delete(Integer id) {
 		if (id == null) {
@@ -74,15 +108,7 @@ public class I18NServiceImpl implements II18NService {
 			return;
 		} else {
 			i18nDao.delete(id);
-			LOGGER.info("Deleted i18nitem by id: " + id);
+			LOGGER.info("Deleted {}item by id: {}", className, id);
 		}
 	}
-
-	/*
-	 * @After public void runAfterTestMethod() {
-	 * LOGGER.debug("Start completion of the method"); for (Manager cg :
-	 * service.getAll()) { deleteFromDb(cg.getId()); }
-	 * LOGGER.debug("Finish completion of the method"); }
-	 */
-
 }
