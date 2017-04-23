@@ -99,7 +99,11 @@ public class CharacterTypeDaoImpl implements ICharacterTypeDao {
 
 	@Override
 	public void delete(Integer id) {
+		//can add deletion check 
+		
 		jdbcTemplate.update("delete from character_type where id=" + id);
+		
+		
 	}
 
 }
