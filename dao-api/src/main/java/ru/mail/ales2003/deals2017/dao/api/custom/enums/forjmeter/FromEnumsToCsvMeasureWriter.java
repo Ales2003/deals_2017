@@ -1,7 +1,6 @@
 package ru.mail.ales2003.deals2017.dao.api.custom.enums.forjmeter;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,56 +12,63 @@ import org.springframework.stereotype.Repository;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 
 @Repository
-public class FromEnumsCsvWriter {
+public class FromEnumsToCsvMeasureWriter {
 
 	// Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
 
-	/*// CSV file header
-	private static final Object[] FILE_HEADER = { "name" };*/
+	/*
+	 * // CSV file header private static final Object[] FILE_HEADER = { "name"
+	 * };
+	 */
 
 	public static void writeCsvFile(String fileName) {
 
-		FileWriter fileWriter = null;
+		// FileWriter fileWriter = null;
 
-		CSVPrinter csvFilePrinter = null;
+		// CSVPrinter csvFilePrinter = null;
 
 		List<Measure> measures = null;
 
 		// Create the CSVFormat object with "\n" as a record delimiter
-		CSVFormat csvFileFormat = CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR);
+		// CSVFormat csvFileFormat =
+		// CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR);
 
-		try {
+		try (CSVPrinter csvFilePrinter = new CSVPrinter(new FileWriter(fileName),
+				CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR))) {
 
 			// Create a new list of enums measure
 			measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
 
+			for (Measure measure : measures) {
+				List<String> ms = new ArrayList<>();
+				ms.add(measure.name());
+				csvFilePrinter.printRecord(ms);
+			}
+
 			// initialize FileWriter object
-			fileWriter = new FileWriter(fileName);
+			// fileWriter = new FileWriter(fileName);
 
 			// initialize CSVPrinter object
-			csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
+			// csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 
-			/*// Create CSV file header
-			csvFilePrinter.printRecord(FILE_HEADER);
-*/
+			/*
+			 * // Create CSV file header
+			 * csvFilePrinter.printRecord(FILE_HEADER);
+			 */
 			// Write the measure list to the CSV file
-			csvFilePrinter.printRecord(measures);
+			// csvFilePrinter.printRecord(measures);
 
 			System.out.println("CSV file was created successfully !!!");
 
 		} catch (Exception e) {
 			System.out.println("Error in CsvFileWriter !!!");
 			e.printStackTrace();
-		} finally {
-			try {
-				fileWriter.flush();
-				fileWriter.close();
-				csvFilePrinter.close();
-			} catch (IOException e) {
-				System.out.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-				e.printStackTrace();
-			}
-		}
+		} /*
+			 * finally { try { fileWriter.flush(); fileWriter.close();
+			 * csvFilePrinter.close(); } catch (IOException e) { System.out.
+			 * println("Error while flushing/closing fileWriter/csvPrinter !!!"
+			 * ); e.printStackTrace(); }
+			 */
 	}
 }
