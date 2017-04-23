@@ -1,109 +1,87 @@
 package ru.mail.ales2003.deals2017.dao.db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.IItemDao;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 
 @Repository
-public class ItemDaoImpl implements IItemDao {
+public class ItemDaoImpl extends AbstractDaoImplDb<Item, Integer> implements IItemDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
-
-	@Inject
-	private JdbcTemplate jdbcTemplate;
 
 	// =============CREATION AREA===============
 
 	@Override
-	public Item insert(Item item) {
+	protected String getInsertQuery() {
 		final String INSERT_SQL = "insert into item (name, description, basic_price) values(?,?,?)";
+		return INSERT_SQL;
+	}
 
-		KeyHolder keyHolder = new GeneratedKeyHolder();
+	@Override
+	protected Item setEntityId(Item entity, Integer id) {
+		entity.setId(id);
+		return entity;
+	}
 
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setString(1, item.getName());
-				ps.setString(2, item.getDescription());
-				ps.setBigDecimal(3, item.getBasicPrice());
-				return ps;
-			}
-		}, keyHolder);
-		item.setId(keyHolder.getKey().intValue());
-		return item;
+	@Override
+	protected void prepareStatementForInsert(PreparedStatement ps, Item entity) {
+		try {
+			ps.setString(1, entity.getName());
+			ps.setString(2, entity.getDescription());
+			ps.setBigDecimal(3, entity.getBasicPrice());
+		} catch (SQLException e) {
+			LOGGER.error("Error: prepareStatementForInsert is broken: {}", e);
+			// !!!TO REFACTOR!!!
+			throw new RuntimeException(e);
+		}
 	}
 
 	// =============READING AREA===============
 
 	@Override
-	public Item get(Integer id) {
-		final String READ_BY_ID_SQL = "select * from item where id = ? ";
-
-		try {
-			return jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
-					new BeanPropertyRowMapper<Item>(Item.class));
-		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: item with id = " + id + " don't exist in storage)", e);
-			return null;
-		}
+	protected String getSelectQuery() {
+		final String READ_BY_ID_SQL = "select * from item";
+		return READ_BY_ID_SQL;
 	}
 
 	@Override
-	public List<Item> getAll() {
-		try {
-			List<Item> rs = jdbcTemplate.query("select * from item ", new BeanPropertyRowMapper<Item>(Item.class));
-			return rs;
-		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all items don't exist in storage", e);
-			return null;
-		}
+	protected Class<Item> getMappedClass() {
+		return Item.class;
 	}
 
 	// =============UPDATE AREA===============
 
 	@Override
-	public void update(Item item) {
-
+	protected String getUpdateQuery() {
 		final String UPDATE_SQL = "update item set name = ?, description = ?, basic_price = ? where id = ?";
+		return UPDATE_SQL;
+	}
 
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				// Value of "id" field is not required here, so I deleted it:
-				// PreparedStatement ps =
-				// connection.prepareStatement(UPDATE_SQL, new String[] { "id"
-				// });
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
-				ps.setString(1, item.getName());
-				ps.setString(2, item.getDescription());
-				ps.setBigDecimal(3, item.getBasicPrice());
-				ps.setInt(4, item.getId());
-				return ps;
-			}
-		});
+	@Override
+	protected void prepareStatementForUpdate(PreparedStatement ps, Item entity) {
+		try {
+			ps.setString(1, entity.getName());
+			ps.setString(2, entity.getDescription());
+			ps.setBigDecimal(3, entity.getBasicPrice());
+			ps.setInt(4, entity.getId());
+		} catch (SQLException e) {
+			LOGGER.error("Error: prepareStatementForInsert is broken", e);
+			// !!!TO REFACTOR!!!
+			throw new RuntimeException(e);
+		}
 	}
 
 	// =============DELETE AREA===============
 
 	@Override
-	public void delete(Integer id) {
-		jdbcTemplate.update("delete from item where id=" + id);
+	protected String getDeleteQuery() {
+		final String DELETE_BY_ID_SQL = "delete from item";
+		return DELETE_BY_ID_SQL;
 	}
 }

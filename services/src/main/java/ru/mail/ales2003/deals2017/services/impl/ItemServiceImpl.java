@@ -18,6 +18,8 @@ public class ItemServiceImpl implements IItemService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
 
+	private String className = Item.class.getSimpleName();
+
 	// dependency injection (внедряем зависимость в этот класс - ссылку на бин
 	// имплементатора IItemDao)
 	@Inject
@@ -33,8 +35,9 @@ public class ItemServiceImpl implements IItemService {
 	@Override
 	public Item get(Integer id) {
 		if (itemDao.get(id) == null) {
-			LOGGER.error("Error: item with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
 			Item item = itemDao.get(id);
 			LOGGER.info("Read one item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
@@ -45,13 +48,8 @@ public class ItemServiceImpl implements IItemService {
 
 	@Override
 	public List<Item> getAll() {
-		if (itemDao.getAll() == null) {
-			LOGGER.error("Error: all items don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all items");
-			return itemDao.getAll();
-		}
+		LOGGER.info("{} storage returns {} entitys.", className, itemDao.getAll().size());
+		return itemDao.getAll();
 	}
 
 	@Override
@@ -61,22 +59,22 @@ public class ItemServiceImpl implements IItemService {
 			return;
 		} else if (item.getId() == null) {
 			itemDao.insert(item);
-			LOGGER.info("Inserted new item: id={}, name={}, description={}, basicPrice={}", item.getId(),
+			LOGGER.info("Inserted new {}: id={}, name={}, description={}, basicPrice={}", className, item.getId(),
 					item.getName(), item.getDescription(), item.getBasicPrice());
 		} else {
 			itemDao.update(item);
-			LOGGER.info("Updated item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
-					item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Updated {}: id={}, name={}, description={}, basicPrice={}", className, item.getId(),
+					item.getName(), item.getDescription(), item.getBasicPrice());
 		}
 	}
 
 	@Override
 	public void saveMultiple(Item... itemArray) {
 		for (Item item : itemArray) {
-			LOGGER.debug("Inserted new item from array: " + item);
+			LOGGER.debug("Inserted new {} from array: {}", className, item);
 			save(item);
 		}
-		LOGGER.info("Inserted items from array");
+		LOGGER.info("Inserted {}s from array", className);
 	}
 
 	@Override
@@ -86,7 +84,7 @@ public class ItemServiceImpl implements IItemService {
 			return;
 		} else {
 			itemDao.delete(id);
-			LOGGER.info("Deleted item by id: " + id);
+			LOGGER.info("Deleted {} by id: {}", className, id);
 		}
 	}
 }

@@ -1,19 +1,7 @@
 package ru.mail.ales2003.deals2017.dao.api;
 
-import java.util.List;
-
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 
-public interface ICharacterTypeDao {
-
-	CharacterType insert(CharacterType entity);
-
-	CharacterType get(Integer id);
-
-	List<CharacterType> getAll();
-
-	void update(CharacterType entity);
-
-	void delete(Integer id);
+public interface ICharacterTypeDao extends GenericDao<CharacterType, Integer> {
 
 }
