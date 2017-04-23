@@ -151,7 +151,11 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 		jdbcTemplate.update(new PreparedStatementCreator() {
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
+				// Value of "id" field is not required here, so I deleted it:
+				// PreparedStatement ps =
+				// connection.prepareStatement(UPDATE_SQL, new String[] { "id"
+				// });
+				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
 				prepareStatementForUpdate(ps, entity);
 				return ps;
 			}

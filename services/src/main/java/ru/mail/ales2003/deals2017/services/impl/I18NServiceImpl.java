@@ -51,6 +51,10 @@ public class I18NServiceImpl implements II18NService {
 	@Override
 	public List<I18N> getAll() {
 		LOGGER.info("{} storage returns {} entitys.", className, i18nDao.getAll().size());
+		LOGGER.info("Read all I18N:");
+		for (I18N entity : i18nDao.getAll()) {
+			LOGGER.info("I18N = {}", entity.toString());
+		}
 		return i18nDao.getAll();
 	}
 
@@ -89,7 +93,7 @@ public class I18NServiceImpl implements II18NService {
 	@Override
 	public void saveMultiple(I18N... entityArray) {
 		for (I18N entity : entityArray) {
-			LOGGER.info("Inserted new {} from array: {}", className, entity);
+			LOGGER.info("Inserted new {} from array: {}", className, className, entity.toString());
 			save(entity);
 		}
 		LOGGER.info("Inserted {}s from array", className);

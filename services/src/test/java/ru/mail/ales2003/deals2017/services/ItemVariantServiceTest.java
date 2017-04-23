@@ -13,13 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeInItemVariantDao;
-import ru.mail.ales2003.deals2017.datamodel.Attribute;
-import ru.mail.ales2003.deals2017.datamodel.CharacterType;
-import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
-import ru.mail.ales2003.deals2017.datamodel.Measure;
 
 public class ItemVariantServiceTest extends AbstractTest {
 
@@ -27,7 +22,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 
 	@Inject
 	private IItemVariantService service;
-		
+
 	@Inject
 	private IItemService itemService;
 
@@ -54,7 +49,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 		instance_1 = getInstance(itemFromDb.getId(), new BigDecimal("250.00"));
 		instance_2 = getInstance(itemFromDb.getId(), new BigDecimal("350.00"));
 		LOGGER.debug("ItemVariants in JVM were created");
-		
+
 		LOGGER.debug("Finish preparation of the method");
 	}
 
@@ -222,7 +217,7 @@ public class ItemVariantServiceTest extends AbstractTest {
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
 	 */
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void deleteItemVariantTest() {
 		LOGGER.debug("Start deleteTest method");
 		service.saveItemVariant(instance_1);

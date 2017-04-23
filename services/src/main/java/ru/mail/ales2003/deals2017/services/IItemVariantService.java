@@ -17,22 +17,40 @@ import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
  */
 public interface IItemVariantService {
 
-	// Item variant entities management and handling
+	// ======================Item variant entities management and handling
 
+	/**
+	 * @param itemVariantId
+	 * @return ItemVariant entity
+	 */
 	ItemVariant getItemVariant(Integer itemVariantId);
 
+	/**
+	 * @return List&ltharacterType&gt itemVariants
+	 */
 	List<ItemVariant> getAllItemVariants();
 
+	/**
+	 * @param itemVariant
+	 *            entity
+	 */
 	@Transactional
 	void saveItemVariant(ItemVariant itemVariant);
 
+	/**
+	 * @param itemVariantArray
+	 */
 	@Transactional
 	void saveItemVariantMultiple(ItemVariant... itemVariantArray);
 
+	/**
+	 * @param itemVariantId
+	 */
 	@Transactional
 	void deleteItemVariant(Integer itemVariantId);
 
-	// Attributes management and handling in an item variant
+	// ===========================Attributes management and handling in an item
+	// variant
 
 	CharacterTypeInItemVariant getCharacterTypeInItemVariant(Integer id);
 
@@ -46,7 +64,7 @@ public interface IItemVariantService {
 
 	public void deleteCharacterTypeInItemVariant(Integer id);
 
-	// Methods for reading with an improved result
+	// ===========================Methods for reading with an improved result
 
 	// returns basic info for one item variant
 	ItemVariantBasicInfo getBasicInfo(Integer itemVariantId);
@@ -62,24 +80,20 @@ public interface IItemVariantService {
 
 	// returns basic info with filtering by basic parameters
 	List<ItemVariantBasicInfo> getFilteredBasicInfo(IItemVariantFilter filter);
-	
+
 	// returns basic info + details = specification for each item variant
-	
-	
-	
+
 	/**
 	 * @param filter
-	 * @return basic info with details (specification) for each filtered item variant
+	 * @return basic info with details (specification) for each filtered item
+	 *         variant
 	 */
 	List<ItemVariantSpecification> getFilteredSpecifications(IItemVariantFilter filter);
 
-	
-	
 	/**
 	 * @param filter
 	 * @return basic info with details (specification) for each item variant
 	 */
 	List<ItemVariantSpecification> getSpecifications();
-	
-	
+
 }

@@ -49,6 +49,10 @@ public class ItemServiceImpl implements IItemService {
 	@Override
 	public List<Item> getAll() {
 		LOGGER.info("{} storage returns {} entitys.", className, itemDao.getAll().size());
+		LOGGER.info("Read all items:");
+		for (Item i : itemDao.getAll()) {
+			LOGGER.info("item = {}", i.toString());
+		}
 		return itemDao.getAll();
 	}
 
@@ -71,7 +75,7 @@ public class ItemServiceImpl implements IItemService {
 	@Override
 	public void saveMultiple(Item... itemArray) {
 		for (Item item : itemArray) {
-			LOGGER.debug("Inserted new {} from array: {}", className, item);
+			LOGGER.debug("Inserted new {} from array: {}", className, item.toString());
 			save(item);
 		}
 		LOGGER.info("Inserted {}s from array", className);

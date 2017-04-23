@@ -21,14 +21,13 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	private ICharacterTypeDao characterTypeDao;
 
 	private String className = CharacterType.class.getSimpleName();
-	
-	
+
 	@Override
 	public CharacterType get(Integer id) {
 		if (characterTypeDao.get(id) == null) {
 			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
-			throw new IllegalArgumentException (errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
 			CharacterType entity = characterTypeDao.get(id);
 			LOGGER.info("Read one {}: id={}, name={}", className, entity.getId(), entity.getName());
@@ -38,8 +37,11 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public List<CharacterType> getAll() {
-		LOGGER.info("{} storage returns {} entitys.", className,
-				characterTypeDao.getAll().size());
+		LOGGER.info("{} storage returns {} entitys.", className, characterTypeDao.getAll().size());
+		LOGGER.info("Read all characterTypes:");
+		for (CharacterType cT : characterTypeDao.getAll()) {
+			LOGGER.info("characterType = {}", cT.toString());
+		}
 		return characterTypeDao.getAll();
 	}
 
@@ -60,7 +62,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	@Override
 	public void saveMultiple(CharacterType... entityArray) {
 		for (CharacterType entity : entityArray) {
-			LOGGER.info("Inserted new {} from array: {}", className, entity);
+			LOGGER.info("Inserted new {} from array: {}", className, entity.toString());
 			save(entity);
 		}
 		LOGGER.info("Inserted {}s from array", className);
