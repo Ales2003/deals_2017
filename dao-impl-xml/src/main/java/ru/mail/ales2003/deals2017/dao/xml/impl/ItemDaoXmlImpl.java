@@ -16,7 +16,7 @@ import ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 
 @Repository
-public class ItemDaoXmlImpl implements IItemDao {
+public class ItemDaoXmlImpl extends AbstractDaoXmlImp<Item, Integer> implements IItemDao {
 
 	private final XStream xstream = new XStream(new DomDriver());
 
@@ -39,25 +39,65 @@ public class ItemDaoXmlImpl implements IItemDao {
 
 	@Override
 	public void delete(Integer id) {
-		// TODO Auto-generated method stub
+		File file = getFile();
+
+		XmlModelWrapper<Integer, Item> wrapper = (XmlModelWrapper<Integer, Item>) xstream.fromXML(file);
+		List<Item> entitys = wrapper.getRows();
+		Item found = null;
+		for (Item entity : entitys) {
+			if (entity.getId().equals(id)) {
+				found = entity;
+				break;
+			}
+		}
+		if (found != null) {
+			entitys.remove(found);
+			writeNewData(file, wrapper);
+		}
 
 	}
 
 	@Override
 	public List<Item> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		File file = getFile();
+
+		XmlModelWrapper<Integer, Item> wrapper = (XmlModelWrapper<Integer, Item>) xstream.fromXML(file);
+		return wrapper.getRows();
 	}
 
 	@Override
 	public Item insert(Item entity) {
-		// TODO Auto-generated method stub
-		return null;
+		File file = getFile();
+
+		XmlModelWrapper<Integer, Item> wrapper = (XmlModelWrapper<Integer, Item>) xstream.fromXML(file);
+		List<Item> entitys = wrapper.getRows();
+		Integer lastId = wrapper.getLastId();
+		int newId = lastId + 1;
+
+		entity.setId(newId);
+		entitys.add(entity);
+
+		wrapper.setLastId(newId);
+		writeNewData(file, wrapper);
+		return entity;
 	}
 
 	@Override
 	public void update(Item entity) {
-		// TODO Auto-generated method stub
+		File file = getFile();
+
+		XmlModelWrapper<Integer, Item> wrapper = (XmlModelWrapper<Integer, Item>) xstream.fromXML(file);
+		List<Item> entitys = wrapper.getRows();
+		for (Item entityItem : entitys) {
+			if (entityItem.getId().equals(entity.getId())) {
+				entityItem.setName(entity.getName());
+				entityItem.setDescription(entity.getDescription());
+				entityItem.setBasicPrice(entity.getBasicPrice());
+				break;
+			}
+		}
+
+		writeNewData(file, wrapper);
 
 	}
 

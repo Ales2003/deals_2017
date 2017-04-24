@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +47,14 @@ public class ItemServiceTest extends AbstractTest {
 
 		LOGGER.debug("Finish preparation of the method");
 	}
-
+	
 	@After
 	public void runAfterTestMethod() {
 		LOGGER.debug("Start completion of the method");
 
 		LOGGER.debug("Start deleting items from Db");
 		for (Item c : service.getAll()) {
-			deleteFromDb(c.getId());
+			//deleteFromDb(c.getId());
 		}
 		LOGGER.debug("Items were deleted from Db ");
 
@@ -127,7 +128,7 @@ public class ItemServiceTest extends AbstractTest {
 	 */
 	@Test
 	public void updateTest() {
-		LOGGER.debug("Start updateTest method");
+		LOGGER.info("Start updateTest method");
 		service.save(instance_1);
 
 		modifiedInstance = service.get(instance_1.getId());
@@ -135,29 +136,37 @@ public class ItemServiceTest extends AbstractTest {
 		modifiedInstance.setDescription("New" + instance_1.getDescription());
 		modifiedInstance.setBasicPrice(instance_1.getBasicPrice().add(new BigDecimal("2")));
 
+		LOGGER.info("save mod");
 		service.save(modifiedInstance);
 
+		LOGGER.info("get instance_1FromDb");
 		instance_1FromDb = service.get(modifiedInstance.getId());
 
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
-
+		
+		
+		
 		Assert.isTrue(
 				!(instance_1.getName().equals(modifiedInstance.getName()))
 						&& !(instance_1.getDescription().equals(modifiedInstance.getDescription()))
 						&& !(instance_1.getBasicPrice().equals(modifiedInstance.getBasicPrice())),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
-
+		
+		
 		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),
 				"id of instance from Db must by eq. to id of  modified instances");
 
+		
+		LOGGER.info("Assert Start");
 		Assert.isTrue(
 				instance_1FromDb.getName().equals(modifiedInstance.getName())
 						&& instance_1FromDb.getDescription().equals(modifiedInstance.getDescription())
 						&& instance_1FromDb.getBasicPrice().equals(modifiedInstance.getBasicPrice()),
 				"values of the corresponding columns of instance from Db and modified instances must by eq.");
 
-		LOGGER.debug("Finish  updateTest method");
+		LOGGER.info("Assert End");
+		LOGGER.info("Finish  updateTest method");
 	}
 
 	/*
@@ -218,6 +227,7 @@ public class ItemServiceTest extends AbstractTest {
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
 	 */
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");

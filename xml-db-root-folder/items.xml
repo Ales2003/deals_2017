@@ -1,0 +1,131 @@
+<ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>
+  <rows>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>139</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>140</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>141</id>
+      <name>NewConvector</name>
+      <description>NewA device that warms a room by creating a current of hot air</description>
+      <basicPrice>202.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>142</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>143</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>144</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>145</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>147</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>148</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>149</id>
+      <name>NewConvector</name>
+      <description>NewA device that warms a room by creating a current of hot air</description>
+      <basicPrice>202.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>150</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>151</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>152</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>153</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>155</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>156</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>157</id>
+      <name>NewConvector</name>
+      <description>NewA device that warms a room by creating a current of hot air</description>
+      <basicPrice>202.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>158</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>159</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>160</id>
+      <name>Air conditioner</name>
+      <description>A machine that keeps the air in a building cool</description>
+      <basicPrice>300.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+    <ru.mail.ales2003.deals2017.datamodel.Item>
+      <id>161</id>
+      <name>Convector</name>
+      <description>A device that warms a room by creating a current of hot air</description>
+      <basicPrice>200.00</basicPrice>
+    </ru.mail.ales2003.deals2017.datamodel.Item>
+  </rows>
+  <lastId class="int">162</lastId>
+</ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>
