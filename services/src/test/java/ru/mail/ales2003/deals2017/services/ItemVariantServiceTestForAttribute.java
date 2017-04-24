@@ -281,8 +281,6 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 		LOGGER.debug("Finish deleteAttributeTest method");
 	}
 
-	// =============To do tests for attributDao===============
-
 	/*
 	 * method creates a new ItemVariant instance & gives it args
 	 */

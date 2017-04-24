@@ -31,12 +31,12 @@ public class I18NServiceImpl implements II18NService {
 	@Override
 	public I18N get(Integer id) {
 		if (i18nDao.get(id) == null) {
-			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
 			I18N entity = i18nDao.get(id);
-			LOGGER.info("Read one {}Item: id={}, table_name={}, member_id={}, language={}, value={}", className,
+			LOGGER.info("Read one {} entity: id={}, table_name={}, member_id={}, language={}, value={}", className,
 					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
 					entity.getValue());
 			return entity;
@@ -50,10 +50,10 @@ public class I18NServiceImpl implements II18NService {
 	 */
 	@Override
 	public List<I18N> getAll() {
-		LOGGER.info("{} storage returns {} entitys.", className, i18nDao.getAll().size());
-		LOGGER.info("Read all I18N:");
+		LOGGER.info("{} entity storage returns {} entitys.", className, i18nDao.getAll().size());
+		LOGGER.info("Read all {} entitys:", className);
 		for (I18N entity : i18nDao.getAll()) {
-			LOGGER.info("I18N = {}", entity.toString());
+			LOGGER.info("{} entity = {}", className, entity.toString());
 		}
 		return i18nDao.getAll();
 	}
@@ -68,18 +68,14 @@ public class I18NServiceImpl implements II18NService {
 	@Override
 	public void save(I18N entity) {
 		if (entity == null) {
-			LOGGER.error("Error: as the {}item was sent a null reference", className);
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
 		} else if (entity.getId() == null) {
 			i18nDao.insert(entity);
-			LOGGER.info("Inserted new {}Item: id={}, table_name={}, member_id={}, language={}, value={}", className,
-					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
-					entity.getValue());
+			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
 			i18nDao.update(entity);
-			LOGGER.info("Updated {}item: id={}, table_name={}, member_id={}, language={}, value={}", className,
-					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
-					entity.getValue());
+			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
 	}
 
@@ -93,10 +89,10 @@ public class I18NServiceImpl implements II18NService {
 	@Override
 	public void saveMultiple(I18N... entityArray) {
 		for (I18N entity : entityArray) {
-			LOGGER.info("Inserted new {} from array: {}", className, className, entity.toString());
+			LOGGER.info("Inserted new {} entity from array: {}", className, className, entity.toString());
 			save(entity);
 		}
-		LOGGER.info("Inserted {}s from array", className);
+		LOGGER.info("{} entitys from array were inserted", className);
 	}
 
 	/*
@@ -112,7 +108,7 @@ public class I18NServiceImpl implements II18NService {
 			return;
 		} else {
 			i18nDao.delete(id);
-			LOGGER.info("Deleted {}item by id: {}", className, id);
+			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
 }

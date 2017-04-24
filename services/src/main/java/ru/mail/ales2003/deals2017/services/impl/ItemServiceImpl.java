@@ -35,23 +35,22 @@ public class ItemServiceImpl implements IItemService {
 	@Override
 	public Item get(Integer id) {
 		if (itemDao.get(id) == null) {
-			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
 			Item item = itemDao.get(id);
-			LOGGER.info("Read one item: id={}, name={}, description={}, basicPrice={}", item.getId(), item.getName(),
-					item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Read one {} entity: {}", className, item.toString());
 			return item;
 		}
 	}
 
 	@Override
 	public List<Item> getAll() {
-		LOGGER.info("{} storage returns {} entitys.", className, itemDao.getAll().size());
-		LOGGER.info("Read all items:");
+		LOGGER.info("{} entities storage returns {} entities.", className, itemDao.getAll().size());
+		LOGGER.info("Read all {} entities:", className);
 		for (Item i : itemDao.getAll()) {
-			LOGGER.info("item = {}", i.toString());
+			LOGGER.info("{} entity = {}", className, i.toString());
 		}
 		return itemDao.getAll();
 	}
@@ -59,24 +58,24 @@ public class ItemServiceImpl implements IItemService {
 	@Override
 	public void save(Item item) {
 		if (item == null) {
-			LOGGER.error("Error: as the item was sent a null reference");
+			LOGGER.error("Error: as the entity was sent a null reference");
 			return;
 		} else if (item.getId() == null) {
 			itemDao.insert(item);
-			LOGGER.info("Inserted new {}: {}", className, item.toString());
+			LOGGER.info("Inserted new {} entity: {}", className, item.toString());
 		} else {
 			itemDao.update(item);
-			LOGGER.info("Updated {}: {}", className, item.toString());
+			LOGGER.info("Updated one {} entity: {}", className, item.toString());
 		}
 	}
 
 	@Override
 	public void saveMultiple(Item... itemArray) {
 		for (Item item : itemArray) {
-			LOGGER.debug("Inserted new {} from array: {}", className, item.toString());
+			LOGGER.debug("Inserted new {} entity from array: {}", className, item.toString());
 			save(item);
 		}
-		LOGGER.info("Inserted {}s from array", className);
+		LOGGER.info("{} entities from array were inserted", className);
 	}
 
 	@Override

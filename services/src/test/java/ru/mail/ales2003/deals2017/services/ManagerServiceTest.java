@@ -209,11 +209,12 @@ public class ManagerServiceTest extends AbstractTest {
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
 	 */
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
 		service.save(instance_1);
 		instance_1FromDb = service.get(instance_1.getId());
+		deleteFromDb(instance_1.getId());
 		deleteFromDb(instance_1.getId());
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 		Assert.isNull(service.get(instance_1.getId()), "instance must be deleted");

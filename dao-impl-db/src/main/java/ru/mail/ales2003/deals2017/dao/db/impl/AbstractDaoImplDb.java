@@ -27,7 +27,7 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 
 	@Inject
 	protected JdbcTemplate jdbcTemplate;
-
+	
 	// =====================Methods to implementing for CREATION AREA
 	/**
 	 * @return String InsertQuery

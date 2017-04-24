@@ -20,56 +20,52 @@ public class ManagerServiceImpl implements IManagerService {
 	@Inject
 	private IManagerDao managerDao;
 
+	private String className = Manager.class.getSimpleName();
+
 	@Override
 	public Manager get(Integer id) {
 		if (managerDao.get(id) == null) {
-			LOGGER.error("Error: manager with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
-			Manager manager = managerDao.get(id);
-			LOGGER.info("Read one manager: id={}, first_name={}, patronymic={}, last_name={}, position={}",
-					manager.getId(), manager.getFirstName(), manager.getPatronymic(), manager.getLastName(),
-					manager.getPosition());
-			return manager;
+			Manager entity = managerDao.get(id);
+			LOGGER.info("Read one {}: {}", className, entity.toString());
+			return entity;
 		}
 	}
 
 	@Override
 	public List<Manager> getAll() {
-		if (managerDao.getAll() == null) {
-			LOGGER.error("Error: all managers don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all managers");
-			return managerDao.getAll();
+		LOGGER.info("{} storage returns {} entitys.", className, managerDao.getAll().size());
+		LOGGER.info("Read all {}s:", className);
+		for (Manager m : managerDao.getAll()) {
+			LOGGER.info("{} = {}", className, m.toString());
 		}
+		return managerDao.getAll();
 	}
 
 	@Override
-	public void save(Manager manager) {
-		if (manager == null) {
-			LOGGER.error("Error: as the manager was sent a null reference");
+	public void save(Manager entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
-		} else if (manager.getId() == null) {
-			managerDao.insert(manager);
-			LOGGER.info("Inserted new manager: id={}, first_name={}, patronymic={}, last_name={}, position={}",
-					manager.getId(), manager.getFirstName(), manager.getPatronymic(), manager.getLastName(),
-					manager.getPosition());
+		} else if (entity.getId() == null) {
+			managerDao.insert(entity);
+			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
-			managerDao.update(manager);
-			LOGGER.info("Updated manager: id={}, first_name={}, patronymic={}, last_name={}, position={}",
-					manager.getId(), manager.getFirstName(), manager.getPatronymic(), manager.getLastName(),
-					manager.getPosition());
+			managerDao.update(entity);
+			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
 	}
 
 	@Override
-	public void saveMultiple(Manager... managerArray) {
-		for (Manager manager : managerArray) {
-			LOGGER.debug("Inserted new manager from array: " + manager);
-			save(manager);
+	public void saveMultiple(Manager... entityArray) {
+		for (Manager entity : entityArray) {
+			LOGGER.info("Inserted new {} entity from array: {}", className, entity.toString());
+			save(entity);
 		}
-		LOGGER.info("Inserted managers from array");
+		LOGGER.info("{} entities from array were inserted", className);
 
 	}
 
@@ -80,7 +76,7 @@ public class ManagerServiceImpl implements IManagerService {
 			return;
 		} else {
 			managerDao.delete(id);
-			LOGGER.info("Deleted manager by id: " + id);
+			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
 

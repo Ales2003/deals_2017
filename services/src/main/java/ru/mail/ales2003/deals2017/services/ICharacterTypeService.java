@@ -15,7 +15,7 @@ public interface ICharacterTypeService {
 	CharacterType get(Integer id);
 
 	/**
-	 * @return List&ltharacterType&gt entitys
+	 * @return List&ltCharacterType&gt entitys
 	 */
 	List<CharacterType> getAll();
 
