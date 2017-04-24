@@ -19,6 +19,9 @@ import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
+import ru.mail.ales2003.deals2017.datamodel.Item;
+import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
+import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
@@ -39,19 +42,41 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	@Inject
 	private ICustomerGroupService customerGroupService;
 
-	private Contract instance_1;
-	private Contract instance_2;
-	private Contract instance_1FromDb;
-	private Contract instance_2FromDb;
+	@Inject
+	private IItemService itemService;
 
-	private Customer customer;
-	private Customer customerFromDb;
-	
+	@Inject
+	private IItemVariantService itemVariantService;
+
 	private Manager manager;
 	private Manager managerFromDb;
 
 	private CustomerGroup customerGroup;
 	private CustomerGroup customerGroupFromDb;
+
+	private Customer customer;
+	private Customer customerFromDb;
+
+	private Contract contract_1;
+	private Contract contract_2;
+	private Contract contract_1FromDb;
+	private Contract contract_2FromDb;
+
+	private Item item;
+	private Item itemFromDb;
+
+	private ItemVariant itemVariant_1;
+	private ItemVariant itemVariant_2;
+	private ItemVariant itemVariant_1FromDb;
+	private ItemVariant itemVariant_2FromDb;
+
+	private ItemVariantInContract instance_1;
+	private ItemVariantInContract instance_2;
+	private ItemVariantInContract instance_1FromDb;
+	private ItemVariantInContract instance_2FromDb;
+	private ItemVariantInContract modifiedInstance;
+	private List<ItemVariantInContract> instances;
+	private List<ItemVariantInContract> instancesFromDb;
 
 	@Before
 	public void runBeforeTestMethod() {
@@ -69,28 +94,46 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 		customerGroupFromDb = customerGroupService.get(customerGroup.getId());
 		LOGGER.debug("CustomerGroup in Db  was created with id={}", customerGroup.getId());
 
-		LOGGER.debug("Creating customers in Db");
+		LOGGER.debug("Creating customer in Db");
+		customer = new Customer();
+		customer.setManagerId(manager.getId());
+		customer.setCustomerGroupId(customerGroupFromDb.getId());
+		customerService.save(customer);
+		customerFromDb = customerService.get(customer.getId());
+		LOGGER.debug("Customer in Db  was created with id={}", customer.getId());
 
-		customer_1 = new Customer();
-		customer_1.setManagerId(manager.getId());
-		customer_1.setCustomerGroupId(customerGroupFromDb.getId());
-		customerService.save(customer_1);
-		customer_1FromDb = customerService.get(customer_1.getId());
+		LOGGER.debug("Creating contracts in Db");
+		contract_1 = getContractInstance(new Timestamp(new Date().getTime()), ContractStatus.CONTRACT_PREPARATION,
+				PayForm.CASH, PayStatus.UNPAID, customerFromDb.getId(), new BigDecimal("0.00"));
+		contract_2 = getContractInstance(new Timestamp(new Date().getTime()), ContractStatus.CONTRACT_PREPARATION,
+				PayForm.CASHLESS, PayStatus.UNPAID, customerFromDb.getId(), new BigDecimal("0.00"));
+		service.saveContract(contract_1);
+		service.saveContract(contract_2);
+		contract_1FromDb = service.getContract(contract_1.getId());
+		contract_2FromDb = service.getContract(contract_2.getId());
+		LOGGER.debug("Contracts in Db were created with id={} and id={}", contract_1FromDb.getId(),
+				contract_2FromDb.getId());
 
-		customer_2 = new Customer();
-		customer_2.setManagerId(manager.getId());
-		customer_2.setCustomerGroupId(customerGroup.getId());
-		customerService.save(customer_2);
-		customer_2FromDb = customerService.get(customer_2.getId());
+		LOGGER.debug("Creating item in Db");
+		item = new Item();
+		itemService.save(item);
+		itemFromDb = itemService.get(item.getId());
+		LOGGER.debug("Item in Db was created with id={}", itemFromDb.getId());
 
-		LOGGER.debug("Customers in Db  were created with id={} and id={}", customer_1.getId(), customer_2.getId());
+		LOGGER.debug("Creating itemVariants in Db");
+		itemVariant_1 = getItemVariantInstance(itemFromDb.getId(), new BigDecimal("250.00"));
+		itemVariant_2 = getItemVariantInstance(itemFromDb.getId(), new BigDecimal("350.00"));
+		itemVariantService.saveItemVariant(itemVariant_1);
+		itemVariantService.saveItemVariant(itemVariant_2);
+		itemVariant_1FromDb = itemVariantService.getItemVariant(itemVariant_1.getId());
+		itemVariant_2FromDb = itemVariantService.getItemVariant(itemVariant_2.getId());
+		LOGGER.debug("ItemVariants in Db were created with id={} and id={}", itemVariant_1FromDb.getId(),
+				itemVariant_2FromDb.getId());
 
-		LOGGER.debug("Creating contracts in JVM");
-		instance_1 = getInstance(new Timestamp(new Date().getTime()), ContractStatus.CONTRACT_PREPARATION, PayForm.CASH,
-				PayStatus.UNPAID, customer_1FromDb.getId(), new BigDecimal("0.00"));
-		instance_2 = getInstance(new Timestamp(new Date().getTime()), ContractStatus.CONTRACT_PREPARATION,
-				PayForm.CASHLESS, PayStatus.UNPAID, customer_1FromDb.getId(), new BigDecimal("0.00"));
-		LOGGER.debug("Contracts in JVM were created");
+		LOGGER.debug("Creating itemVariantInContract in JVM");
+		instance_1 = getItemVariantInContractInstance(10, contract_1FromDb.getId(), itemVariant_1.getId());
+		instance_2 = getItemVariantInContractInstance(20, contract_1FromDb.getId(), itemVariant_1.getId());
+		LOGGER.debug("itemVariantInContract in JVM were created");
 
 		LOGGER.debug("Finish preparation of the method");
 
@@ -99,6 +142,24 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	@After
 	public void runAfterTestMethod() {
 		LOGGER.debug("Start completion of the method");
+
+		LOGGER.debug("Start deleting itemVariantsInContract from Db");
+		for (ItemVariantInContract inst : service.getAllItemVariantsInContract()) {
+			service.deleteItemVariantInContract(inst.getId());
+		}
+		LOGGER.debug("ItemVariantsInContracts were deleted from Db ");
+
+		LOGGER.debug("Start deleting itemVariants from Db");
+		for (ItemVariant iV : itemVariantService.getAllItemVariants()) {
+			itemVariantService.deleteItemVariant(iV.getId());
+		}
+		LOGGER.debug("ItemVariants were deleted from Db ");
+
+		LOGGER.debug("Start deleting items from Db");
+		for (Item i : itemService.getAll()) {
+			itemService.delete(i.getId());
+		}
+		LOGGER.debug("Items were deleted from Db ");
 
 		LOGGER.debug("Start deleting contracts from Db");
 		for (Contract cnt : service.getAllContract()) {
@@ -128,22 +189,23 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	}
 
 	/*
+	 * Instances are eq. if values of the corresponding columns are eq.
+	 */
+
+	/*
 	 * Two objects with the same Id are compared: created in Java and saved in &
 	 * extracted from the database
 	 */
 	@Test
 	public void insertTest() {
 		LOGGER.debug("Start insertTest method");
-		service.saveContract(instance_1);
-		instance_1FromDb = service.getContract(instance_1.getId());
+		service.saveItemVariantInContract(instance_1);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
 
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 
-		Assert.isTrue(
-				(instance_1FromDb.getCreated() != null) && (instance_1FromDb.getContractStatus() != null)
-						&& (instance_1FromDb.getPayForm() != null) && (instance_1FromDb.getPayStatus() != null)
-						&& (instance_1FromDb.getCustomerId() != null) && (instance_1FromDb.getTotalPrice() != null),
-				"columns values must not by empty");
+		Assert.isTrue((instance_1FromDb.getQuantity() != null) && (instance_1FromDb.getContractId() != null)
+				&& (instance_1FromDb.getItemVariantId() != null), "columns values must not by empty");
 
 		Assert.isTrue(instance_1FromDb.equals(instance_1), "values of the corresponding columns must by eq.");
 		LOGGER.debug("Finish insertTest method");
@@ -154,45 +216,26 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	 * Test for the insertion of several objects, for each are compared two
 	 * objects with the same Id: created in Java and extracted from the database
 	 */
+
 	@Test
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
-		service.saveContractMultiple(instance_1, instance_2);
-		instance_1FromDb = service.getContract(instance_1.getId());
-		instance_2FromDb = service.getContract(instance_2.getId());
+		service.saveItemVariantInContractMultiple(instance_1, instance_2);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
+		instance_2FromDb = service.getItemVariantInContract(instance_2.getId());
 
 		Assert.notNull(instance_1FromDb, "instance_1 must be saved");
 		Assert.notNull(instance_2FromDb, "instance_2 must be saved");
 
-		Assert.isTrue(
-				(instance_1FromDb.getCreated() != null) && (instance_1FromDb.getContractStatus() != null)
-						&& (instance_1FromDb.getPayForm() != null) && (instance_1FromDb.getPayStatus() != null)
-						&& (instance_1FromDb.getCustomerId() != null) && (instance_1FromDb.getTotalPrice() != null),
-				"columns values must not by empty");
+		Assert.isTrue((instance_1FromDb.getQuantity() != null) && (instance_1FromDb.getContractId() != null)
+				&& (instance_1FromDb.getItemVariantId() != null), "columns values must not by empty");
 
-		Assert.isTrue(
-				(instance_2FromDb.getCreated() != null) && (instance_2FromDb.getContractStatus() != null)
-						&& (instance_2FromDb.getPayForm() != null) && (instance_2FromDb.getPayStatus() != null)
-						&& (instance_2FromDb.getCustomerId() != null) && (instance_2FromDb.getTotalPrice() != null),
-				"columns values must not by empty");
+		Assert.isTrue((instance_2FromDb.getQuantity() != null) && (instance_2FromDb.getContractId() != null)
+				&& (instance_2FromDb.getItemVariantId() != null), "columns values must not by empty");
 
-		Assert.isTrue(
-				instance_1FromDb.getCreated().equals(instance_1.getCreated())
-						&& instance_1FromDb.getContractStatus().equals(instance_1.getContractStatus())
-						&& instance_1FromDb.getPayForm().equals(instance_1.getPayForm())
-						&& instance_1FromDb.getPayStatus().equals(instance_1.getPayStatus())
-						&& instance_1FromDb.getCustomerId().equals(instance_1.getCustomerId())
-						&& instance_1FromDb.getTotalPrice().equals(instance_1.getTotalPrice()),
-				"values of the corresponding columns must by eq.");
+		Assert.isTrue(instance_1FromDb.equals(instance_1), "values of the corresponding columns must by eq.");
 
-		Assert.isTrue(
-				instance_2FromDb.getCreated().equals(instance_2.getCreated())
-						&& instance_2FromDb.getContractStatus().equals(instance_2.getContractStatus())
-						&& instance_2FromDb.getPayForm().equals(instance_2.getPayForm())
-						&& instance_2FromDb.getPayStatus().equals(instance_2.getPayStatus())
-						&& instance_2FromDb.getCustomerId().equals(instance_2.getCustomerId())
-						&& instance_2FromDb.getTotalPrice().equals(instance_2.getTotalPrice()),
-				"values of the corresponding columns must by eq.");
+		Assert.isTrue(instance_2FromDb.equals(instance_2), "values of the corresponding columns must by eq.");
 
 		LOGGER.debug("Finish  insertMultipleTest method");
 	}
@@ -204,42 +247,28 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	@Test
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
-		service.saveContract(instance_1);
+		service.saveItemVariantInContract(instance_1);
 
-		modifiedInstance = service.getContract(instance_1.getId());
-		modifiedInstance.setCreated(new Timestamp(new Date().getTime()));
-		modifiedInstance.setContractStatus(ContractStatus.PRODUCTION_PREPARATION);
-		modifiedInstance.setPayForm(PayForm.CASHLESS);
-		modifiedInstance.setPayStatus(PayStatus.PAID);
-		modifiedInstance.setCustomerId(customer_2FromDb.getId());
-		modifiedInstance.setTotalPrice(instance_1.getTotalPrice().add(new BigDecimal("2")));
+		modifiedInstance = service.getItemVariantInContract(instance_1.getId());
 
-		service.saveContract(modifiedInstance);
+		modifiedInstance.setQuantity(30);
+		modifiedInstance.setContractId(contract_2FromDb.getId());
+		modifiedInstance.setItemVariantId(itemVariant_2FromDb.getId());
 
-		instance_1FromDb = service.getContract(modifiedInstance.getId());
+		service.saveItemVariantInContract(modifiedInstance);
+
+		instance_1FromDb = service.getItemVariantInContract(modifiedInstance.getId());
 
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
 
-		Assert.isTrue(
-				!(instance_1.getCreated().equals(modifiedInstance.getCreated()))
-						&& !(instance_1.getContractStatus().equals(modifiedInstance.getContractStatus()))
-						&& !(instance_1.getPayForm().equals(modifiedInstance.getPayForm()))
-						&& !(instance_1.getPayStatus().equals(modifiedInstance.getPayStatus()))
-						&& !(instance_1.getCustomerId().equals(modifiedInstance.getCustomerId()))
-						&& !(instance_1.getTotalPrice().equals(modifiedInstance.getTotalPrice())),
+		Assert.isTrue(!(instance_1.equals(modifiedInstance)),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
 
 		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),
 				"id of instance from Db must by eq. to id of  modified instances");
 
-		Assert.isTrue(
-				(instance_1FromDb.getCreated().equals(modifiedInstance.getCreated()))
-						&& (instance_1FromDb.getContractStatus().equals(modifiedInstance.getContractStatus()))
-						&& (instance_1FromDb.getPayForm().equals(modifiedInstance.getPayForm()))
-						&& (instance_1FromDb.getPayStatus().equals(modifiedInstance.getPayStatus()))
-						&& (instance_1FromDb.getCustomerId().equals(modifiedInstance.getCustomerId()))
-						&& (instance_1FromDb.getTotalPrice().equals(modifiedInstance.getTotalPrice())),
+		Assert.isTrue((instance_1FromDb.equals(modifiedInstance)),
 				"values of the corresponding columns of instance from Db and modified instances must by eq.");
 
 		LOGGER.debug("Finish  updateTest method");
@@ -252,24 +281,15 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	@Test
 	public void getTest() {
 		LOGGER.debug("Start getTest method");
-		service.saveContract(instance_1);
-		instance_1FromDb = service.getContract(instance_1.getId());
+		service.saveItemVariantInContract(instance_1);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
+
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 
-		Assert.isTrue(
-				(instance_1FromDb.getCreated() != null) && (instance_1FromDb.getContractStatus() != null)
-						&& (instance_1FromDb.getPayForm() != null) && (instance_1FromDb.getPayStatus() != null)
-						&& (instance_1FromDb.getCustomerId() != null) && (instance_1FromDb.getTotalPrice() != null),
-				"columns values must not by empty");
+		Assert.isTrue((instance_1FromDb.getQuantity() != null) && (instance_1FromDb.getContractId() != null)
+				&& (instance_1FromDb.getItemVariantId() != null), "columns values must not by empty");
 
-		Assert.isTrue(
-				instance_1FromDb.getCreated().equals(instance_1.getCreated())
-						&& instance_1FromDb.getContractStatus().equals(instance_1.getContractStatus())
-						&& instance_1FromDb.getPayForm().equals(instance_1.getPayForm())
-						&& instance_1FromDb.getPayStatus().equals(instance_1.getPayStatus())
-						&& instance_1FromDb.getCustomerId().equals(instance_1.getCustomerId())
-						&& instance_1FromDb.getTotalPrice().equals(instance_1.getTotalPrice()),
-				"values of the corresponding columns must by eq.");
+		Assert.isTrue(instance_1FromDb.equals(instance_1), "values of the corresponding columns must by eq.");
 
 		LOGGER.debug("Finish  getTest method");
 	}
@@ -287,8 +307,9 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 		instances = new ArrayList<>();
 		instances.add(instance_1);
 		instances.add(instance_2);
-		service.saveContractMultiple(instance_1, instance_2);
-		instancesFromDb = service.getAllContract();
+		service.saveItemVariantInContractMultiple(instance_1, instance_2);
+		instancesFromDb = service.getAllItemVariantsInContract();
+
 		Assert.isTrue(instances.size() == instancesFromDb.size(),
 				"count of from Db instances must by eq. to count of inserted instances");
 		for (int i = 0; i < instances.size(); i++) {
@@ -309,19 +330,21 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
-		service.saveContract(instance_1);
-		instance_1FromDb = service.getContract(instance_1.getId());
-		service.deleteContract(instance_1.getId());
+		service.saveItemVariantInContract(instance_1);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
+		service.deleteItemVariantInContract(instance_1.getId());
+
 		Assert.notNull(instance_1FromDb, "instance must be saved");
-		Assert.isNull(service.getContract(instance_1.getId()), "instance must be deleted");
+		Assert.isNull(service.getItemVariantInContract(instance_1.getId()), "instance must be deleted");
+
 		LOGGER.debug("Finish deleteTest method");
 	}
 
 	/*
-	 * method creates a new instance & gives it args
+	 * method creates a new Contract instance & gives it args
 	 */
-	private Contract getInstance(Timestamp сreated, ContractStatus contractStatus, PayForm payForm, PayStatus payStatus,
-			Integer customerId, BigDecimal totalPrice) {
+	private Contract getContractInstance(Timestamp сreated, ContractStatus contractStatus, PayForm payForm,
+			PayStatus payStatus, Integer customerId, BigDecimal totalPrice) {
 		Contract instance = new Contract();
 		instance.setCreated(сreated);
 		instance.setContractStatus(contractStatus);
@@ -331,4 +354,27 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 		instance.setTotalPrice(totalPrice);
 		return instance;
 	}
+
+	/*
+	 * method creates a new ItemVariant instance & gives it args
+	 */
+	private ItemVariant getItemVariantInstance(Integer itemId, BigDecimal variantPrice) {
+		ItemVariant instance = new ItemVariant();
+		instance.setItemId(itemId);
+		instance.setVariantPrice(variantPrice);
+		return instance;
+	}
+
+	/*
+	 * method creates a new ItemVariantInContract instance & gives it args
+	 */
+	private ItemVariantInContract getItemVariantInContractInstance(Integer quantity, Integer contractId,
+			Integer itemVariantId) {
+		ItemVariantInContract instance = new ItemVariantInContract();
+		instance.setQuantity(quantity);
+		instance.setContractId(contractId);
+		instance.setItemVariantId(itemVariantId);
+		return instance;
+	}
+
 }

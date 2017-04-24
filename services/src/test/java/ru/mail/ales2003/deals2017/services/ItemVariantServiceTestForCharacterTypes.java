@@ -151,6 +151,10 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 	}
 
 	/*
+	 * Instances are eq. if values of the corresponding columns are eq.
+	 */
+	
+	/*
 	 * Test for the insertion of several objects, for each are compared two
 	 * objects with the same Id: created in Java and saved in & extracted from
 	 * the database

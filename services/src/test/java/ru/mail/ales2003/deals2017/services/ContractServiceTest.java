@@ -39,6 +39,17 @@ public class ContractServiceTest extends AbstractTest {
 	@Inject
 	private ICustomerGroupService customerGroupService;
 
+	private Manager manager;
+	private Manager managerFromDb;
+
+	private CustomerGroup customerGroup;
+	private CustomerGroup customerGroupFromDb;
+
+	private Customer customer_1;
+	private Customer customer_1FromDb;
+	private Customer customer_2;
+	private Customer customer_2FromDb;
+
 	private Contract instance_1;
 	private Contract instance_2;
 	private Contract instance_1FromDb;
@@ -46,17 +57,6 @@ public class ContractServiceTest extends AbstractTest {
 	private Contract modifiedInstance;
 	private List<Contract> instances;
 	private List<Contract> instancesFromDb;
-
-	private Customer customer_1;
-	private Customer customer_1FromDb;
-	private Customer customer_2;
-	private Customer customer_2FromDb;
-
-	private Manager manager;
-	private Manager managerFromDb;
-
-	private CustomerGroup customerGroup;
-	private CustomerGroup customerGroupFromDb;
 
 	@Before
 	public void runBeforeTestMethod() {
@@ -131,6 +131,10 @@ public class ContractServiceTest extends AbstractTest {
 
 		LOGGER.debug("Finish completion of the method");
 	}
+
+	/*
+	 * Instances are eq. if values of the corresponding columns are eq.
+	 */
 
 	/*
 	 * Two objects with the same Id are compared: created in Java and saved in &
@@ -212,6 +216,7 @@ public class ContractServiceTest extends AbstractTest {
 		service.saveContract(instance_1);
 
 		modifiedInstance = service.getContract(instance_1.getId());
+
 		modifiedInstance.setCreated(new Timestamp(new Date().getTime()));
 		modifiedInstance.setContractStatus(ContractStatus.PRODUCTION_PREPARATION);
 		modifiedInstance.setPayForm(PayForm.CASHLESS);
