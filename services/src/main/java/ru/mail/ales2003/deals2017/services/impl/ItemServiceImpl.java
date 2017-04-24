@@ -63,12 +63,10 @@ public class ItemServiceImpl implements IItemService {
 			return;
 		} else if (item.getId() == null) {
 			itemDao.insert(item);
-			LOGGER.info("Inserted new {}: id={}, name={}, description={}, basicPrice={}", className, item.getId(),
-					item.getName(), item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Inserted new {}: {}", className, item.toString());
 		} else {
 			itemDao.update(item);
-			LOGGER.info("Updated {}: id={}, name={}, description={}, basicPrice={}", className, item.getId(),
-					item.getName(), item.getDescription(), item.getBasicPrice());
+			LOGGER.info("Updated {}: {}", className, item.toString());
 		}
 	}
 
