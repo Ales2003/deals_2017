@@ -156,6 +156,34 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	}
 
 	/*
+	 * Method tests the throwing of IAE by re removal an exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void expectIAEByReRemovTest() {
+		LOGGER.debug("Start expectIAEByReRemovTest method");
+		service.save(type_1);
+		CharacterType typeFromDb = service.get(type_1.getId());
+		deleteFromDb(type_1.getId());
+		// re-removal
+		deleteFromDb(type_1.getId());
+		LOGGER.debug("Finish expectIAEByReRemovTest method");
+	}
+
+	/*
+	 * Method tests the throwing of IAE by reading the entity that doesn't exist
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void expectIAEByEmptinessReadingTest() {
+		LOGGER.debug("Start expectIAEByEmptinessReadingTest method");
+		service.save(type_1);
+		CharacterType typeFromDb = service.get(type_1.getId());
+		deleteFromDb(type_1.getId());
+		// reading
+		service.get(type_1.getId());
+		LOGGER.debug("Finish expectIAEByEmptinessReadingTest method");
+	}
+
+	/*
 	 * method creates a new instance & gives it name
 	 */
 	private CharacterType getInstance(Measure name) {

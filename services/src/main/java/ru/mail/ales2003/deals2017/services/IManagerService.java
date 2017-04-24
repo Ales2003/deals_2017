@@ -15,7 +15,7 @@ public interface IManagerService {
 	Manager get(Integer id);
 
 	/**
-	 * @return List&ltManager&gt entitys
+	 * @return List&ltManager&gt entities
 	 */
 	List<Manager> getAll();
 

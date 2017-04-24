@@ -145,7 +145,7 @@ public class CustomerGroupServiceTest extends AbstractTest {
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
 	 */
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
 		service.save(group_1);

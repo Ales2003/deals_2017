@@ -26,7 +26,7 @@ public interface IItemVariantService {
 	ItemVariant getItemVariant(Integer itemVariantId);
 
 	/**
-	 * @return List&ltCharacterType&gt itemVariants
+	 * @return List&ltCharacterType&gt entities
 	 */
 	List<ItemVariant> getAllItemVariants();
 

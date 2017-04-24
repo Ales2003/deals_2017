@@ -21,53 +21,55 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	@Inject
 	private ICustomerGroupDao customerGroupDao;
 
+	private String className = CustomerGroup.class.getSimpleName();
+
 	@Override
 	public CustomerGroup get(Integer id) {
 		if (customerGroupDao.get(id) == null) {
-			LOGGER.error("Error: customerGroup with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
-			CustomerGroup customerGroup = customerGroupDao.get(id);
-			LOGGER.info("Read one customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
-			return customerGroup;
+			CustomerGroup entity = customerGroupDao.get(id);
+			LOGGER.info("Read one {} entity: {}", className, entity.toString());
+			return entity;
 		}
 	}
 
 	@Override
 	public List<CustomerGroup> getAll() {
-		if (customerGroupDao.getAll() == null) {
-			LOGGER.error("Error: all customerGroups don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all customerGroups");
-			return customerGroupDao.getAll();
+		LOGGER.info("{} entities storage returns {} entities.", className, customerGroupDao.getAll().size());
+		LOGGER.info("Read all {} entities:", className);
+		for (CustomerGroup cG : customerGroupDao.getAll()) {
+			LOGGER.info("{} entity = {}", className, cG.toString());
 		}
+		return customerGroupDao.getAll();
 	}
 
 	@Override
-	public void save(CustomerGroup customerGroup) {
-		if (customerGroup == null) {
-			LOGGER.error("Error: as the customerGroup was sent a null reference");
+	public void save(CustomerGroup entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
-		} else if (customerGroup.getId() == null) {
-			if (customerGroup.getName() == null) {
-				customerGroup.setName(CustomerType.INDIVIDUAL);
+		} else if (entity.getId() == null) {
+			if (entity.getName() == null) {
+				entity.setName(CustomerType.INDIVIDUAL);
 			}
-			customerGroupDao.insert(customerGroup);
-			LOGGER.info("Inserted new customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			customerGroupDao.insert(entity);
+			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
-			customerGroupDao.update(customerGroup);
-			LOGGER.info("Updated customerGroup: id={}, name={}", customerGroup.getId(), customerGroup.getName());
+			customerGroupDao.update(entity);
+			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
 	}
 
 	@Override
-	public void saveMultiple(CustomerGroup... customerGroupArray) {
-		for (CustomerGroup customerGroup : customerGroupArray) {
-			LOGGER.debug("Inserted new customerGroup from array: " + customerGroup);
-			save(customerGroup);
+	public void saveMultiple(CustomerGroup... entityArray) {
+		for (CustomerGroup entity : entityArray) {
+			LOGGER.info("Inserted new {} entity from array: {}", className, entity.toString());
+			save(entity);
 		}
-		LOGGER.info("Inserted customerGroups from array");
+		LOGGER.info("{} entities from array were inserted", className);
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 			return;
 		} else {
 			customerGroupDao.delete(id);
-			LOGGER.info("Deleted customerGroup by id: " + id);
+			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
 }

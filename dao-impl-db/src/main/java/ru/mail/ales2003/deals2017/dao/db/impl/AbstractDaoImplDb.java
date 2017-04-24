@@ -27,7 +27,7 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 
 	@Inject
 	protected JdbcTemplate jdbcTemplate;
-	
+
 	// =====================Methods to implementing for CREATION AREA
 	/**
 	 * @return String InsertQuery
@@ -110,15 +110,16 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	@Override
 	public T get(PK id) {
 		if (id == null) {
-			throw new IllegalArgumentException("Error: as the id was sent a null reference");
+			throw new IllegalArgumentException("Error: as the id was sent a null reference.");
 		}
 		final String READ_BY_ID_SQL = getSelectQuery() + " where id = ?";
 		try {
 			return (T) jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					(RowMapper<T>) new BeanPropertyRowMapper<T>(getMappedClass()));
 		} catch (EmptyResultDataAccessException e) {
-			String errMsg = String.format("[%s] with id = [%s] don't exist in storage)",
-					getMappedClass().getCanonicalName(), id);
+			String errMsg = String.format(
+					"You want to READ the [%s] with id = [%s], but it doesn't exist in the storage.",
+					getMappedClass().getSimpleName(), id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg, e);
 		}
@@ -171,6 +172,13 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 		// can also add deletion check
 
 		final String DELETE_BY_ID_SQL = getDeleteQuery();
-		jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
+		int i = jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
+		if (i == 0) {
+			String errMsg = String.format(
+					"You want to DELETE the [%s] with id = [%s], but it doesn't exist in the storage.",
+					getMappedClass().getSimpleName(), id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		}
 	}
 }

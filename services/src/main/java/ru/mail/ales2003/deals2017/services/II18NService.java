@@ -15,7 +15,7 @@ public interface II18NService {
 	I18N get(Integer id);
 
 	/**
-	 * @return List&ltI18N&gt  entitys
+	 * @return List&ltI18N&gt  entities
 	 */
 	List<I18N> getAll();
 

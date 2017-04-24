@@ -115,17 +115,17 @@ public class CharacterTypeDaoImpl extends AbstractDaoImplDb<CharacterType, Integ
 	 * IllegalArgumentException(errMsg, e); } }
 	 */
 
-	/*@Override public List<CharacterType> getAll() { 
-		try { final String 	}
-	 READ_ALL_SQL = "select * from character_type";
-	 List<CharacterType> characterTypes = jdbcTemplate.query(READ_ALL_SQL, new BeanPropertyRowMapper<CharacterType>(CharacterType.class));
-	 LOGGER.debug("[{}]. Store returns [{}] entitys.",  CharacterType.class.getSimpleName(), characterTypes.size()); return
-	 characterTypes; }
-	catch (EmptyResultDataAccessException e) { LOGGER.error("[%s]. Store returns incorrect entity count.",
-	 CharacterType.class.getSimpleName()); return null;
-	 throw e; }
-	}*/
-	 
+	/*
+	 * @Override public List<CharacterType> getAll() { try { final String }
+	 * READ_ALL_SQL = "select * from character_type"; List<CharacterType>
+	 * characterTypes = jdbcTemplate.query(READ_ALL_SQL, new
+	 * BeanPropertyRowMapper<CharacterType>(CharacterType.class));
+	 * LOGGER.debug("[{}]. Store returns [{}] entitys.",
+	 * CharacterType.class.getSimpleName(), characterTypes.size()); return
+	 * characterTypes; } catch (EmptyResultDataAccessException e) {
+	 * LOGGER.error("[%s]. Store returns incorrect entity count.",
+	 * CharacterType.class.getSimpleName()); return null; throw e; } }
+	 */
 
 	// =============UPDATE AREA===============
 	/*
