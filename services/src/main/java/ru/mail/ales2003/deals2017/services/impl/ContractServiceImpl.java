@@ -25,60 +25,63 @@ public class ContractServiceImpl implements IContractService {
 	@Inject
 	private IItemVariantInContractDao itemVariantInContractDao;
 
+	private String contractClassName = Contract.class.getSimpleName();
+
+	private String itemVariantInContractClassName = ItemVariantInContract.class.getSimpleName();
+
+	// ============================Contract management and handling
+
+	// =============READING AREA===============
+
 	@Override
 	public Contract getContract(Integer id) {
 		if (contractDao.get(id) == null) {
-			LOGGER.error("Error: contract with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", contractClassName, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
 			Contract contract = contractDao.get(id);
-			LOGGER.info(
-					"Read one contract: id={}, сreated={}, contract_status={}, pay_form={}, pay_status={}, customer_id={}, total_price={}",
-					contract.getId(), contract.getCreated(), contract.getContractStatus(), contract.getPayForm(),
-					contract.getPayStatus(), contract.getCustomerId(), contract.getTotalPrice());
+			LOGGER.info("Read one {} entity: {}", contractClassName, contract.toString());
 			return contract;
 		}
 	}
 
 	@Override
 	public List<Contract> getAllContract() {
-		if (contractDao.getAll() == null) {
-			LOGGER.error("Error: all contracts don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all contracts");
-			return contractDao.getAll();
+		LOGGER.info("{} entities storage returns {} entities.", contractClassName, contractDao.getAll().size());
+		LOGGER.info("Read all {} entities:", contractClassName);
+		for (Contract cT : contractDao.getAll()) {
+			LOGGER.info("{} entity = {}", contractClassName, cT.toString());
 		}
+		return contractDao.getAll();
 	}
+
+	// =============CREATION/UPDATE AREA===============
 
 	@Override
 	public void saveContract(Contract contract) {
 		if (contract == null) {
-			LOGGER.error("Error: as the customer was sent a null reference");
+			LOGGER.error("Error: as the {} entity was sent a null reference", contractClassName);
 			return;
 		} else if (contract.getId() == null) {
 			contractDao.insert(contract);
-			LOGGER.info(
-					"Inserted new contract: id={}, сreated={}, contract_status={}, pay_form={}, pay_status={}, customer_id={}, total_price={}",
-					contract.getId(), contract.getCreated(), contract.getContractStatus(), contract.getPayForm(),
-					contract.getPayStatus(), contract.getCustomerId(), contract.getTotalPrice());
+			LOGGER.info("Inserted new {} entity: {}", contractClassName, contract.toString());
 		} else {
 			contractDao.update(contract);
-			LOGGER.info(
-					"Updated contract: id={}, сreated={}, contract_status={}, pay_form={}, pay_status={}, customer_id={}, total_price={}",
-					contract.getId(), contract.getCreated(), contract.getContractStatus(), contract.getPayForm(),
-					contract.getPayStatus(), contract.getCustomerId(), contract.getTotalPrice());
+			LOGGER.info("Updated one {} entity: {}", contractClassName, contract.toString());
 		}
 	}
 
 	@Override
 	public void saveContractMultiple(Contract... contractArray) {
 		for (Contract contract : contractArray) {
-			LOGGER.debug("Inserted new contract from array: " + contract);
+			LOGGER.info("Inserted new {} entity from array: {}", contractClassName, contract.toString());
 			saveContract(contract);
 		}
-		LOGGER.info("Inserted contracts from array");
+		LOGGER.info("{} entities from array were inserted", contractClassName);
 	}
+
+	// =============DELETE AREA===============
 
 	@Override
 	public void deleteContract(Integer id) {
@@ -87,45 +90,76 @@ public class ContractServiceImpl implements IContractService {
 			return;
 		} else {
 			contractDao.delete(id);
-			LOGGER.info("Deleted contract by id: " + id);
+			LOGGER.info("Deleted {} entity by id: {}", contractClassName, id);
 		}
 	}
 
-	// Goods management and handling in a contract
+	// ======================ItemVariant management and handling in a contract
+
+	// =============READING AREA===============
 
 	@Override
-	public ItemVariantInContract getItemInContract(Integer itemInContractId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemVariantInContract getItemVariantInContract(Integer id) {
+		if (itemVariantInContractDao.get(id) == null) {
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage",
+					itemVariantInContractClassName, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		} else {
+			ItemVariantInContract item = itemVariantInContractDao.get(id);
+			LOGGER.info("Read one {} entity: {}", itemVariantInContractClassName, item.toString());
+			return item;
+		}
 	}
 
 	@Override
-	public List<ItemVariantInContract> getAllItemInContract() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ItemVariantInContract> getAllItemVariantsInContract() {
+		LOGGER.info("{} entities storage returns {} entities.", itemVariantInContractClassName,
+				itemVariantInContractDao.getAll().size());
+		LOGGER.info("Read all {} entities:", itemVariantInContractClassName);
+		for (ItemVariantInContract cT : itemVariantInContractDao.getAll()) {
+			LOGGER.info("{} entity = {}", itemVariantInContractClassName, cT.toString());
+		}
+		return itemVariantInContractDao.getAll();
+	}
+
+	// =============CREATION/UPDATE AREA===============
+
+	@Override
+	public void saveItemVariantInContract(ItemVariantInContract item) {
+		if (item == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", itemVariantInContractClassName);
+			return;
+		} else if (item.getId() == null) {
+			itemVariantInContractDao.insert(item);
+			LOGGER.info("Inserted new {} entity: {}", itemVariantInContractClassName, item.toString());
+		} else {
+			itemVariantInContractDao.update(item);
+			LOGGER.info("Updated one {} entity: {}", itemVariantInContractClassName, item.toString());
+		}
 	}
 
 	@Override
-	public void saveItemInContract(ItemVariantInContract itemInContract) {
-		// TODO Auto-generated method stub
+	public void saveItemVariantInContractMultiple(ItemVariantInContract... itemsArray) {
+		for (ItemVariantInContract item : itemsArray) {
+			LOGGER.info("Inserted new {} entity from array: {}", itemVariantInContractClassName, item.toString());
+			saveItemVariantInContract(item);
+		}
+		LOGGER.info("{} entities from array were inserted", itemVariantInContractClassName);
 
 	}
+
+	// =============DELETE AREA===============
 
 	@Override
-	public void saveItemInContractMultiple(ItemVariantInContract... itemInContractArray) {
-		// TODO Auto-generated method stub
-
+	public void deleteItemVariantInContract(Integer id) {
+		if (id == null) {
+			LOGGER.error("Error: as the id was sent a null reference");
+			return;
+		} else {
+			itemVariantInContractDao.delete(id);
+			LOGGER.info("Deleted {} entity by id: {}", itemVariantInContractClassName, id);
+		}
 	}
 
-	@Override
-	public void deleteItemInContract(Integer itemInContractid) {
-		// TODO Auto-generated method stub
-
-	}
-
-	// !!!!!!!!!!!!!!+=============
-	/*
-	 * @Override public List<ItemInContract> ic() { return
-	 * contractDao.findAll(); }
-	 */
 }

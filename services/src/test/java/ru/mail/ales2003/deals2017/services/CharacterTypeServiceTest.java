@@ -24,6 +24,11 @@ public class CharacterTypeServiceTest extends AbstractTest {
 
 	private CharacterType type_1;
 	private CharacterType type_2;
+	private CharacterType type_1FromDb;
+	private CharacterType type_2FromDb;
+	private CharacterType modifiedType;
+	List<CharacterType> types;
+	List<CharacterType> typesFromDb;
 
 	@Before
 	public void runBeforeTestMethod() {
@@ -51,10 +56,10 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void insertTest() {
 		LOGGER.debug("Start insertTest method");
 		service.save(type_1);
-		CharacterType typeFromDb = service.get(type_1.getId());
-		Assert.notNull(typeFromDb, "group must be saved");
-		Assert.notNull(typeFromDb.getName(), "'name' column must not by empty");
-		Assert.isTrue(typeFromDb.getName().equals(type_1.getName()), "name from Db must by eq. to prepared name");
+		type_1FromDb = service.get(type_1.getId());
+		Assert.notNull(type_1FromDb, "group must be saved");
+		Assert.notNull(type_1FromDb.getName(), "'name' column must not by empty");
+		Assert.isTrue(type_1FromDb.getName().equals(type_1.getName()), "name from Db must by eq. to prepared name");
 		LOGGER.debug("Finish insertTest method");
 	}
 
@@ -66,8 +71,8 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
 		service.saveMultiple(type_1, type_2);
-		CharacterType type_1FromDb = service.get(type_1.getId());
-		CharacterType type_2FromDb = service.get(type_2.getId());
+		type_1FromDb = service.get(type_1.getId());
+		type_2FromDb = service.get(type_2.getId());
 		Assert.notNull(type_1FromDb, "type_1 must be saved");
 		Assert.notNull(type_2FromDb, "type_2 must be saved");
 		Assert.notNull(type_1FromDb.getName(), "'name' column must not by empty");
@@ -85,16 +90,17 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");
 		service.save(type_1);
-		CharacterType modifiedType = service.get(type_1.getId());
+		modifiedType = service.get(type_1.getId());
 		modifiedType.setName(Measure.KG);
 		service.save(modifiedType);
-		CharacterType typeFromDb = service.get(modifiedType.getId());
+		type_1FromDb = service.get(modifiedType.getId());
 		Assert.isTrue((type_1.getId().equals(modifiedType.getId())),
 				"id of initial type must by eq. to modified type id");
 		Assert.isTrue(!(type_1.getName().equals(modifiedType.getName())),
 				"name of initial and modified types must not by eq.");
-		Assert.isTrue((typeFromDb.getId().equals(modifiedType.getId())), "id from Db must by eq. to modified id");
-		Assert.isTrue(typeFromDb.getName().equals(modifiedType.getName()), "name from Db must by eq. to modified name");
+		Assert.isTrue((type_1FromDb.getId().equals(modifiedType.getId())), "id from Db must by eq. to modified id");
+		Assert.isTrue(type_1FromDb.getName().equals(modifiedType.getName()),
+				"name from Db must by eq. to modified name");
 		LOGGER.debug("Finish  updateTest method");
 	}
 
@@ -106,10 +112,10 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void getTest() {
 		LOGGER.debug("Start getTest method");
 		service.save(type_1);
-		CharacterType typeFromDb = service.get(type_1.getId());
-		Assert.notNull(typeFromDb, "type must be saved");
-		Assert.notNull(typeFromDb.getName(), "'name' column must not by empty");
-		Assert.isTrue(typeFromDb.getName().equals(type_1.getName()),
+		type_1FromDb = service.get(type_1.getId());
+		Assert.notNull(type_1FromDb, "type must be saved");
+		Assert.notNull(type_1FromDb.getName(), "'name' column must not by empty");
+		Assert.isTrue(type_1FromDb.getName().equals(type_1.getName()),
 				"name of type from Db must by eq. to prepared types name");
 		LOGGER.debug("Finish  getTest method");
 	}
@@ -122,11 +128,11 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	@Test
 	public void getAllTest() {
 		LOGGER.debug("Start getAllTest method");
-		List<CharacterType> types = new ArrayList<>();
+		types = new ArrayList<>();
 		types.add(type_1);
 		types.add(type_2);
 		service.saveMultiple(type_1, type_2);
-		List<CharacterType> typesFromDb = service.getAll();
+		typesFromDb = service.getAll();
 		Assert.isTrue(types.size() == typesFromDb.size(),
 				"count of from Db types must by eq. to count of inserted types");
 		for (int i = 0; i < types.size(); i++) {
@@ -147,9 +153,9 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void deleteTest() {
 		LOGGER.debug("Start deleteTest method");
 		service.save(type_1);
-		CharacterType typeFromDb = service.get(type_1.getId());
+		type_1FromDb = service.get(type_1.getId());
 		deleteFromDb(type_1.getId());
-		Assert.notNull(typeFromDb, "type must be saved");
+		Assert.notNull(type_1FromDb, "type must be saved");
 		// here it is expected the IllegalArgumentException.
 		Assert.isNull(service.get(type_1.getId()), "type must be deleted");
 		LOGGER.debug("Finish deleteTest method");
@@ -162,7 +168,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void expectIAEByReRemovTest() {
 		LOGGER.debug("Start expectIAEByReRemovTest method");
 		service.save(type_1);
-		CharacterType typeFromDb = service.get(type_1.getId());
+		type_1FromDb = service.get(type_1.getId());
 		deleteFromDb(type_1.getId());
 		// re-removal
 		deleteFromDb(type_1.getId());
@@ -176,7 +182,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 	public void expectIAEByEmptinessReadingTest() {
 		LOGGER.debug("Start expectIAEByEmptinessReadingTest method");
 		service.save(type_1);
-		CharacterType typeFromDb = service.get(type_1.getId());
+		type_1FromDb = service.get(type_1.getId());
 		deleteFromDb(type_1.getId());
 		// reading
 		service.get(type_1.getId());

@@ -4,41 +4,70 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
-import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 
 public interface IContractService {
 
+	// ==================Contracts management and handling
+	/**
+	 * @param contractId
+	 * @return Contract contract
+	 */
 	Contract getContract(Integer contractId);
 
+	/**
+	 * @return List&ltContract&gt contract
+	 */
 	List<Contract> getAllContract();
 
+	/**
+	 * @param contract
+	 */
 	@Transactional
 	void saveContract(Contract contract);
 
+	/**
+	 * @param contractArray
+	 */
 	@Transactional
-	void saveContractMultiple(Contract... contract);
+	void saveContractMultiple(Contract... contractArray);
 
+	/**
+	 * @param contractId
+	 */
 	@Transactional
 	void deleteContract(Integer contractId);
 
-	// Goods management and handling in a contract
+	// ==================Item variants management and handling in a contract
 
-	ItemVariantInContract getItemInContract(Integer itemInContractId);
+	/**
+	 * @param itemId
+	 * @return ItemVariantInContract item
+	 */
+	ItemVariantInContract getItemVariantInContract(Integer itemId);
 
-	List<ItemVariantInContract> getAllItemInContract();
+	/**
+	 * @return List&ltContract&gt items
+	 */
+	List<ItemVariantInContract> getAllItemVariantsInContract();
 
+	/**
+	 * @param item
+	 */
 	@Transactional
-	void saveItemInContract(ItemVariantInContract itemInContract);
+	void saveItemVariantInContract(ItemVariantInContract item);
 
+	/**
+	 * @param itemsArray
+	 */
 	@Transactional
-	void saveItemInContractMultiple(ItemVariantInContract... itemInContractArray);
+	void saveItemVariantInContractMultiple(ItemVariantInContract... itemsArray);
 
+	/**
+	 * @param itemId
+	 */
 	@Transactional
-	void deleteItemInContract(Integer itemInContractid);
-
-
+	void deleteItemVariantInContract(Integer itemId);
 
 }

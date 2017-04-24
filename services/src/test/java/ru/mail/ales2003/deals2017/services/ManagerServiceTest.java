@@ -119,10 +119,10 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Start updateTest method");
 		service.save(instance_1);
 		modifiedInstance = service.get(instance_1.getId());
-		modifiedInstance.setFirstName("modifiedName");
-		modifiedInstance.setFirstName("modifiedName");
-		modifiedInstance.setFirstName("modifiedName");
-		modifiedInstance.setFirstName("modifiedPosition");
+		modifiedInstance.setFirstName("modifiedFirstName");
+		modifiedInstance.setPatronymic("modifiedPatronymic");
+		modifiedInstance.setLastName("modifiedLastName");
+		modifiedInstance.setPosition("modifiedPosition");
 		service.save(modifiedInstance);
 
 		instance_1FromDb = service.get(modifiedInstance.getId());
@@ -130,10 +130,10 @@ public class ManagerServiceTest extends AbstractTest {
 		Assert.isTrue((instance_1.getId().equals(modifiedInstance.getId())),
 				"id of initial instance must by eq. to modified instance id");
 		Assert.isTrue(
-				!(instance_1.getFirstName().equals(modifiedInstance.getFirstName())
-						&& !(instance_1.getPatronymic().equals(modifiedInstance.getPatronymic()))
-						&& !(instance_1.getLastName().equals(modifiedInstance.getLastName()))
-						&& !(instance_1.getPosition().equals(modifiedInstance.getPosition()))),
+				!(instance_1.getFirstName().equals(modifiedInstance.getFirstName()))
+						& !(instance_1.getPatronymic().toString().equals(modifiedInstance.getPatronymic().toString()))
+						& !(instance_1.getLastName().equals(modifiedInstance.getLastName()))
+						& !(instance_1.getPosition().equals(modifiedInstance.getPosition())),
 				"values of the corresponding columns of initial and modified instances must not by eq.");
 
 		Assert.isTrue((instance_1FromDb.getId().equals(modifiedInstance.getId())),

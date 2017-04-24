@@ -37,7 +37,7 @@ public class ManagerServiceImpl implements IManagerService {
 
 	@Override
 	public List<Manager> getAll() {
-		LOGGER.info("{} storage returns {} entitys.", className, managerDao.getAll().size());
+		LOGGER.info("{} storage returns {} entities.", className, managerDao.getAll().size());
 		LOGGER.info("Read all {}s:", className);
 		for (Manager m : managerDao.getAll()) {
 			LOGGER.info("{} = {}", className, m.toString());

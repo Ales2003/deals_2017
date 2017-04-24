@@ -23,9 +23,9 @@ import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 
-public class ContractServiceTest extends AbstractTest {
+public class ContractServiceTestForItemVariants extends AbstractTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ContractServiceTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContractServiceTestForItemVariants.class);
 
 	@Inject
 	private IContractService service;
@@ -43,15 +43,10 @@ public class ContractServiceTest extends AbstractTest {
 	private Contract instance_2;
 	private Contract instance_1FromDb;
 	private Contract instance_2FromDb;
-	private Contract modifiedInstance;
-	private List<Contract> instances;
-	private List<Contract> instancesFromDb;
 
-	private Customer customer_1;
-	private Customer customer_1FromDb;
-	private Customer customer_2;
-	private Customer customer_2FromDb;
-
+	private Customer customer;
+	private Customer customerFromDb;
+	
 	private Manager manager;
 	private Manager managerFromDb;
 

@@ -20,9 +20,9 @@ import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 
-public class ItemVariantServiceTestForAttribute extends AbstractTest {
+public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantServiceTestForAttribute.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantServiceTestForCharacterTypes.class);
 
 	@Inject
 	private IItemVariantService service;
@@ -104,7 +104,7 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 
 		LOGGER.debug("Start deleting characterTypeInItemVariants from Db");
 		for (CharacterTypeInItemVariant attribute : service.getAllAttributes()) {
-			deleteAttributeFromDb(attribute.getId());
+			service.deleteAttribute(attribute.getId());
 		}
 		LOGGER.debug("CharacterTypeInItemVariants were deleted from Db ");
 
@@ -245,8 +245,8 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 	 * the database
 	 */
 	@Test
-	public void getAllAttributeTest() {
-		LOGGER.debug("Start getAllAttributeTest method");
+	public void getAllAttributesTest() {
+		LOGGER.debug("Start getAllAttributesTest method");
 		List<CharacterTypeInItemVariant> instances = new ArrayList<>();
 		instances.add(attribute_1);
 		instances.add(attribute_2);
@@ -261,9 +261,9 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 					"id of every instance from Db must by eq. to appropriate prepared instance id");
 
 			Assert.isTrue(instances.get(i).equals(instancesFromDb.get(i)),
-					"column's values of every instance from Db must by eq. to appropriate prepared instance's column's values");
+					"every instance from Db must by eq. to appropriate prepared instance");
 		}
-		LOGGER.debug("Finish getAllAttributeTest method");
+		LOGGER.debug("Finish getAllAttributesTest method");
 	}
 
 	/*
@@ -275,7 +275,7 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 		LOGGER.debug("Start deleteAttributeTest method");
 		service.saveAttribute(attribute_1);
 		attributeFromDb_1 = service.getAttribute(attribute_1.getId());
-		deleteAttributeFromDb(attribute_1.getId());
+		service.deleteAttribute(attribute_1.getId());
 		Assert.notNull(itemVariantFromDb_1, "instance must be saved");
 		Assert.isNull(service.getAttribute(attribute_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteAttributeTest method");
@@ -313,12 +313,4 @@ public class ItemVariantServiceTestForAttribute extends AbstractTest {
 		instance.setName(name);
 		return instance;
 	}
-
-	/*
-	 * method deletes an instance by id
-	 */
-	private void deleteAttributeFromDb(Integer id) {
-		service.deleteAttribute(id);
-	}
-
 }

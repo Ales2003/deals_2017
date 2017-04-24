@@ -1,17 +1,10 @@
 package ru.mail.ales2003.deals2017.dao.db.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.IContractDao;
@@ -25,103 +18,78 @@ public class ContractDaoImpl extends AbstractDaoImplDb<Contract, Integer> implem
 	// =============CREATION AREA===============
 
 	@Override
-	public Contract insert(Contract entity) {
+	protected String getInsertQuery() {
 		final String INSERT_SQL = "insert into contract (created, contract_status, pay_form, pay_status, customer_id, total_price) values(?, ?, ?, ?, ?, ?)";
+		return INSERT_SQL;
+	}
 
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
-				ps.setTimestamp(1, entity.getCreated());
-				ps.setString(2, entity.getContractStatus().name());
-				ps.setString(3, entity.getPayForm().name());
-				ps.setString(4, entity.getPayStatus().name());
-				ps.setInt(5, entity.getCustomerId());
-				ps.setBigDecimal(6, entity.getTotalPrice());
-
-				return ps;
-			}
-		}, keyHolder);
-
-		entity.setId(keyHolder.getKey().intValue());
-
+	@Override
+	protected Contract setEntityId(Contract entity, Integer id) {
+		entity.setId(id);
 		return entity;
+	}
+
+	@Override
+	protected void prepareStatementForInsert(PreparedStatement ps, Contract entity) {
+		try {
+			ps.setTimestamp(1, entity.getCreated());
+			ps.setString(2, entity.getContractStatus().name());
+			ps.setString(3, entity.getPayForm().name());
+			ps.setString(4, entity.getPayStatus().name());
+			ps.setInt(5, entity.getCustomerId());
+			ps.setBigDecimal(6, entity.getTotalPrice());
+		} catch (SQLException e) {
+			LOGGER.error("Error: prepareStatementForInsert is broken: {}", e);
+			// !!!TO REFACTOR!!!
+			throw new RuntimeException(e);
+		}
+
 	}
 
 	// =============READING AREA===============
 
 	@Override
-	public Contract get(Integer id) {
-		try {
-			return jdbcTemplate.queryForObject("select * from contract where id = ? ", new Object[] { id },
-					new BeanPropertyRowMapper<Contract>(Contract.class));
-		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: contract with id = " + id + " don't exist in storage)", e);
-			return null;
-		}
+	protected String getSelectQuery() {
+		final String READ_BY_ID_SQL = "select * from contract";
+		return READ_BY_ID_SQL;
 	}
 
 	@Override
-	public List<Contract> getAll() {
-		try {
-			List<Contract> rs = jdbcTemplate.query("select * from contract ",
-					new BeanPropertyRowMapper<Contract>(Contract.class));
-			return rs;
-		} catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Error: all contracts don't exist in storage", e);
-			return null;
-		}
+	protected Class<Contract> getMappedClass() {
+		return Contract.class;
 	}
 
 	// =============UPDATE AREA===============
 
 	@Override
-	public void update(Contract entity) {
+	protected String getUpdateQuery() {
 		final String UPDATE_SQL = "update contract set created = ?, contract_status = ?, pay_form = ?, pay_status = ?,"
 				+ " customer_id = ?, total_price = ? where id = ?";
+		return UPDATE_SQL;
+	}
 
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			@Override
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_SQL, new String[] { "id" });
-				ps.setTimestamp(1, entity.getCreated());
-				ps.setString(2, entity.getContractStatus().name());
-				ps.setString(3, entity.getPayForm().name());
-				ps.setString(4, entity.getPayStatus().name());
-				ps.setInt(5, entity.getCustomerId());
-				ps.setBigDecimal(6, entity.getTotalPrice());
-				ps.setInt(7, entity.getId());
-				return ps;
-			}
-		});
+	@Override
+	protected void prepareStatementForUpdate(PreparedStatement ps, Contract entity) {
+		try {
+			ps.setTimestamp(1, entity.getCreated());
+			ps.setString(2, entity.getContractStatus().name());
+			ps.setString(3, entity.getPayForm().name());
+			ps.setString(4, entity.getPayStatus().name());
+			ps.setInt(5, entity.getCustomerId());
+			ps.setBigDecimal(6, entity.getTotalPrice());
+			ps.setInt(7, entity.getId());
+		} catch (SQLException e) {
+			LOGGER.error("Error: prepareStatementForInsert is broken", e);
+			// !!!TO REFACTOR!!!
+			throw new RuntimeException(e);
+		}
 	}
 
 	// =============DELETE AREA===============
 
 	@Override
-	public void delete(Integer id) {
-		jdbcTemplate.update("delete from contract where id=" + id);
+	protected String getDeleteQuery() {
+		final String DELETE_BY_ID_SQL = "delete from contract";
+		return DELETE_BY_ID_SQL;
 	}
-
-	// !!!=============CUSTOM MAPPING AREA===============
-	/*
-	 * public List<ItemVariantDetail> findAll() {
-	 * 
-	 * String sql =
-	 * "SELECT * FROM item_variant as iv left join character_type_in_item_variant as ctiiv where iv.id=ctiiv.item_variant_id left join character_type as ct where ct.id=ctiiv.character_type_id where iv.id=86"
-	 * ;
-	 * 
-	 * List<ItemVariantDetail> items = new ArrayList<>();
-	 * 
-	 * List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql); for (Map
-	 * row : rows) { ItemVariantDetail item = new ItemVariantDetail();
-	 * item.setContractId((Integer) (row.get("id")));
-	 * item.setCustomerId((Integer) (row.get("customer_id"))); items.add(item);
-	 * }
-	 * 
-	 * return items; }
-	 */
-
 }
