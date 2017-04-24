@@ -54,7 +54,7 @@ public class ItemServiceTest extends AbstractTest {
 
 		LOGGER.debug("Start deleting items from Db");
 		for (Item c : service.getAll()) {
-			//deleteFromDb(c.getId());
+			deleteFromDb(c.getId());
 		}
 		LOGGER.debug("Items were deleted from Db ");
 
