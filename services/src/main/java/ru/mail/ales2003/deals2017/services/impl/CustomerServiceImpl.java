@@ -20,62 +20,52 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Inject
 	private ICustomerDao customerDao;
 
+	private String className = Customer.class.getSimpleName();
+
 	@Override
 	public Customer get(Integer id) {
 		if (customerDao.get(id) == null) {
-			LOGGER.error("Error: customer with id = " + id + " don't exist in storage)");
-			return null;
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		} else {
-			Customer customer = customerDao.get(id);
-			LOGGER.info(
-					"Read one customer: id={}, first_name={}, patronymic={}, last_name={}, companyName={}, address={}, phoneNumber={}, customerGroupId={}, managerId={}",
-					customer.getId(), customer.getFirstName(), customer.getPatronymic(), customer.getLastName(),
-					customer.getCompanyName(), customer.getAddress(), customer.getPhoneNumber(),
-					customer.getCustomerGroupId(), customer.getManagerId());
-			return customer;
+			Customer entity = customerDao.get(id);
+			LOGGER.info("Read one {} entity: {}", className, entity.toString());
+			return entity;
 		}
 	}
 
 	@Override
 	public List<Customer> getAll() {
-		if (customerDao.getAll() == null) {
-			LOGGER.error("Error: all customers don't exist in storage");
-			return null;
-		} else {
-			LOGGER.info("Read all customers");
-			return customerDao.getAll();
+		LOGGER.info("{} entities storage returns {} entities.", className, customerDao.getAll().size());
+		LOGGER.info("Read all {} entities:", className);
+		for (Customer c : customerDao.getAll()) {
+			LOGGER.info("{} entity = {}", className, c.toString());
 		}
+		return customerDao.getAll();
 	}
 
 	@Override
-	public void save(Customer customer) {
-		if (customer == null) {
-			LOGGER.error("Error: as the customer was sent a null reference");
+	public void save(Customer entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
-		} else if (customer.getId() == null) {
-			customerDao.insert(customer);
-			LOGGER.info(
-					"Inserted new customer: id={}, first_name={}, patronymic={}, last_name={}, companyName={}, address={}, phoneNumber={}, customerGroupId={}, managerId={}",
-					customer.getId(), customer.getFirstName(), customer.getPatronymic(), customer.getLastName(),
-					customer.getCompanyName(), customer.getAddress(), customer.getPhoneNumber(),
-					customer.getCustomerGroupId(), customer.getManagerId());
+		} else if (entity.getId() == null) {
+			customerDao.insert(entity);
+			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
-			customerDao.update(customer);
-			LOGGER.info(
-					"Updated customer: id={}, first_name={}, patronymic={}, last_name={}, companyName={}, address={}, phoneNumber={}, customerGroupId={}, managerId={}",
-					customer.getId(), customer.getFirstName(), customer.getPatronymic(), customer.getLastName(),
-					customer.getCompanyName(), customer.getAddress(), customer.getPhoneNumber(),
-					customer.getCustomerGroupId(), customer.getManagerId());
+			customerDao.update(entity);
+			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
 	}
 
 	@Override
-	public void saveMultiple(Customer... customerArray) {
-		for (Customer customer : customerArray) {
-			LOGGER.debug("Inserted new customer from array: " + customer);
-			save(customer);
+	public void saveMultiple(Customer... entityArray) {
+		for (Customer entity : entityArray) {
+			LOGGER.info("Inserted new {} entity from array: {}", className, entity.toString());
+			save(entity);
 		}
-		LOGGER.info("Inserted customers from array");
+		LOGGER.info("{} entities from array were inserted", className);
 	}
 
 	@Override
@@ -85,19 +75,7 @@ public class CustomerServiceImpl implements ICustomerService {
 			return;
 		} else {
 			customerDao.delete(id);
-			LOGGER.info("Deleted customer by id: " + id);
+			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
-
-	//I need create so method maybe 
-	//!!!maybe with StringFormat???
-/*	private String getCustomerInfo(Customer customer){
-		
-		String customerInfo = 	new String();
-		customerInfo = ("id={}, first_name={}, patronymic={}, last_name={}, companyName={}, address={}, phoneNumber={}, customerGroupId={}, managerId={}",
-				customer.getId(), customer.getFirstName(), customer.getPatronymic(), customer.getLastName(),
-					customer.getCompanyName(), customer.getAddress(), customer.getPhoneNumber(),
-					customer.getCustomerGroupId(), customer.getManagerId());
-		return customerInfo; 
-	};*/
 }

@@ -5,13 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -21,12 +18,9 @@ import ru.mail.ales2003.deals2017.dao.api.IContractDao;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 
 @Repository
-public class ContractDaoImpl implements IContractDao {
+public class ContractDaoImpl extends AbstractDaoImplDb<Contract, Integer> implements IContractDao {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ContractDaoImpl.class);
-
-	@Inject
-	private JdbcTemplate jdbcTemplate;
 
 	// =============CREATION AREA===============
 
