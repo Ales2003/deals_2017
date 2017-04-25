@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -226,6 +227,34 @@ public class ItemVariantServiceTest extends AbstractTest {
 		Assert.notNull(instanceFromDb_1, "instance must be saved");
 		Assert.isNull(service.getItemVariant(instance_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteItemVariantTest method");
+	}
+
+	@Ignore
+	@Test
+	public void getEmptyResultTest() {
+		System.out.println("!!!!!!!!!!!===================START");
+		List<ItemVariant> instancesFromDb = service.getAllItemVariants();
+
+		System.out.println(instancesFromDb.size());
+		System.out.println("!!!!!!!!!!!===================FINISH");
+		// Assert.isTrue(instances.size() == instancesFromDb.size(),
+		// "count of from Db instances must by eq. to count of inserted
+		// instances");
+
+		// (int i = 0; i < instances.size(); i++) {
+		// False if compared to ==, since the references to objects
+		// Assert.isTrue(instances.get(i).getId().equals(instancesFromDb.get(i).getId()),
+		// "id of every instance from Db must by eq. to appropriate prepared
+		// instance id");
+
+		// Assert.isTrue(
+		// instances.get(i).getItemId().equals(instancesFromDb.get(i).getItemId())
+		// &&
+		// instances.get(i).getVariantPrice().equals(instancesFromDb.get(i).getVariantPrice()),
+		// "column's values of every instance from Db must by eq. to appropriate
+		// prepared instance's column's values");
+		// }
+		// LOGGER.debug("Finish getAllItemVariantTest method");
 	}
 
 	/*

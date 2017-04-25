@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.api.custom.entities;
+package ru.mail.ales2003.deals2017.dao.api.customentities;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ public class ItemVariantSpecification {
 
 	private Integer id;
 
-	private ItemVariantBasicInfo info;
+	private ItemVariantCommonInfo info;
 
 	private List<ItemVariantDetail> details;
 
@@ -18,11 +18,11 @@ public class ItemVariantSpecification {
 		this.id = id;
 	}
 
-	public ItemVariantBasicInfo getInfo() {
+	public ItemVariantCommonInfo getInfo() {
 		return info;
 	}
 
-	public void setInfo(ItemVariantBasicInfo info) {
+	public void setInfo(ItemVariantCommonInfo info) {
 		this.info = info;
 	}
 

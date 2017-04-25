@@ -1,8 +1,8 @@
-package ru.mail.ales2003.deals2017.dao.api.custom.entities;
+package ru.mail.ales2003.deals2017.dao.api.customentities;
 
 import java.math.BigDecimal;
 
-public class ItemVariantBasicInfo {
+public class ItemVariantCommonInfo {
 	
 	private Integer itemVariantId;
 
@@ -44,11 +44,16 @@ public class ItemVariantBasicInfo {
 		this.itemVariantPrice = itemVariantPrice;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "ItemVariantBasicInfo [itemVariantId=" + itemVariantId + ", itemName=" + itemName + ", itemDescription="
+		return "ItemVariantCommonInfo [itemVariantId=" + itemVariantId + ", itemName=" + itemName + ", itemDescription="
 				+ itemDescription + ", itemVariantPrice=" + itemVariantPrice + "]";
 	}
+
+	
 
 	
 	

@@ -8,18 +8,18 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantSpecification;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecification;
+import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
-import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantBasicInfoFilter;
+import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.Attribute;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
@@ -32,6 +32,9 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantSpecificationServiceTest.class);
 
 	@Inject
+	private IItemVariantSpecificationService service;
+
+	@Inject
 	private IItemService itemService;
 
 	@Inject
@@ -40,8 +43,8 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	@Inject
 	private ICharacterTypeService measureService;
 
-	private ItemVariantBasicInfo basicInfo;
-	private List<ItemVariantBasicInfo> basicInfos;
+	private ItemVariantCommonInfo commonInfo;
+	private List<ItemVariantCommonInfo> commonInfos;
 
 	private List<ItemVariantDetail> details;
 	private ItemVariantSpecification specification;
@@ -163,17 +166,17 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	 */
 
 	@Test
-	public void getBasicInfoTest() {
-		LOGGER.debug("Start getBasicInfoTest method");
-		basicInfo = itemVariantService.getBasicInfo(itemVariant_1.getId());
-		Assert.notNull(basicInfo, "instance must be saved");
+	public void getCommonInfoTest() {
+		LOGGER.debug("Start getCommonInfoTest method");
+		commonInfo = service.getCommonInfo(itemVariant_1FromDb.getId());
+		Assert.notNull(commonInfo, "instance must not be empty");
 
 		Assert.isTrue(
-				(basicInfo.getItemVariantId() != null) && (basicInfo.getItemName() != null)
-						&& (basicInfo.getItemDescription() != null) && (basicInfo.getItemVariantPrice() != null),
+				(commonInfo.getItemVariantId() != null) && (commonInfo.getItemName() != null)
+						&& (commonInfo.getItemDescription() != null) && (commonInfo.getItemVariantPrice() != null),
 				"columns values must not by empty");
 
-		LOGGER.debug("Finish  getBasicInfoTest method");
+		LOGGER.debug("Finish  getCommonInfoTest method");
 	}
 
 	/*
@@ -182,31 +185,71 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	 */
 
 	@Test
-	public void getAllBasicInfoTest() {
-		LOGGER.debug("Start getAllBasicInfoTest method");
-		basicInfos = new ArrayList<>();
-		basicInfos = itemVariantService.getBasicInfoForEach();
-		for (ItemVariantBasicInfo instance : basicInfos) {
-			Assert.notNull(instance, "instance must be saved");
+	public void getCommonInfoForAllTest() {
+		LOGGER.debug("Start getCommonInfoForAllTest method");
+
+		commonInfos = service.getCommonInfoForAll();
+		for (ItemVariantCommonInfo instance : commonInfos) {
+			Assert.notNull(instance, "instance must not be empty");
 			Assert.isTrue(
 					(instance.getItemVariantId() != null) && (instance.getItemName() != null)
 							&& (instance.getItemDescription() != null) && (instance.getItemVariantPrice() != null),
 					"columns values must not by empty");
 		}
-		LOGGER.debug("Finish  getAllBasicInfoTest method");
+		LOGGER.debug("Finish  getCommonInfoForAllTest method");
+	}
+
+	@Test
+	public void getCommonInfoFilteredTest() {
+		LOGGER.debug("Start getCommonInfoFilteredTest method");
+		ItemVariantCommonInfoFilter filter = new ItemVariantCommonInfoFilter();
+
+		String itemVariantDescription = itemFromDb.getDescription();
+		String itemVariantName = itemFromDb.getName();
+		BigDecimal itemVariantPrice = itemVariant_1FromDb.getVariantPrice();
+
+		PaginationParams paginationParams = new PaginationParams();
+		paginationParams.setLimit(5);
+		paginationParams.setOffset(0);
+
+		SortingParams sortingParams = new SortingParams();
+		sortingParams.setSortColumn(ColumnNamesForSortingParams.name);
+
+		// sortingParams.setSortOrder(OrderDirectionForSortingParams.asc);
+
+		// try to use LIKE by description filtering
+		filter.setItemVariantDescription(itemVariantDescription);
+		filter.setItemVariantDescription(itemVariantDescription.substring(2, itemVariantDescription.length() - 2));
+
+		// try to use LIKE by name filtering
+		// filter.setItemVariantName(itemVariantName);
+		filter.setItemVariantName(itemVariantName.substring(2, itemVariantName.length() - 2));
+		filter.setItemVariantPrice(itemVariantPrice);
+		filter.setPaginationParams(paginationParams);
+		filter.setSortingParams(sortingParams);
+
+		commonInfos = service.getCommonInfoFiltered(filter);
+
+		for (ItemVariantCommonInfo instance : commonInfos) {
+			Assert.notNull(instance, "instance must not be empty");
+			Assert.isTrue(
+					(instance.getItemVariantId() != null) && (instance.getItemName() != null)
+							&& (instance.getItemDescription() != null) && (instance.getItemVariantPrice() != null),
+					"columns values must not by empty");
+		}
+		LOGGER.debug("Finish  getCommonInfoFilteredTest method");
 	}
 
 	@Test
 	public void getDetailsTest() {
 		LOGGER.debug("Start getDetailsTest method");
-		details = new ArrayList<>();
-		details = itemVariantService.getDetails(itemVariant_1FromDb.getId());
-		for (ItemVariantDetail instance : details) {
-			LOGGER.debug("Instance from query = {}", instance.toString());
-			Assert.notNull(instance, "instance must be saved");
+		details = service.getDetails(itemVariant_1FromDb.getId());
+		for (ItemVariantDetail detail : details) {
+			LOGGER.debug("Instance from query = {}", detail.toString());
+			Assert.notNull(detail, "itemVariantDetail must be saved");
 			Assert.isTrue(
-					(instance.getItemVariantId() != null) && (instance.getAttributeName() != null)
-							&& (instance.getAttributeValue() != null) && (instance.getAttributeMeasure() != null),
+					(detail.getItemVariantId() != null) && (detail.getAttributeName() != null)
+							&& (detail.getAttributeValue() != null) && (detail.getAttributeMeasure() != null),
 					"columns values must not by empty");
 		}
 		LOGGER.debug("Finish  getDetailsTest method");
@@ -215,47 +258,19 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	@Test
 	public void getSpecificationTest() {
 		LOGGER.debug("Start getSpecificationTest method");
-		basicInfo = itemVariantService.getBasicInfo(itemVariant_1FromDb.getId());
+		commonInfo = service.getCommonInfo(itemVariant_1FromDb.getId());
 		details = new ArrayList<>();
-		details = itemVariantService.getDetails(itemVariant_1FromDb.getId());
+		details = service.getDetails(itemVariant_1FromDb.getId());
 		specification = new ItemVariantSpecification();
-		specification.setInfo(basicInfo);
+		specification.setInfo(commonInfo);
 		specification.setDetails(details);
-		LOGGER.debug("Specification is created: {}", specification);
+		LOGGER.debug("Specification is created: {}", specification.toString());
 		Assert.notNull(specification, "instance must be saved");
 
 		Assert.isTrue((specification.getInfo() != null) && (specification.getDetails() != null),
 				"columns values must not by empty");
 
 		LOGGER.debug("Finish  getSpecificationTest method");
-	}
-
-	@Test
-	public void getFilteredBasicInfoTest() {
-		LOGGER.debug("Start getFilteredBasicInfoTest method");
-		ItemVariantBasicInfoFilter filter = new ItemVariantBasicInfoFilter();
-
-		String itemVariantDescription = itemFromDb.getDescription();
-		String itemVariantName = itemFromDb.getName();
-		BigDecimal itemVariantPrice = itemVariant_1FromDb.getVariantPrice();
-
-		PaginationParams paginationParams = new PaginationParams();
-
-		SortingParams sortingParams = new SortingParams();
-
-		filter.setItemVariantDescription(itemVariantDescription);
-		filter.setItemVariantName(itemVariantName);
-		filter.setItemVariantPrice(itemVariantPrice);
-		filter.setPaginationParams(paginationParams);
-		filter.setSortingParams(sortingParams);
-
-
-		//filter.filterInitialize();
-
-		List<ItemVariantBasicInfo> i = itemVariantService.getFilteredBasicInfo(filter);
-
-		itemVariantService.getBasicInfoForEach();
-		LOGGER.debug("Finish  getFilteredBasicInfoTest method");
 	}
 
 }

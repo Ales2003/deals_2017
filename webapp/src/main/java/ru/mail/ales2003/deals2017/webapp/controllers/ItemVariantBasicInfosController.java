@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantBasicInfo;
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantSpecification;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecification;
 import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
-import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantBasicInfoFilter;
+import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantCommonInfoFilter;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantBasicInfoModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantDetailModel;
@@ -38,7 +38,7 @@ public class ItemVariantBasicInfosController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAllInShortFormat(@RequestParam(required = false) String name, BigDecimal price) {
-		List<ItemVariantBasicInfo> allBasicInfos = itemVariantService.getBasicInfoForEach();
+		List<ItemVariantCommonInfo> allBasicInfos = itemVariantService.getCommonInfoForAll();
 		if (allBasicInfos == null) {
 			String msg = String.format("All item variants don't exist in store");
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
@@ -46,11 +46,11 @@ public class ItemVariantBasicInfosController {
 
 		// allBasicInfos = itemVariantService.getBasicInfoForEach();
 		if (name != null || price != null) {
-			IItemVariantFilter filter = new ItemVariantBasicInfoFilter();
+			IItemVariantFilter filter = new ItemVariantCommonInfoFilter();
 			filter.setItemVariantName(name);
 			filter.setItemVariantPrice(price);
 			// basicInfoFilter.filterInitialize();
-			allBasicInfos = itemVariantService.getFilteredBasicInfo(filter);
+			allBasicInfos = itemVariantService.getCommonInfoFiltered(filter);
 			if (allBasicInfos == null) {
 				// maybe to offer all available combinations
 				String msg = String.format(
@@ -67,7 +67,7 @@ public class ItemVariantBasicInfosController {
 		// HttpStatus.OK);
 
 		List<ItemVariantBasicInfoModel> convertedBasicInfos = new ArrayList<>();
-		for (ItemVariantBasicInfo info : allBasicInfos) {
+		for (ItemVariantCommonInfo info : allBasicInfos) {
 			convertedBasicInfos.add(basicInfoEntity2basicInfoModel(info));
 		}
 
@@ -82,11 +82,11 @@ public class ItemVariantBasicInfosController {
 			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
 		}
 		if (name != null || price != null) {
-			IItemVariantFilter filter = new ItemVariantBasicInfoFilter();
+			IItemVariantFilter filter = new ItemVariantCommonInfoFilter();
 			filter.setItemVariantName(name);
 			filter.setItemVariantPrice(price);
 
-			specifications = itemVariantService.getFilteredSpecifications(filter);
+			specifications = itemVariantService.getSpecificationsFiltered(filter);
 			if (specifications == null) {
 				// maybe to offer all available combinations
 				String msg = String.format(
@@ -165,7 +165,7 @@ public class ItemVariantBasicInfosController {
 		return detailModel;
 	}
 
-	private ItemVariantBasicInfoModel basicInfoEntity2basicInfoModel(ItemVariantBasicInfo basicInfo) {
+	private ItemVariantBasicInfoModel basicInfoEntity2basicInfoModel(ItemVariantCommonInfo basicInfo) {
 		ItemVariantBasicInfoModel basicInfokModel = new ItemVariantBasicInfoModel();
 
 		String translatedItemName = translate(basicInfo.getItemName(), locale);

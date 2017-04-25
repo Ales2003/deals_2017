@@ -110,12 +110,15 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	@Override
 	public T get(PK id) {
 		if (id == null) {
-			throw new IllegalArgumentException("Error: as the id was sent a null reference.");
+			String errMsg = String.format("Error: as the id was sent a null reference.");
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
 		}
 		final String READ_BY_ID_SQL = getSelectQuery() + " where id = ?";
 		try {
-			return (T) jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
+			T entity = (T) jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { id },
 					(RowMapper<T>) new BeanPropertyRowMapper<T>(getMappedClass()));
+			return entity;
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format(
 					"You want to READ the [%s] with id = [%s], but it doesn't exist in the storage.",
@@ -131,9 +134,13 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	@Override
 	public List<T> getAll() {
 		try {
-			List<T> entitys = jdbcTemplate.query(getSelectQuery(), new BeanPropertyRowMapper<T>(getMappedClass()));
-			LOGGER.debug("[{}]. Store returns [{}] entitys.", getMappedClass().getCanonicalName(), entitys.size());
-			return entitys;
+			List<T> entities = jdbcTemplate.query(getSelectQuery(), new BeanPropertyRowMapper<T>(getMappedClass()));
+			LOGGER.debug("[{}]. Storage returns [{}] entities.", getMappedClass().getCanonicalName(), entities.size());
+			if (entities.size() == 0) {
+				// return null;
+				return entities;
+			} else
+				return entities;
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format("Class [%s]. Storage returns incorrect entity count.",
 					getMappedClass().getCanonicalName());

@@ -15,7 +15,7 @@ public interface IItemService {
 	Item get(Integer id);
 
 	/**
-	 * @return List&ltharacterType&gt items
+	 * @return List&ltItem&gt items
 	 */
 	List<Item> getAll();
 

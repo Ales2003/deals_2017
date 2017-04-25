@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.entities.ItemVariantDetail;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.datamodel.Attribute;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 

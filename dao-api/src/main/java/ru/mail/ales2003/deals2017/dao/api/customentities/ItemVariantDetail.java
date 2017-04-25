@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.api.custom.entities;
+package ru.mail.ales2003.deals2017.dao.api.customentities;
 
 import ru.mail.ales2003.deals2017.datamodel.Attribute;
 import ru.mail.ales2003.deals2017.datamodel.Measure;

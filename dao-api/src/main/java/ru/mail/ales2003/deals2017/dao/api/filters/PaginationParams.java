@@ -21,6 +21,14 @@ public class PaginationParams {
 	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "PaginationParams [limit=" + limit + ", offset=" + offset + "]";
+	}
 	
 	
 }

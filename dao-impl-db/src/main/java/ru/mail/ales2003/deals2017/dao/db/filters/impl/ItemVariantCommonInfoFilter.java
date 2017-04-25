@@ -14,10 +14,10 @@ import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
 
 @Repository
-public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
+public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantBasicInfoFilter.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantCommonInfoFilter.class);
+
 	// list of args as parameter for JdbcTemplate;
 	private Object[] queryParamsArray;
 	// full SQL as parameter for JdbcTemplate;
@@ -51,35 +51,40 @@ public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
 	}
 
 	/**
-	 * @param itemVariantName the name of item variant  to set
+	 * @param itemVariantName
+	 *            the name of item variant to set
 	 */
 	public void setItemVariantName(String itemVariantName) {
 		this.itemVariantName = itemVariantName;
 	}
 
 	/**
-	 * @param itemVariantPrice the price of item variant to set
+	 * @param itemVariantPrice
+	 *            the price of item variant to set
 	 */
 	public void setItemVariantPrice(BigDecimal itemVariantPrice) {
 		this.itemVariantPrice = itemVariantPrice;
 	}
 
 	/**
-	 * @param itemVariantDescription the the description  of item variant to set
+	 * @param itemVariantDescription
+	 *            the the description of item variant to set
 	 */
 	public void setItemVariantDescription(String itemVariantDescription) {
 		this.itemVariantDescription = itemVariantDescription;
 	}
 
 	/**
-	 * @param sortingParams the sorting parameters to set
+	 * @param sortingParams
+	 *            the sorting parameters to set
 	 */
 	public void setSortingParams(SortingParams sortingParams) {
 		this.sortingParams = sortingParams;
 	}
 
 	/**
-	 * @param paginationParams the pagination parameters to set
+	 * @param paginationParams
+	 *            the pagination parameters to set
 	 */
 	public void setPaginationParams(PaginationParams paginationParams) {
 		this.paginationParams = paginationParams;
@@ -87,16 +92,16 @@ public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
 
 	// Internal parameters
 	private List<Object> paramsList = new ArrayList<Object>();
-	
+
 	private List<String> sqlWhereFragmentsAndList = new ArrayList<String>();
-	
-	
-	public void filterInitialize (){
+
+	public void filterInitialize() {
 
 		StringBuilder sqlWhereBuilder = new StringBuilder("");
 
 		if (itemVariantName != null) {
-			sqlWhereFragmentsAndList.add("name = ? ");
+			//sqlWhereFragmentsAndList.add("name = ? ");
+			sqlWhereFragmentsAndList.add("name like ? ");
 			paramsList.add(itemVariantName);
 		}
 
@@ -106,7 +111,8 @@ public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
 		}
 
 		if (itemVariantDescription != null) {
-			sqlWhereFragmentsAndList.add("description = ? ");
+			//sqlWhereFragmentsAndList.add("description like ? ");
+			sqlWhereFragmentsAndList.add("description like ? ");
 			paramsList.add(itemVariantDescription);
 		}
 
@@ -117,14 +123,15 @@ public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
 		sqlWhereBuilder.append(concatAnds(sqlWhereFragmentsAndList));
 
 		if (sortingParams != null) {
-			String column = sortingParams.getSortColumn();
-			String direction = sortingParams.getSortOrder();
+			String column = sortingParams.getSortColumn() != null ? column = sortingParams.getSortColumn().name()
+					: null;
+			String direction = sortingParams.getSortOrder() != null ? sortingParams.getSortOrder().name() : null;
 			if (column != null) {
 				if (direction == null) {
 					sqlWhereBuilder.append("order by ? ");
 					paramsList.add(column);
 				} else {
-					sqlWhereBuilder.append("order by ? ? ");
+					sqlWhereBuilder.append("order by ? ?");
 					paramsList.add(column);
 					paramsList.add(direction);
 				}
@@ -166,17 +173,18 @@ public class ItemVariantBasicInfoFilter implements IItemVariantFilter {
 		return stringBuilder.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "ItemVariantBasicInfoFilter [queryParamsArray=" + Arrays.toString(queryParamsArray) + ", fullSqlQuery="
+		return "ItemVariantCommonInfoFilter [queryParamsArray=" + Arrays.toString(queryParamsArray) + ", fullSqlQuery="
 				+ fullSqlQuery + ", itemVariantName=" + itemVariantName + ", itemVariantPrice=" + itemVariantPrice
 				+ ", itemVariantDescription=" + itemVariantDescription + ", sortingParams=" + sortingParams
 				+ ", paginationParams=" + paginationParams + ", paramsList=" + paramsList
 				+ ", sqlWhereFragmentsAndList=" + sqlWhereFragmentsAndList + "]";
 	}
-	
-	
+
 }
