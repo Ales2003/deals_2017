@@ -19,7 +19,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.GenericDao;
-import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 
 @Repository
 public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
@@ -58,8 +57,8 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	 * @return Class<T> MappedClass
 	 */
 	protected abstract Class<T> getMappedClass();
-	
-		// =====================Methods to implementing for UPDATING AREA
+
+	// =====================Methods to implementing for UPDATING AREA
 	/**
 	 * @return String UpdateQuery
 	 */

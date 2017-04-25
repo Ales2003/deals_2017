@@ -92,4 +92,43 @@ public class ContractDaoImpl extends AbstractDaoImplDb<Contract, Integer> implem
 		final String DELETE_BY_ID_SQL = "delete from contract";
 		return DELETE_BY_ID_SQL;
 	}
+
+	// =============TOTAL PRICE CALCULATE===============
+
+	/*
+	 * @Override public void contractTotalPriceCalculate(Integer id) {
+	 * jdbcTemplate.update(new PreparedStatementCreator() {
+	 * 
+	 * @Override public PreparedStatement createPreparedStatement(Connection
+	 * connection) throws SQLException { // Value of "id" field is not required
+	 * here, so I deleted it: // PreparedStatement ps = //
+	 * connection.prepareStatement(UPDATE_SQL, new String[] { "id" // });
+	 * PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
+	 * prepareStatementForUpdate(ps, entity);
+	 * 
+	 * } }); }
+	 */
+/*
+	@Override
+	public void contractTotalPriceCalculate(Integer id) {
+		final String UPDATE_TOTAL_PRICE_SQL = "update contract set total_price="
+				+ "(select sum(invoice.quantity*iv.variant_price)"
+				+ " from contract left join item_variant_in_contract as invoice on contract.id=invoice.contract_id"
+				+ " left join item_variant as iv on iv.id=invoice.item_variant_id"
+				+ " left join public.item as item on iv.item_id=item.id"
+				+ " where contract.id=? GROUP BY contract.id)"; //where contract.id=?";
+
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(UPDATE_TOTAL_PRICE_SQL, new String[] { "id"});
+				ps.setInt(1, id);
+				ps.setInt(2, id);
+				return ps;
+				
+			}
+			
+		});
+
+	}
+*/
 }

@@ -133,6 +133,11 @@ public class ContractServiceImpl implements IContractService {
 		} else if (item.getId() == null) {
 			itemVariantInContractDao.insert(item);
 			LOGGER.info("Inserted new {} entity: {}", itemVariantInContractClassName, item.toString());
+/*
+			LOGGER.info("Calculate totalPrice for {} with id={}", contractClassName, item.getContractId());
+			contractDao.contractTotalPriceCalculate(item.getContractId());
+			LOGGER.info("TotalPrice for {} with id={} was calculated", contractClassName, item.getContractId());
+*/
 		} else {
 			itemVariantInContractDao.update(item);
 			LOGGER.info("Updated one {} entity: {}", itemVariantInContractClassName, item.toString());
