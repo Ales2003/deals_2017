@@ -19,7 +19,13 @@ public class Translator {
 	 * @param locale
 	 * @return translated variable
 	 */
-	public String translate(String key, Locale locale) {
+	public static String translate(String key, Locale locale) {
+		if (key == null) {
+			return null;
+		}
+		if (locale == null) {
+			locale = new Locale("en_EN");
+		}
 		PropertyResourceBundle pr = null;
 		String translated;
 		try {

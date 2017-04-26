@@ -100,7 +100,7 @@ public class CharacterTypesController {
 		} catch (Exception e) {
 			String msg = String.format(
 					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
-					entityModel.getName(), MeasureArrayToString());
+					entityModel.getName(), measureArrayToString());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 		service.save(entity);
@@ -122,7 +122,7 @@ public class CharacterTypesController {
 		} catch (Exception e) {
 			String msg = String.format(
 					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
-					entityModel.getName(), MeasureArrayToString());
+					entityModel.getName(), measureArrayToString());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 		service.save(entity);
@@ -148,7 +148,7 @@ public class CharacterTypesController {
 	private CharacterTypeModel entity2model(CharacterType entity) {
 		CharacterTypeModel entityModel = new CharacterTypeModel();
 		entityModel.setId(entity.getId());
-		entityModel.setName(entity.getName() == null ? null : translator.translate(entity.getName().name(), locale));
+		entityModel.setName(entity.getName() == null ? null : Translator.translate(entity.getName().name(), locale));
 		return entityModel;
 	}
 
@@ -167,7 +167,7 @@ public class CharacterTypesController {
 	/**
 	 * @return a string representation of the enumsarray from class Measure.
 	 */
-	private String MeasureArrayToString() {
+	private String measureArrayToString() {
 		StringBuilder measureToStringBuilder = new StringBuilder("");
 		List<Measure> measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
 		for (Measure m : measures) {

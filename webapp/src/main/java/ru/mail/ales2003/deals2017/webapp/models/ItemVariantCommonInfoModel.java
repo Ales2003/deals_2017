@@ -2,7 +2,7 @@ package ru.mail.ales2003.deals2017.webapp.models;
 
 import java.math.BigDecimal;
 
-public class ItemVariantBasicInfoModel {
+public class ItemVariantCommonInfoModel {
 
 	private String itemName;
 

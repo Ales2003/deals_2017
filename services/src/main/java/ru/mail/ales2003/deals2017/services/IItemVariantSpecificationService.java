@@ -8,7 +8,7 @@ import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecificatio
 import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
 
 /**
- * Methods provide both general and detailed information about item variants.
+ * Methods provide both common and detailed information about item variants.
  * The first part of the methods is based on the use IItemVariantCommonInfoDao.
  * The first part of the methods is based on the use IItemVariantDetailDao. The
  * third part of the methods is based on both marked Daos. These methods are

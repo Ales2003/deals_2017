@@ -3,20 +3,20 @@ package ru.mail.ales2003.deals2017.webapp.models;
 import java.util.List;
 
 public class ItemVariantSpecificationModel {
-	private ItemVariantBasicInfoModel basicInfoModel;
+	private ItemVariantCommonInfoModel basicInfoModel;
 	//private ItemVariantDetailModel [] detailModel;
 	private List <ItemVariantDetailModel> detailModel;
 	
 	/**
 	 * @return the basicInfoModel
 	 */
-	public ItemVariantBasicInfoModel getBasicInfoModel() {
+	public ItemVariantCommonInfoModel getBasicInfoModel() {
 		return basicInfoModel;
 	}
 	/**
 	 * @param basicInfoModel the basicInfoModel to set
 	 */
-	public void setBasicInfoModel(ItemVariantBasicInfoModel basicInfoModel) {
+	public void setBasicInfoModel(ItemVariantCommonInfoModel basicInfoModel) {
 		this.basicInfoModel = basicInfoModel;
 	}
 	/**

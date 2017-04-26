@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeDao;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 
+
 /**
- * @author admin
+ * @author Aliaksandr Vishneuski ales_2003@mail.ru
  *
  */
 @Repository

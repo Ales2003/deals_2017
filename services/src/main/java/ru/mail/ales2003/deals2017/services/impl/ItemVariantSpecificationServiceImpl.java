@@ -32,10 +32,6 @@ public class ItemVariantSpecificationServiceImpl implements IItemVariantSpecific
 
 	private String commonInfoClassName = ItemVariantCommonInfo.class.getSimpleName();
 
-	private String detailClassName = ItemVariantDetail.class.getSimpleName();
-
-	private String specificationClassName = ItemVariantSpecification.class.getSimpleName();
-
 	@Override
 	public ItemVariantCommonInfo getCommonInfo(Integer itemVariantId) {
 		if (commonInfoDao.getCommonInfo(itemVariantId) == null) {
