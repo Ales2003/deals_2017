@@ -39,9 +39,9 @@ public interface ICharacterTypeService {
 
 	// Methods to avoid duplication in the CharacterType storage
 
-	void fillChecer();
+	void fillChecker();
 
-	void clearChecer();
+	void clearChecker();
 
 	boolean isExist(CharacterType entity);
 

@@ -47,7 +47,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 			service.delete(ct.getId());
 		}
 		LOGGER.debug("Finish completion of the method");
-		service.clearChecer();
+		service.clearChecker();
 
 	}
 

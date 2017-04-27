@@ -59,7 +59,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 			// LOGGING
 
-			fillChecer();
+			fillChecker();
 
 			if (isExist(entity)) {
 				String errMsg = String.format("You want to insert [%s] entity with name [%s]. But such exist already.",
@@ -102,7 +102,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	// LOGGING
 	@Override
-	public void fillChecer() {
+	public void fillChecker() {
 		List<CharacterType> members = getAll();
 		for (CharacterType instance : members) {
 			String word = instance.getName().name();
@@ -112,7 +112,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	// LOGGING
 	@Override
-	public void clearChecer() {
+	public void clearChecker() {
 		activChecer.clear();
 	}
 
