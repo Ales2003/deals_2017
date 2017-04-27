@@ -17,7 +17,7 @@
 	<!--Элемент <context:annotation-config> сообщает фреймворку Spring, что 
 		для связывания свойств должен использоваться механизм на осно ве аннотаций. -->
 	<context:annotation-config />
-	<import resource="classpath:dao-api-context.xml" />
+	
 
 	<!-- multiple packages in context:component-scan, spring config -->
 	<context:component-scan

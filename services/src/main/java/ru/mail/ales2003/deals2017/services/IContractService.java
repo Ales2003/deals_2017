@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,27 @@ public interface IContractService {
 	 */
 	@Transactional
 	void deleteContract(Integer contractId);
+	
+	
+	/**
+	 * @param id
+	 * @return  calculated total price of contract 
+	 */
+	BigDecimal calculateContractTotalPrice(Integer id);
+	
+	
+	/**
+	 * @param id
+	 */
+	@Transactional
+	void updateContractTotalPrice(Integer id);
+	
+	
+	/**
+	 * @param id
+	 * @return
+	 */
+	Boolean isChangeable(Integer id);
 
 	// ==================Item variants management and handling in a contract
 

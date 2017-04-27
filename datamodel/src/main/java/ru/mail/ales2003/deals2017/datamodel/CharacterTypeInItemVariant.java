@@ -48,9 +48,14 @@ public class CharacterTypeInItemVariant {
 		this.characterTypeId = characterTypeId;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "CharacterType2ItemVariant [id=" + id + ", itemVariantId=" + itemVariantId + ", attribute=" + attribute
+		return "CharacterTypeInItemVariant [id=" + id + ", itemVariantId=" + itemVariantId + ", attribute=" + attribute
 				+ ", value=" + value + ", characterTypeId=" + characterTypeId + "]";
 	}
 

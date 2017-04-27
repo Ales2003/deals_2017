@@ -19,9 +19,7 @@
 	<context:annotation-config />
 
 	<!-- multiple packages in context:component-scan, spring config -->
-	<context:component-scan
-		base-package="ru.mail.ales2003.deals2017.dao.api.custom.enums.forjmeter" />
-
+	
 
 
 

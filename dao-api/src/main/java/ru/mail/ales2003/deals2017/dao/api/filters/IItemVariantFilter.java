@@ -11,10 +11,16 @@ public interface IItemVariantFilter extends IDealsFilter {
 	public void setItemVariantName(String itemVariantName);
 
 	/**
-	 * @param itemVariantPrice
+	 * @param itemVariantPriceMIN
 	 *            the price of item variant to set
 	 */
-	public void setItemVariantPrice(BigDecimal itemVariantPrice);
+	public void setItemVariantPriceMIN (BigDecimal itemVariantPriceMIN);
+	
+	/**
+	 * @param itemVariantPriceMAX
+	 *            the price of item variant to set
+	 */
+	public void setItemVariantPriceMAX (BigDecimal itemVariantPriceMAX);
 
 	/**
 	 * @param itemVariantDescription

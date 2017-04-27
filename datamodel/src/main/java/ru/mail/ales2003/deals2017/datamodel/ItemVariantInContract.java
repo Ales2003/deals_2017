@@ -39,9 +39,14 @@ public class ItemVariantInContract {
 		this.itemVariantId = itemVariantId;
 	}
 
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Contract2ItemVariant [id=" + id + ", quantity=" + quantity + ", contractId=" + contractId
+		return "ItemVariantInContract [id=" + id + ", quantity=" + quantity + ", contractId=" + contractId
 				+ ", itemVariantId=" + itemVariantId + "]";
 	}
 

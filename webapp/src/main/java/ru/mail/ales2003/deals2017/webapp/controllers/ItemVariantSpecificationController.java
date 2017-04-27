@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.PropertyResourceBundle;
 
 import javax.inject.Inject;
 
@@ -48,14 +47,14 @@ public class ItemVariantSpecificationController {
 	// request header.
 	private Locale locale = new Locale("ru_RU");
 
-	private PropertyResourceBundle pr = null;
+	// private PropertyResourceBundle pr = null;
 
 	@Inject
 	private IItemVariantSpecificationService service;
 
 	@RequestMapping(value = "/commoninfo", method = RequestMethod.GET)
 	public ResponseEntity<?> getCommonInfoForAll(@RequestParam(required = false) String name, String description,
-			BigDecimal price, String column, String order, Integer limit, Integer offset) {
+			BigDecimal minprice, BigDecimal maxprice, String column, String order, Integer limit, Integer offset) {
 
 		List<ItemVariantCommonInfo> commonInfos;
 
@@ -69,13 +68,22 @@ public class ItemVariantSpecificationController {
 
 		filter.setItemVariantDescription(description);
 
-		filter.setItemVariantPrice(price);
+		if ((maxprice.subtract(minprice)).intValue() < 0) {
 
-		if (limit == null) {
-			pParams.setLimit(20);
+			String msg = String.format("Incorrect arguments: the MIN price should be LOWER than the MAX price");
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		pParams.setLimit(limit);
+		filter.setItemVariantPriceMIN(minprice);
+
+		filter.setItemVariantPriceMAX(maxprice);
+
+		if (limit == null) {
+			pParams.setLimit(5);
+		} else {
+			pParams.setLimit(limit);
+		}
+
 		pParams.setOffset(offset);
 		filter.setPaginationParams(pParams);
 
@@ -209,12 +217,11 @@ public class ItemVariantSpecificationController {
 		basicInfokModel.setItemVariantPrice(commonInfo.getItemVariantPrice());
 		return basicInfokModel;
 	}
-
-	private String translate(String name, Locale locale) {
-		pr = (PropertyResourceBundle) PropertyResourceBundle
-				.getBundle("ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", locale);
-		String key = pr.getString(name);
-		return key;
-	}
+	/*
+	 * private String translate(String name, Locale locale) { pr =
+	 * (PropertyResourceBundle) PropertyResourceBundle .getBundle(
+	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames",
+	 * locale); String key = pr.getString(name); return key; }
+	 */
 
 }

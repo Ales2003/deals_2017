@@ -1,10 +1,12 @@
 package ru.mail.ales2003.deals2017.dao.db.impl;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import ru.mail.ales2003.deals2017.dao.api.IContractDao;
@@ -95,40 +97,49 @@ public class ContractDaoImpl extends AbstractDaoImplDb<Contract, Integer> implem
 
 	// =============TOTAL PRICE CALCULATE===============
 
-	/*
-	 * @Override public void contractTotalPriceCalculate(Integer id) {
-	 * jdbcTemplate.update(new PreparedStatementCreator() {
-	 * 
-	 * @Override public PreparedStatement createPreparedStatement(Connection
-	 * connection) throws SQLException { // Value of "id" field is not required
-	 * here, so I deleted it: // PreparedStatement ps = //
-	 * connection.prepareStatement(UPDATE_SQL, new String[] { "id" // });
-	 * PreparedStatement ps = connection.prepareStatement(UPDATE_SQL);
-	 * prepareStatementForUpdate(ps, entity);
-	 * 
-	 * } }); }
-	 */
-/*
-	@Override
-	public void contractTotalPriceCalculate(Integer id) {
-		final String UPDATE_TOTAL_PRICE_SQL = "update contract set total_price="
-				+ "(select sum(invoice.quantity*iv.variant_price)"
+	@SuppressWarnings("deprecation")
+	public BigDecimal calculateContractTotalPrice(Integer id) {
+		BigDecimal totalPrice;
+		if (id == null) {
+			String errMsg = String.format("Error: as the id was sent a null reference.");
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		}
+		final String SELECT_BY_ID_SQL = "select sum(invoice.quantity*iv.variant_price)"
 				+ " from contract left join item_variant_in_contract as invoice on contract.id=invoice.contract_id"
 				+ " left join item_variant as iv on iv.id=invoice.item_variant_id"
-				+ " left join public.item as item on iv.item_id=item.id"
-				+ " where contract.id=? GROUP BY contract.id)"; //where contract.id=?";
+				+ "  left join public.item as item on iv.item_id=item.id" + " where contract.id=?"
+				+ " GROUP BY contract.id";
+		try {
 
-		jdbcTemplate.update(new PreparedStatementCreator() {
-			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-				PreparedStatement ps = connection.prepareStatement(UPDATE_TOTAL_PRICE_SQL, new String[] { "id"});
-				ps.setInt(1, id);
-				ps.setInt(2, id);
-				return ps;
-				
-			}
-			
-		});
+			totalPrice = BigDecimal.valueOf(jdbcTemplate.queryForInt(SELECT_BY_ID_SQL, new Object[] { id }));
+
+		} catch (EmptyResultDataAccessException e) {
+			String errMsg = String.format(
+					"You want to READ the [%s] with id = [%s], but it doesn't exist in the storage.",
+					getMappedClass().getSimpleName(), id);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg, e);
+		}
+		return totalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+	}
+
+	// =============TOTAL PRICE UPDATE===============
+
+	@Override
+	public void updateContractTotalPrice(Integer contractId, BigDecimal totalPrice) {
+
+		final String UPDATE_BY_SQL = "update contract set total_price = " + totalPrice + " where contract.id= "
+				+ contractId;
+
+		int i = jdbcTemplate.update(UPDATE_BY_SQL);
+		if (i == 0) {
+			String errMsg = String.format(
+					"You want to UPDATE field totalPrice of the [%s] with id = [%s], but it doesn't exist in the storage.",
+					getMappedClass().getSimpleName(), contractId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		}
 
 	}
-*/
 }

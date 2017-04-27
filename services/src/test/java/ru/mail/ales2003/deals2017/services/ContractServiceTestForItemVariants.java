@@ -340,6 +340,65 @@ public class ContractServiceTestForItemVariants extends AbstractTest {
 		LOGGER.debug("Finish deleteTest method");
 	}
 
+	@Test
+	public void calculateContractTotalPrice() {
+		LOGGER.debug("Start calculateContractTotalPrice method");
+		service.saveItemVariantInContract(instance_1);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
+
+		Integer contractId = instance_1FromDb.getContractId();
+
+		BigDecimal contracTotalPriceFromQuery = service.calculateContractTotalPrice(contractId);
+
+		System.out.println(
+				"========================" + contracTotalPriceFromQuery + "===================================");
+
+		ItemVariant iv = itemVariantService.getItemVariant(instance_1FromDb.getItemVariantId());
+		BigDecimal itemVariantPrice = iv.getVariantPrice();
+		BigDecimal contractPriceFromTest = itemVariantPrice.multiply(new BigDecimal(instance_1FromDb.getQuantity()));
+		System.out.println(
+				"========================" + contractPriceFromTest + "===================================");
+
+
+		Assert.isTrue(contracTotalPriceFromQuery.equals(contractPriceFromTest), "instance must be eq");
+		// Assert.isNull(service.getItemVariantInContract(instance_1.getId()),
+		// "instance must be deleted");
+
+		LOGGER.debug("Finish calculateContractTotalPrice method");
+	}
+	
+	
+	@Test
+	public void updateContractTotalPrice() {
+		LOGGER.debug("Start updateContractTotalPrice method");
+		service.saveItemVariantInContract(instance_1);
+		instance_1FromDb = service.getItemVariantInContract(instance_1.getId());
+
+		Integer contractId = instance_1FromDb.getContractId();
+
+		BigDecimal contracTotalPriceFromDAOQuery = service.calculateContractTotalPrice(contractId);
+		service.updateContractTotalPrice(contractId);
+		
+
+		System.out.println(
+				"========================" + contracTotalPriceFromDAOQuery + "===================================");
+
+		
+		BigDecimal contracTotalPriceFromService = service.getContract(contractId).getTotalPrice();
+		System.out.println(
+				"========================" + contracTotalPriceFromService + "===================================");
+
+
+		Assert.isTrue(contracTotalPriceFromDAOQuery.equals(contracTotalPriceFromService), "instance must be eq");
+		// Assert.isNull(service.getItemVariantInContract(instance_1.getId()),
+		// "instance must be deleted");
+
+		LOGGER.debug("Finish updateContractTotalPrice method");
+	}
+	
+
+	
+	
 	/*
 	 * method creates a new Contract instance & gives it args
 	 */

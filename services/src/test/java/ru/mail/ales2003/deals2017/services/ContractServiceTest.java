@@ -312,6 +312,14 @@ public class ContractServiceTest extends AbstractTest {
 		LOGGER.debug("Finish getAllTest method");
 	}
 
+	@Test
+	public void isChangeableTest() {
+		LOGGER.debug("Start isChangeableTest method");
+		
+		
+		LOGGER.debug("Finish isChangeableTest method");
+	}
+	
 	/*
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database

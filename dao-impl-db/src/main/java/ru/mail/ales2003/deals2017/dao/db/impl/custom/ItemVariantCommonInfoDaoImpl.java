@@ -26,7 +26,6 @@ public class ItemVariantCommonInfoDaoImpl implements IItemVariantCommonInfoDao {
 	private JdbcTemplate jdbcTemplate;
 
 	private String itemVariantClassName = ItemVariant.class.getSimpleName();
-	private String commonInfoClassName = ItemVariant.class.getSimpleName();
 	private String filterClassName = ItemVariantCommonInfoFilter.class.getSimpleName();
 
 	// =============READING AREA===============

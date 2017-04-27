@@ -1,13 +1,13 @@
-package ru.mail.ales2003.deals2017.dao.api;
+package ru.mail.ales2003.deals2017.webapp;
 
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.dao.api.custom.enums.forjmeter.FromEnumsToCsvMeasureWriter;
+import ru.mail.ales2003.deals2017.webapp.util.MeasureFromEnumsToCsvWriter;
 
 @Repository
-public class EnumsToCsvWriterTest {
+public class EnumsToCsvWriterInitializer {
 
-	private static String rootFolder = "D://REPO/GitHub/deals_2017/dao-api/src/main/resources/";
+	private static String rootFolder = "D://REPO/GitHub/deals_2017/webapp/src/main/resources/csvforenums/";
 
 	/**
 	 * @param args
@@ -17,7 +17,7 @@ public class EnumsToCsvWriterTest {
 		// String fileName = ""+rootFolder + "measure.csv";
 
 		System.out.println("Write CSV file:");
-		FromEnumsToCsvMeasureWriter.writeCsvFile(getFileName());
+		MeasureFromEnumsToCsvWriter.writeCsvFile(getFileName());
 
 		/*
 		 * System.out.println("\nRead CSV file:");

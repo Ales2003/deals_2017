@@ -1,4 +1,4 @@
-package ru.mail.ales2003.deals2017.dao.api.custom.enums.forjmeter;
+package ru.mail.ales2003.deals2017.webapp.util;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 
 @Repository
-public class FromEnumsToCsvMeasureWriter {
+public class MeasureFromEnumsToCsvWriter {
 
 	// Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";

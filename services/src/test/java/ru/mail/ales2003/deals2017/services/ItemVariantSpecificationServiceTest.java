@@ -17,6 +17,7 @@ import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecification;
 import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
 import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantCommonInfoFilter;
@@ -204,7 +205,7 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		LOGGER.debug("Start getCommonInfoFilteredTest method");
 		ItemVariantCommonInfoFilter filter = new ItemVariantCommonInfoFilter();
 
-		String itemVariantDescription = itemFromDb.getDescription();
+	    String itemVariantDescription = itemFromDb.getDescription();
 		String itemVariantName = itemFromDb.getName();
 		BigDecimal itemVariantPrice = itemVariant_1FromDb.getVariantPrice();
 
@@ -213,18 +214,21 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		paginationParams.setOffset(0);
 
 		SortingParams sortingParams = new SortingParams();
-		sortingParams.setSortColumn(ColumnNamesForSortingParams.name);
+		sortingParams.setSortColumn(ColumnNamesForSortingParams.price);
 
-		// sortingParams.setSortOrder(OrderDirectionForSortingParams.asc);
+		sortingParams.setSortOrder(OrderDirectionForSortingParams.desc);
 
 		// try to use LIKE by description filtering
 		filter.setItemVariantDescription(itemVariantDescription);
-		filter.setItemVariantDescription(itemVariantDescription.substring(2, itemVariantDescription.length() - 2));
+		//filter.setItemVariantDescription(itemVariantDescription.substring(2, itemVariantDescription.length() - 2));
 
 		// try to use LIKE by name filtering
 		// filter.setItemVariantName(itemVariantName);
-		filter.setItemVariantName(itemVariantName.substring(2, itemVariantName.length() - 2));
-		filter.setItemVariantPrice(itemVariantPrice);
+
+		//filter.setItemVariantName(itemVariantName.substring(2, itemVariantName.length() - 2));
+		filter.setItemVariantName(itemVariantName);
+		filter.setItemVariantPriceMIN(itemVariantPrice.multiply(new BigDecimal("0.5")));
+		filter.setItemVariantPriceMAX(itemVariantPrice.multiply(new BigDecimal("1.5")));
 		filter.setPaginationParams(paginationParams);
 		filter.setSortingParams(sortingParams);
 

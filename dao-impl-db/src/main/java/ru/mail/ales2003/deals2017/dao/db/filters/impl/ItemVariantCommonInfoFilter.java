@@ -26,7 +26,9 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 	// Incoming parameters
 	private String itemVariantName;
 
-	private BigDecimal itemVariantPrice;
+	private BigDecimal itemVariantPriceMIN;
+
+	private BigDecimal itemVariantPriceMAX;
 
 	private String itemVariantDescription;
 
@@ -59,11 +61,19 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 	}
 
 	/**
-	 * @param itemVariantPrice
+	 * @param itemVariantPriceMIN
 	 *            the price of item variant to set
 	 */
-	public void setItemVariantPrice(BigDecimal itemVariantPrice) {
-		this.itemVariantPrice = itemVariantPrice;
+	public void setItemVariantPriceMIN(BigDecimal itemVariantPriceMIN) {
+		this.itemVariantPriceMIN = itemVariantPriceMIN;
+	}
+
+	/**
+	 * @param itemVariantPriceMAX
+	 *            the price of item variant to set
+	 */
+	public void setItemVariantPriceMAX(BigDecimal itemVariantPriceMAX) {
+		this.itemVariantPriceMAX = itemVariantPriceMAX;
 	}
 
 	/**
@@ -100,19 +110,24 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 		StringBuilder sqlWhereBuilder = new StringBuilder("");
 
 		if (itemVariantName != null) {
-			//sqlWhereFragmentsAndList.add("name = ? ");
-			sqlWhereFragmentsAndList.add("name like ? ");
+			sqlWhereFragmentsAndList.add("name = ? ");
+			// sqlWhereFragmentsAndList.add("name like ? ");
 			paramsList.add(itemVariantName);
 		}
 
-		if (itemVariantPrice != null) {
-			sqlWhereFragmentsAndList.add("variant_price = ? ");
-			paramsList.add(itemVariantPrice);
+		if (itemVariantPriceMIN != null) {
+			sqlWhereFragmentsAndList.add("variant_price >= ? ");
+			paramsList.add(itemVariantPriceMIN);
+		}
+
+		if (itemVariantPriceMAX != null) {
+			sqlWhereFragmentsAndList.add("variant_price <= ? ");
+			paramsList.add(itemVariantPriceMAX);
 		}
 
 		if (itemVariantDescription != null) {
-			//sqlWhereFragmentsAndList.add("description like ? ");
-			sqlWhereFragmentsAndList.add("description like ? ");
+			sqlWhereFragmentsAndList.add("description = ? ");
+			// sqlWhereFragmentsAndList.add("description like ? ");
 			paramsList.add(itemVariantDescription);
 		}
 
@@ -123,19 +138,32 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 		sqlWhereBuilder.append(concatAnds(sqlWhereFragmentsAndList));
 
 		if (sortingParams != null) {
-			String column = sortingParams.getSortColumn() != null ? column = sortingParams.getSortColumn().name()
+			String column = (sortingParams.getSortColumn() != null) ? sortingParams.getSortColumn().name().toLowerCase()
 					: null;
-			String direction = sortingParams.getSortOrder() != null ? sortingParams.getSortOrder().name() : null;
+			String direction = (sortingParams.getSortOrder() != null)
+					? sortingParams.getSortOrder().name().toLowerCase() : null;
 			if (column != null) {
-				if (direction == null) {
-					sqlWhereBuilder.append("order by ? ");
-					paramsList.add(column);
-				} else {
-					sqlWhereBuilder.append("order by ? ?");
-					paramsList.add(column);
-					paramsList.add(direction);
+				sqlWhereBuilder.append("order by ? ");
+				paramsList.add(column);
+				if (direction == "asc") {
+					sqlWhereBuilder.append(" ASC ");
+					// paramsList.add(direction);
+				} else if (direction == "desc") {
+					sqlWhereBuilder.append("desc ");
+					// paramsList.add(direction);
 				}
 			}
+			/*
+			 * { if (direction == null) { sqlWhereBuilder.append("order by ? ");
+			 * paramsList.add(column); }
+			 * 
+			 * else { sqlWhereBuilder.append("order by ? ?");
+			 * paramsList.add(column); paramsList.add(direction); }
+			 * 
+			 * 
+			 * }
+			 * 
+			 */
 		}
 
 		if (paginationParams != null) {
@@ -181,9 +209,9 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 	@Override
 	public String toString() {
 		return "ItemVariantCommonInfoFilter [queryParamsArray=" + Arrays.toString(queryParamsArray) + ", fullSqlQuery="
-				+ fullSqlQuery + ", itemVariantName=" + itemVariantName + ", itemVariantPrice=" + itemVariantPrice
-				+ ", itemVariantDescription=" + itemVariantDescription + ", sortingParams=" + sortingParams
-				+ ", paginationParams=" + paginationParams + ", paramsList=" + paramsList
+				+ fullSqlQuery + ", itemVariantName=" + itemVariantName + ", itemVariantPrice=" + itemVariantPriceMIN
+				+ itemVariantPriceMAX + ", itemVariantDescription=" + itemVariantDescription + ", sortingParams="
+				+ sortingParams + ", paginationParams=" + paginationParams + ", paramsList=" + paramsList
 				+ ", sqlWhereFragmentsAndList=" + sqlWhereFragmentsAndList + "]";
 	}
 

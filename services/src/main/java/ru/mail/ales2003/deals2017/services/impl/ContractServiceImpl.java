@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import ru.mail.ales2003.deals2017.dao.api.IContractDao;
 import ru.mail.ales2003.deals2017.dao.api.IItemVariantInContractDao;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
+import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
+import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.services.IContractService;
 
 @Service
@@ -93,6 +96,36 @@ public class ContractServiceImpl implements IContractService {
 			LOGGER.info("Deleted {} entity by id: {}", contractClassName, id);
 		}
 	}
+	// =============TOTAL PRICE CALCULATE/UPDATE===============
+
+	@Override
+	public BigDecimal calculateContractTotalPrice(Integer id) {
+		BigDecimal totalPrice;
+		totalPrice = contractDao.calculateContractTotalPrice(id);
+		return totalPrice;
+	}
+
+	@Override
+	public void updateContractTotalPrice(Integer id) {
+		BigDecimal totalPrice;
+		totalPrice = contractDao.calculateContractTotalPrice(id);
+		contractDao.updateContractTotalPrice(id, totalPrice);
+
+	}
+
+	// =============CHECK FOR CHANGEABILITY===============
+	@Override
+	public Boolean isChangeable(Integer id) {
+		// ADD LOGGING
+		Boolean isChangeable = true;
+		Contract contract = getContract(id);
+		if (contract.getContractStatus().equals(ContractStatus.EXECUTED)
+				&& contract.getPayStatus().equals(PayStatus.PAID)) {
+			isChangeable = false;
+		}
+		return isChangeable;
+		// ADD LOGGING
+	}
 
 	// ======================ItemVariant management and handling in a contract
 
@@ -127,18 +160,30 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public void saveItemVariantInContract(ItemVariantInContract item) {
+
 		if (item == null) {
 			LOGGER.error("Error: as the {} entity was sent a null reference", itemVariantInContractClassName);
 			return;
 		} else if (item.getId() == null) {
 			itemVariantInContractDao.insert(item);
 			LOGGER.info("Inserted new {} entity: {}", itemVariantInContractClassName, item.toString());
-/*
-			LOGGER.info("Calculate totalPrice for {} with id={}", contractClassName, item.getContractId());
-			contractDao.contractTotalPriceCalculate(item.getContractId());
-			LOGGER.info("TotalPrice for {} with id={} was calculated", contractClassName, item.getContractId());
-*/
-		} else {
+
+			LOGGER.info("Start  totalPrice updating in contract {} by saving of entity: {}. Total price before = {}. ",
+					getContract(item.getContractId()).toString(), item.toString(),
+					getContract(item.getContractId()).getTotalPrice());
+
+			updateContractTotalPrice(item.getContractId());
+
+			LOGGER.info("Finish  totalPrice updating in contract {} by saving of entity: {}. Total price after = {}. ",
+					getContract(item.getContractId()).toString(), item.toString(),
+					getContract(item.getContractId()).getTotalPrice());
+
+		}
+
+		// ADD LOGGING
+		else if (isChangeable(item.getId()))
+		// ADD LOGGING
+		{
 			itemVariantInContractDao.update(item);
 			LOGGER.info("Updated one {} entity: {}", itemVariantInContractClassName, item.toString());
 		}
@@ -158,12 +203,21 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public void deleteItemVariantInContract(Integer id) {
-		if (id == null) {
-			LOGGER.error("Error: as the id was sent a null reference");
-			return;
-		} else {
-			itemVariantInContractDao.delete(id);
-			LOGGER.info("Deleted {} entity by id: {}", itemVariantInContractClassName, id);
+		// ADD LOGGING
+
+		if (isChangeable(id)) {
+
+			
+
+			// ADD LOGGING
+
+			if (id == null) {
+				LOGGER.error("Error: as the id was sent a null reference");
+				return;
+			} else {
+				itemVariantInContractDao.delete(id);
+				LOGGER.info("Deleted {} entity by id: {}", itemVariantInContractClassName, id);
+			}
 		}
 	}
 
