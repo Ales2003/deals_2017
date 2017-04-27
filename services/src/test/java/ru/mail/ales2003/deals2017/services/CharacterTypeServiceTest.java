@@ -46,6 +46,8 @@ public class CharacterTypeServiceTest extends AbstractTest {
 			service.delete(ct.getId());
 		}
 		LOGGER.debug("Finish completion of the method");
+		service.clearChecer();
+		
 	}
 
 	/*
@@ -91,7 +93,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		LOGGER.debug("Start updateTest method");
 		service.save(type_1);
 		modifiedType = service.get(type_1.getId());
-		modifiedType.setName(Measure.KG);
+		modifiedType.setName(Measure.L);
 		service.save(modifiedType);
 		type_1FromDb = service.get(modifiedType.getId());
 		Assert.isTrue((type_1.getId().equals(modifiedType.getId())),

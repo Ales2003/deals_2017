@@ -1,6 +1,8 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -21,6 +23,8 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	private ICharacterTypeDao characterTypeDao;
 
 	private String className = CharacterType.class.getSimpleName();
+
+	private static Set<String> activChecer = new HashSet<>();
 
 	@Override
 	public CharacterType get(Integer id) {
@@ -51,6 +55,18 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
 		} else if (entity.getId() == null) {
+
+			// LOGGING
+			fillChecer();
+			if (isExist(entity)) {
+				LOGGER.info(
+						"Warning: The {} entity with name {} exist in storage. Duplication of values is not supported.",
+						className, entity.getName().name());
+				return;
+			}
+
+			// LOGGING
+
 			characterTypeDao.insert(entity);
 			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
@@ -78,4 +94,32 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
+
+	// Methods to avoid duplication in the CharacterType storage
+
+	// LOGGING
+	@Override
+	public void fillChecer() {
+		List<CharacterType> members = getAll();
+		for (CharacterType instance : members) {
+			String word = instance.getName().name();
+			activChecer.add(word);
+		}
+	}
+
+	@Override
+	public void clearChecer() {
+		activChecer.clear();
+	}
+
+	@Override
+	public boolean isExist(CharacterType entity) {
+		Boolean isExist = false;
+		String word = entity.getName().name();
+		if (isExist = activChecer.contains(word)) {
+			return isExist;
+		}
+		return isExist;
+	}
+
 }

@@ -37,4 +37,12 @@ public interface ICharacterTypeService {
 	@Transactional
 	void delete(Integer id);
 
+	// Methods to avoid duplication in the CharacterType storage
+
+	void fillChecer();
+
+	void clearChecer();
+
+	boolean isExist(CharacterType entity);
+
 }
