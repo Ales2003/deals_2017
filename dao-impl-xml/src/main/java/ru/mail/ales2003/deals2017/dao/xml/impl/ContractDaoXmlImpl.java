@@ -69,13 +69,12 @@ public class ContractDaoXmlImpl implements IContractDao {
 
 	}
 
-	@Override
 	public BigDecimal calculateContractTotalPrice(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public void updateContractTotalPrice(Integer contractId, BigDecimal totalPrice) {
 		// TODO Auto-generated method stub
 
