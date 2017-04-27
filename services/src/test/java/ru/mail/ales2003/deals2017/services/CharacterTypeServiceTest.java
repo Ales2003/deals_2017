@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
+import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 
 public class CharacterTypeServiceTest extends AbstractTest {
 
@@ -47,7 +48,7 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		}
 		LOGGER.debug("Finish completion of the method");
 		service.clearChecer();
-		
+
 	}
 
 	/*
@@ -189,6 +190,20 @@ public class CharacterTypeServiceTest extends AbstractTest {
 		// reading
 		service.get(type_1.getId());
 		LOGGER.debug("Finish expectIAEByEmptinessReadingTest method");
+	}
+
+	/*
+	 * Method tests the throwing of IAE by reading the entity that doesn't exist
+	 */
+	@Test(expected = DuplicationKeyInformationException.class)
+	public void expectDKIEByEmptinessReadingTest() {
+		LOGGER.debug("Start expectDKIEByEmptinessReadingTest method");
+
+		type_1.setName(Measure.M);
+		type_2.setName(Measure.M);
+		service.saveMultiple(type_1, type_2);
+
+		LOGGER.debug("Finish expectDKIEByEmptinessReadingTest method");
 	}
 
 	/*

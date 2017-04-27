@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ru.mail.ales2003.deals2017.dao.api.ICharacterTypeDao;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
+import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 
 @Service
 public class CharacterTypeServiceImpl implements ICharacterTypeService {
@@ -57,12 +58,13 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 		} else if (entity.getId() == null) {
 
 			// LOGGING
+
 			fillChecer();
+
 			if (isExist(entity)) {
-				LOGGER.info(
-						"Warning: The {} entity with name {} exist in storage. Duplication of values is not supported.",
-						className, entity.getName().name());
-				return;
+				String errMsg = String.format("[%s] entity", className);
+				LOGGER.error("Error: Warning: {} exist in storage. Duplication of values is not supported.", errMsg);
+				throw new DuplicationKeyInformationException(errMsg);
 			}
 
 			// LOGGING
@@ -106,12 +108,14 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			activChecer.add(word);
 		}
 	}
-
+	
+	// LOGGING
 	@Override
 	public void clearChecer() {
 		activChecer.clear();
 	}
-
+	
+	// LOGGING
 	@Override
 	public boolean isExist(CharacterType entity) {
 		Boolean isExist = false;
