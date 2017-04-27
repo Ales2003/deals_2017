@@ -2,6 +2,7 @@ package ru.mail.ales2003.deals2017.webapp.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
@@ -23,13 +24,22 @@ public class EnumArrayToMessageConvertor {
 		for (Measure m : measures) {
 			stringBuilder.append("" + m + ", ");
 		}
+		// sorting
+		measures.sort(new Comparator<Measure>() {
+			@Override
+			public int compare(Measure o1, Measure o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
 		String result = String.format("%s", stringBuilder);
 		result = result.substring(0, result.length() - 2);
 		return result;
 	}
 
 	/**
-	 * @return a string representation of the enumsarray from class ColumnNamesForSortingParams.
+	 * @return a string representation of the enumsarray from class
+	 *         ColumnNamesForSortingParams.
 	 */
 	public static String itemColumnNameEnumArrayToMessage() {
 		StringBuilder stringBuilder = new StringBuilder("");
@@ -38,13 +48,22 @@ public class EnumArrayToMessageConvertor {
 		for (ColumnNamesForSortingParams p : params) {
 			stringBuilder.append("" + p + ", ");
 		}
+		// sorting
+		params.sort(new Comparator<ColumnNamesForSortingParams>() {
+			@Override
+			public int compare(ColumnNamesForSortingParams o1, ColumnNamesForSortingParams o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
 		String result = String.format("%s", stringBuilder);
 		result = result.substring(0, result.length() - 2);
 		return result;
 	}
 
 	/**
-	 * @return a string representation of the enumsarray from class ColumnNamesForSortingParams.
+	 * @return a string representation of the enumsarray from class
+	 *         ColumnNamesForSortingParams.
 	 */
 	public static String orderDirectionEnumArrayToMessage() {
 		StringBuilder stringBuilder = new StringBuilder("");
@@ -53,9 +72,17 @@ public class EnumArrayToMessageConvertor {
 		for (OrderDirectionForSortingParams p : params) {
 			stringBuilder.append("" + p + ", ");
 		}
+		// sorting
+		params.sort(new Comparator<OrderDirectionForSortingParams>() {
+			@Override
+			public int compare(OrderDirectionForSortingParams o1, OrderDirectionForSortingParams o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
 		String result = String.format("%s", stringBuilder);
 		result = result.substring(0, result.length() - 2);
 		return result;
 	}
-	
+
 }

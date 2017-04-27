@@ -62,8 +62,9 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			fillChecer();
 
 			if (isExist(entity)) {
-				String errMsg = String.format("[%s] entity", className);
-				LOGGER.error("Error: Warning: {} exist in storage. Duplication of values is not supported.", errMsg);
+				String errMsg = String.format("You want to insert [%s] entity with name [%s]. But such exist already.",
+						className, entity.getName().name());
+				LOGGER.error("Error: Warning: {}", errMsg);
 				throw new DuplicationKeyInformationException(errMsg);
 			}
 
@@ -108,13 +109,13 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			activChecer.add(word);
 		}
 	}
-	
+
 	// LOGGING
 	@Override
 	public void clearChecer() {
 		activChecer.clear();
 	}
-	
+
 	// LOGGING
 	@Override
 	public boolean isExist(CharacterType entity) {

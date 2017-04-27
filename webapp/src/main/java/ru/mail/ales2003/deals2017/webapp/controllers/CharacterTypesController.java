@@ -2,6 +2,7 @@ package ru.mail.ales2003.deals2017.webapp.controllers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
+import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 /**
  * @author admin
@@ -100,10 +103,16 @@ public class CharacterTypesController {
 		} catch (Exception e) {
 			String msg = String.format(
 					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
-					entityModel.getName(), measureArrayToString());
+					entityModel.getName(), EnumArrayToMessageConvertor.measureArrayToMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-		service.save(entity);
+		try {
+			service.save(entity);
+		} catch (DuplicationKeyInformationException e) {
+			String msg = e.getAttachedMsg() + " " + e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
 	}
 
@@ -121,7 +130,7 @@ public class CharacterTypesController {
 			entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));
 		} catch (Exception e) {
 			String msg = String.format(
-					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
+					"Character type with name [%s] is not allowed for insertion. Please use one of: [%s].",
 					entityModel.getName(), measureArrayToString());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
@@ -167,9 +176,17 @@ public class CharacterTypesController {
 	/**
 	 * @return a string representation of the enumsarray from class Measure.
 	 */
+
 	private String measureArrayToString() {
 		StringBuilder measureToStringBuilder = new StringBuilder("");
+
 		List<Measure> measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
+		measures.sort(new Comparator<Measure>() {
+			@Override
+			public int compare(Measure o1, Measure o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
 		for (Measure m : measures) {
 			measureToStringBuilder.append("" + m + ", ");
 		}
