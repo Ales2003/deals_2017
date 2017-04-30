@@ -49,12 +49,13 @@ public class ItemVariantSpecificationController {
 
 	// private PropertyResourceBundle pr = null;
 
+	
 	@Inject
 	private IItemVariantSpecificationService service;
 
 	@RequestMapping(value = "/commoninfo", method = RequestMethod.GET)
 	public ResponseEntity<?> getCommonInfoForAll(@RequestParam(required = false) String name, String description,
-			BigDecimal minprice, BigDecimal maxprice, String column, String order, Integer limit, Integer offset) {
+			BigDecimal minprice, BigDecimal maxprice, String column, String direction, Integer limit, Integer offset) {
 
 		List<ItemVariantCommonInfo> commonInfos;
 
@@ -67,6 +68,15 @@ public class ItemVariantSpecificationController {
 		filter.setItemVariantName(name);
 
 		filter.setItemVariantDescription(description);
+
+		if (maxprice == null) {
+			maxprice = new BigDecimal("1000000.00");
+		}
+		LOGGER.info("Because maxprice in customerquery ==null, maxprice=1000000");
+		if (minprice == null) {
+			minprice = new BigDecimal("0.00");
+		}
+		LOGGER.info("Because minprice in customerquery ==null, minprice=0");
 
 		if ((maxprice.subtract(minprice)).intValue() < 0) {
 
@@ -96,11 +106,11 @@ public class ItemVariantSpecificationController {
 				return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 			}
 		}
-		if (order != null) {
+		if (direction != null) {
 			try {
-				sParams.setSortOrder(OrderDirectionForSortingParams.valueOf(column));
+				sParams.setSortOrder(OrderDirectionForSortingParams.valueOf(direction));
 			} catch (IllegalArgumentException | NullPointerException e) {
-				String msg = String.format("Order direction [%s] is not supported. Please use one of: %s", order,
+				String msg = String.format("Order direction [%s] is not supported. Please use one of: %s", direction,
 						EnumArrayToMessageConvertor.orderDirectionEnumArrayToMessage());
 				return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 			}

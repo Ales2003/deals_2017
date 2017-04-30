@@ -28,16 +28,11 @@ public class BasicAuthFilter implements Filter {
 	static {
 		USERS_DB.put("admin", 1);
 		USERS_DB.put("NeAdmin", 2);
+		System.out.println(USERS_DB.size());
 	}
 
-	String s = "admin";
-	
-	
-	ICharacterTypeService service;
-	
-	// private AuthenticationService authService;
+	private ICharacterTypeService service;
 
-	// private UserDataStorage userDataStorage;
 	private ApplicationContext appContext;
 
 	@Override
@@ -46,7 +41,6 @@ public class BasicAuthFilter implements Filter {
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(config.getServletContext());
 		service = context.getBean(ICharacterTypeService.class);
-		// authService = context.getBean(AuthenticationService.class);
 		appContext = context;
 	}
 
@@ -56,9 +50,9 @@ public class BasicAuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		//if (!isAuthRequired(req)) {
-	//		chain.doFilter(request, response);
-	//	}
+		// if (!isAuthRequired(req)) {
+		// chain.doFilter(request, response);
+		// }
 
 		UserAuthStorage userDataStorage = appContext.getBean(UserAuthStorage.class);
 
@@ -72,10 +66,7 @@ public class BasicAuthFilter implements Filter {
 		}
 
 		String username = credentials[0];
-		System.out.println("===========================>>>>>>>>>>>"+username);
-		
 		String password = credentials[1];
-		System.out.println("===========================>>>>>>>>>>>"+password);
 
 		// TODO query to DB instead of MAP
 		Integer userId = USERS_DB.get(username);
@@ -83,7 +74,7 @@ public class BasicAuthFilter implements Filter {
 
 			userDataStorage.setId(userId);
 
-			
+			// userDataStorage.getId();
 
 			chain.doFilter(request, response);
 		} else {
@@ -115,8 +106,12 @@ public class BasicAuthFilter implements Filter {
 		try {
 			Enumeration<String> headers = req.getHeaders("Authorization");
 			String nextElement = headers.nextElement();
-			String base64Credentials = nextElement.substring("Basic".length()).trim();
-			String credentials = new String(Base64.getDecoder().decode(base64Credentials), Charset.forName("UTF-8"));
+			// String base64Credentials =
+			// nextElement.substring("Basic".length()).trim();
+			// String credentials = new
+			// String(Base64.getDecoder().decode(base64Credentials),
+			// Charset.forName("UTF-8"));
+			String credentials = new String(Base64.getDecoder().decode(nextElement), Charset.forName("UTF-8"));
 			return credentials.split(":", 2);
 		} catch (Exception e) {
 			return null;

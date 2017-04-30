@@ -146,10 +146,10 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 				sqlWhereBuilder.append("order by ? ");
 				paramsList.add(column);
 				if (direction == "asc") {
-					sqlWhereBuilder.append(" ASC ");
+					sqlWhereBuilder.append("ASC ");
 					// paramsList.add(direction);
 				} else if (direction == "desc") {
-					sqlWhereBuilder.append("desc ");
+					sqlWhereBuilder.append("DESC ");
 					// paramsList.add(direction);
 				}
 			}

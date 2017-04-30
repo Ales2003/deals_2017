@@ -45,7 +45,7 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 	private CharacterType measure_2;
 	private CharacterType measureFromDb_1;
 	private CharacterType measureFromDb_2;
-
+	
 	private CharacterTypeInItemVariant attribute_1;
 	private CharacterTypeInItemVariant attribute_2;
 	private CharacterTypeInItemVariant attributeFromDb_1;

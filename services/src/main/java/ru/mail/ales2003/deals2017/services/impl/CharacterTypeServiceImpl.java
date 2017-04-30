@@ -25,7 +25,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	private String className = CharacterType.class.getSimpleName();
 
-	private static Set<String> activChecer = new HashSet<>();
+	private static Set<String> characterTypeSet = new HashSet<>();
 
 	@Override
 	public CharacterType get(Integer id) {
@@ -58,8 +58,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 		} else if (entity.getId() == null) {
 
 			// LOGGING
-
-			fillChecker();
+			refreshCharacterTypeSet();
 
 			if (isExist(entity)) {
 				String errMsg = String.format("You want to insert [%s] entity with name [%s]. But such exist already.",
@@ -102,18 +101,25 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	// LOGGING
 	@Override
-	public void fillChecker() {
+	public void refreshCharacterTypeSet() {
+		clearfillCharacterTypeSet();
+		fillCharacterTypeSet();
+	}
+
+	// LOGGING
+	@Override
+	public void fillCharacterTypeSet() {
 		List<CharacterType> members = getAll();
 		for (CharacterType instance : members) {
 			String word = instance.getName().name();
-			activChecer.add(word);
+			characterTypeSet.add(word);
 		}
 	}
 
 	// LOGGING
 	@Override
-	public void clearChecker() {
-		activChecer.clear();
+	public void clearfillCharacterTypeSet() {
+		characterTypeSet.clear();
 	}
 
 	// LOGGING
@@ -121,7 +127,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	public boolean isExist(CharacterType entity) {
 		Boolean isExist = false;
 		String word = entity.getName().name();
-		if (isExist = activChecer.contains(word)) {
+		if (isExist = characterTypeSet.contains(word)) {
 			return isExist;
 		}
 		return isExist;
