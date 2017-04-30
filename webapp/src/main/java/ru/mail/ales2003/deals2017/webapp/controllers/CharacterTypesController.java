@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
+import ru.mail.ales2003.deals2017.datamodel.Role;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
@@ -36,6 +37,22 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 @RequestMapping("/charactertypes")
 public class CharacterTypesController {
 
+	// id-ROLE-idInOwnTable-login-password
+	private static final Object[][] userRoles = new Object[100][5];
+	static {
+		userRoles[0][0] = 1;
+		userRoles[0][1] = Role.ADMIN;
+		userRoles[0][2] = 1;
+		userRoles[0][3] = "admin";
+		userRoles[0][4] = "password";
+
+		userRoles[1][0] = 2;
+		userRoles[1][1] = Role.CUSTOMER;
+		userRoles[1][2] = 1;
+		userRoles[1][3] = "neadmin";
+		userRoles[1][4] = "password";
+	}
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypesController.class);
 
 	@Inject
@@ -51,11 +68,19 @@ public class CharacterTypesController {
 	@Inject
 	private ICharacterTypeService service;
 
+	private String thisClassN = CharacterTypesController.class.getSimpleName();
+
 	/**
 	 * @return List&ltCharacterTypeModel&gt convertedEntitys
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
+
+		UserAuthStorage userDataStorage = context.getBean(UserAuthStorage.class);
+		Integer userId = userDataStorage.getId();
+		System.out.println(userId);
+
+		LOGGER.info("User with id = [{}] invoced method {} in {}", userId, "getAll()", thisClassN);
 
 		List<CharacterType> allEntitys;
 		try {
@@ -86,9 +111,8 @@ public class CharacterTypesController {
 
 		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
 		LOGGER.info("User {} request charachterType {}", userAuthStorage, entityIdParam);
-		System.out.println("===========================>>>>>>>>>>>"+userAuthStorage.getId());
-		
-		
+		System.out.println("===========================>>>>>>>>>>>" + userAuthStorage.getId());
+
 		CharacterType entity = null;
 		try {
 			entity = service.get(entityIdParam);

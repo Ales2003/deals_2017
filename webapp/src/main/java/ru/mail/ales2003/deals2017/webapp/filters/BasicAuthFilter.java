@@ -50,9 +50,9 @@ public class BasicAuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 
-		// if (!isAuthRequired(req)) {
-		// chain.doFilter(request, response);
-		// }
+		if (!isAuthRequired(req)) {
+			chain.doFilter(request, response);
+		}
 
 		UserAuthStorage userDataStorage = appContext.getBean(UserAuthStorage.class);
 
