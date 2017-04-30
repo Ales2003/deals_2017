@@ -173,13 +173,32 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	// =============DELETE AREA===============
 	/**
 	 * @param id
+	 * 
 	 */
 	@Override
 	public void delete(PK id) {
 		// can also add deletion check
 
 		final String DELETE_BY_ID_SQL = getDeleteQuery();
-		int i = jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
+		int i = 0;
+
+		// Add checking if org.springframework.web.util.NestedServletException:
+		// Request processing failed; nested exception is
+		// org.springframework.dao.DataIntegrityViolationException:
+		// StatementCallback; SQL [delete from character_type where id=41];
+		// ОШИБКА: UPDATE или DELETE в таблице "character_type" нарушает
+		// ограничение внешнего ключа "character_type_id" таблицы
+		// "character_type_in_item_variant"
+		// Подробности: На ключ (id)=(41) всё ещё есть ссылки в таблице
+		// "character_type_in_item_variant".; nested exception is
+		// org.postgresql.util.PSQLException: ОШИБКА: UPDATE или DELETE в
+		// таблице "character_type" нарушает ограничение внешнего ключа
+		// "character_type_id" таблицы "character_type_in_item_variant"
+		// Подробности: На ключ (id)=(41) всё ещё есть ссылки в таблице
+		// "character_type_in_item_variant".
+
+		i = jdbcTemplate.update(DELETE_BY_ID_SQL + " where id=" + id);
+
 		if (i == 0) {
 			String errMsg = String.format(
 					"You want to DELETE the [%s] with id = [%s], but it doesn't exist in the storage.",

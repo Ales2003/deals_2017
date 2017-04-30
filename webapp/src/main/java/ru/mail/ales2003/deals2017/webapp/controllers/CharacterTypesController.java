@@ -1,8 +1,6 @@
 package ru.mail.ales2003.deals2017.webapp.controllers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -10,6 +8,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
+import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
@@ -29,7 +29,7 @@ import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 /**
- * @author admin
+ * @author Aliaksandr Vishneuski ales_2003@mail.ru
  *
  */
 @RestController
@@ -37,6 +37,9 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 public class CharacterTypesController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypesController.class);
+
+	@Inject
+	private ApplicationContext context;
 
 	// this variable need to get his value instead hard but dynamically - from a
 	// request header.
@@ -53,6 +56,7 @@ public class CharacterTypesController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
+
 		List<CharacterType> allEntitys;
 		try {
 			allEntitys = service.getAll();
@@ -79,6 +83,12 @@ public class CharacterTypesController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
+		LOGGER.info("User {} request charachterType {}", userAuthStorage, entityIdParam);
+		System.out.println("===========================>>>>>>>>>>>"+userAuthStorage.getId());
+		
+		
 		CharacterType entity = null;
 		try {
 			entity = service.get(entityIdParam);
@@ -131,7 +141,7 @@ public class CharacterTypesController {
 		} catch (Exception e) {
 			String msg = String.format(
 					"Character type with name [%s] is not allowed for insertion. Please use one of: [%s].",
-					entityModel.getName(), measureArrayToString());
+					entityModel.getName(), EnumArrayToMessageConvertor.measureArrayToMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 		service.save(entity);
@@ -173,49 +183,4 @@ public class CharacterTypesController {
 		return entity;
 	}
 
-	/**
-	 * @return a string representation of the enumsarray from class Measure.
-	 */
-
-	private String measureArrayToString() {
-		StringBuilder measureToStringBuilder = new StringBuilder("");
-
-		List<Measure> measures = new ArrayList<Measure>(Arrays.asList(Measure.values()));
-		measures.sort(new Comparator<Measure>() {
-			@Override
-			public int compare(Measure o1, Measure o2) {
-				return o1.name().compareTo(o2.name());
-			}
-		});
-		for (Measure m : measures) {
-			measureToStringBuilder.append("" + m + ", ");
-		}
-		String result = String.format("%s", measureToStringBuilder);
-		result = result.substring(0, result.length() - 2);
-		return result;
-	}
-
-	// transferred to ru.mail.ales2003.deals2017.webapp.translate
-	/**
-	 * @param name
-	 *            - variable to translate
-	 * @param locale
-	 * @return translated variable
-	 */
-	/*
-	 * private String translate(String key, Locale locale) {
-	 * PropertyResourceBundle pr = null; String translated; try { pr =
-	 * (PropertyResourceBundle) PropertyResourceBundle .getBundle(
-	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames",
-	 * locale); if (pr == null) throw new
-	 * MissingResourceException("Property file not found!",
-	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
-	 * translated = pr.getString(key); // Perhaps extra - it works without it -
-	 * he starts using the key in // the absence of a pair. if (translated ==
-	 * null) throw new MissingResourceException("Key not found!",
-	 * "ru.mail.ales2003.deals2017.webapp.controllers.i18n.entitieNames", key);
-	 * } catch (MissingResourceException e) {
-	 * LOGGER.error("{}, className = {}, key = {}.", e.getMessage(),
-	 * e.getClassName(), e.getKey()); return key; } return translated; }
-	 */
 }
