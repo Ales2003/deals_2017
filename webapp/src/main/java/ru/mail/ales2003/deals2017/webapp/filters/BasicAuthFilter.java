@@ -119,10 +119,10 @@ public class BasicAuthFilter implements Filter {
 
 			LOGGER.info("Saving userId  = [{}] to JVM Storage.", userIdFromStorage);
 			userJVMDataStorage.setId(userIdFromStorage);
-			
+
 			LOGGER.info("Cleaning old userData from JedisCache");
 			cache.cleanUserData(username, userIdFromStorage, password);
-			
+
 			LOGGER.info(
 					"Chaching to JedisCache: username = [{}], userId  = [{}], password = [{}], the lifetime of cached data = [{}] sec.",
 					username, userIdFromStorage, password, cashingTimeInSec);
@@ -150,13 +150,16 @@ public class BasicAuthFilter implements Filter {
 		// TODO query to cashe
 		Integer userIdFromStorage;
 		String userPasswordFromStorage;
-		
+
 		System.out.println(cache.getLength(username));
-		
+
 		if (cache.isExistInCache(username)) {
 			Integer idFromCashe = cache.getIdFromCache(username);
 			userIdFromStorage = idFromCashe;
-
+			
+			if (userIdFromStorage == null) {
+				return false;
+			}
 			// TODO check in cashe
 
 			String passwordFromCashe = cache.getPasswordFromCache(username);
