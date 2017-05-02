@@ -80,8 +80,10 @@ public class BasicAuthFilter implements Filter {
 		String username = credentials[0];
 		String password = credentials[1];
 
-		// TODO query to cashe
+		
 		Integer userIdFromStorage;
+		
+		// query to cashe
 		System.out.println(cache.getLength(username));
 		if (cache.isExistInCache(username)) {
 			LOGGER.info("Fortunately, the JedisCache stores the requested data.");
@@ -89,14 +91,22 @@ public class BasicAuthFilter implements Filter {
 			LOGGER.info("Getting userId  = [{}] by username [{}] from Jedis Cache.", idFromCashe, username);
 			userIdFromStorage = idFromCashe;
 
-			// TODO check in cashe
-
+			
+			// query to DB
 		} else {
 			LOGGER.info("Unfortunately, the JedisCache does not store the requested data.");
 			Integer userIdFromDB = USERS_DB.get(username);
 			LOGGER.info("Getting userId  = [{}] by username [{}] from DataBase.", userIdFromDB, username);
 			userIdFromStorage = userIdFromDB;
 
+			// TODO query to DB instead of MAP
+			// TODO get user from DB by username and check password
+			// get user by username
+			// user.get id
+			
+			
+			
+			
 		}
 		// if (cashe.isExistInCashe(username)) {
 		// Integer idFromCashe = cashe.getIdFromCashe(username);
@@ -147,16 +157,18 @@ public class BasicAuthFilter implements Filter {
 
 	// private boolean validateUserPassword(Integer userId, String password) {
 	private boolean validateUserPassword(String username, String password) {
-		// TODO query to cashe
+		
+		
 		Integer userIdFromStorage;
 		String userPasswordFromStorage;
 
 		System.out.println(cache.getLength(username));
 
+		// query to cashe
 		if (cache.isExistInCache(username)) {
 			Integer idFromCashe = cache.getIdFromCache(username);
 			userIdFromStorage = idFromCashe;
-			
+
 			if (userIdFromStorage == null) {
 				return false;
 			}

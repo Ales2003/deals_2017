@@ -43,7 +43,7 @@ public interface ICharacterTypeService {
 	
 	void fillCharacterTypeSet();
 
-	void clearfillCharacterTypeSet();
+	void clearCharacterTypeSet();
 
 	boolean isExist(CharacterType entity);
 	

@@ -102,7 +102,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	// LOGGING
 	@Override
 	public void refreshCharacterTypeSet() {
-		clearfillCharacterTypeSet();
+		clearCharacterTypeSet();
 		fillCharacterTypeSet();
 	}
 
@@ -118,7 +118,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	// LOGGING
 	@Override
-	public void clearfillCharacterTypeSet() {
+	public void clearCharacterTypeSet() {
 		characterTypeSet.clear();
 	}
 

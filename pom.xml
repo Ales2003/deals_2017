@@ -244,10 +244,22 @@
 				<version>${spring.version}</version>
 			</dependency>
 
+			<!-- DEPENDENCIE FOR JAVA->CSV -->
+
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-csv</artifactId>
 				<version>1.3</version>
+			</dependency>
+
+
+			<!-- REDIS DEPENDENCIE FOR CACHING -->
+			<dependency>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+				<version>2.9.0</version>
+				<type>jar</type>
+				<scope>compile</scope>
 			</dependency>
 
 

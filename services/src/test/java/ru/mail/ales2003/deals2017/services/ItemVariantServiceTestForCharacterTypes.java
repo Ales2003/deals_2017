@@ -45,7 +45,7 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 	private CharacterType measure_2;
 	private CharacterType measureFromDb_1;
 	private CharacterType measureFromDb_2;
-	
+
 	private CharacterTypeInItemVariant attribute_1;
 	private CharacterTypeInItemVariant attribute_2;
 	private CharacterTypeInItemVariant attributeFromDb_1;
@@ -54,8 +54,6 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 
 	@Before
 	public void runBeforeTestMethod() {
-
-		TestAssistant.createInstance("s");
 
 		LOGGER.debug("Start preparation of the method");
 
@@ -97,8 +95,6 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 
 	@After
 	public void runAfterTestMethod() {
-
-		TestAssistant.deleteInstance();
 
 		LOGGER.debug("Start completion of the method");
 
@@ -153,7 +149,7 @@ public class ItemVariantServiceTestForCharacterTypes extends AbstractTest {
 	/*
 	 * Instances are eq. if values of the corresponding columns are eq.
 	 */
-	
+
 	/*
 	 * Test for the insertion of several objects, for each are compared two
 	 * objects with the same Id: created in Java and saved in & extracted from
