@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 
@@ -43,15 +43,15 @@ public class EnumArrayToMessageConvertor {
 	 */
 	public static String itemColumnNameEnumArrayToMessage() {
 		StringBuilder stringBuilder = new StringBuilder("");
-		List<ColumnNamesForSortingParams> params = new ArrayList<ColumnNamesForSortingParams>(
-				Arrays.asList(ColumnNamesForSortingParams.values()));
-		for (ColumnNamesForSortingParams p : params) {
+		List<ItemColumnNamesForSortingParams> params = new ArrayList<ItemColumnNamesForSortingParams>(
+				Arrays.asList(ItemColumnNamesForSortingParams.values()));
+		for (ItemColumnNamesForSortingParams p : params) {
 			stringBuilder.append("" + p + ", ");
 		}
 		// sorting
-		params.sort(new Comparator<ColumnNamesForSortingParams>() {
+		params.sort(new Comparator<ItemColumnNamesForSortingParams>() {
 			@Override
-			public int compare(ColumnNamesForSortingParams o1, ColumnNamesForSortingParams o2) {
+			public int compare(ItemColumnNamesForSortingParams o1, ItemColumnNamesForSortingParams o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});

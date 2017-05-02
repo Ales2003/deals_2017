@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
-import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
@@ -99,7 +99,7 @@ public class ItemVariantSpecificationController {
 
 		if (column != null) {
 			try {
-				sParams.setSortColumn(ColumnNamesForSortingParams.valueOf(column));
+				sParams.setSortColumn(ItemColumnNamesForSortingParams.valueOf(column));
 			} catch (IllegalArgumentException | NullPointerException e) {
 				String msg = String.format("Column [%s] is not supported. Please use one of: %s", column,
 						EnumArrayToMessageConvertor.itemColumnNameEnumArrayToMessage());

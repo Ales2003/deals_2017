@@ -8,12 +8,12 @@
 	</parent>
 	<artifactId>services</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>ru.mail.ales2003.deals2017</groupId>
 			<artifactId>dao-impl-db</artifactId>
-			<!--<artifactId>dao-impl-xml</artifactId>-->
+			<!--<artifactId>dao-impl-xml</artifactId> -->
 		</dependency>
 
 		<!-- for testing -->
@@ -26,11 +26,19 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
 		</dependency>
 
 

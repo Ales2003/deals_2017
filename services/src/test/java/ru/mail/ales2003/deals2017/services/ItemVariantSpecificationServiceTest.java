@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecification;
-import ru.mail.ales2003.deals2017.dao.api.filters.ColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
@@ -214,7 +214,7 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 		paginationParams.setOffset(0);
 
 		SortingParams sortingParams = new SortingParams();
-		sortingParams.setSortColumn(ColumnNamesForSortingParams.price);
+		sortingParams.setSortColumn(ItemColumnNamesForSortingParams.price);
 
 		sortingParams.setSortOrder(OrderDirectionForSortingParams.desc);
 

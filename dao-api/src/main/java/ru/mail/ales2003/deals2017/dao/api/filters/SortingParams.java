@@ -2,14 +2,14 @@ package ru.mail.ales2003.deals2017.dao.api.filters;
 
 public class SortingParams {
 
-	private ColumnNamesForSortingParams sortColumn;
+	private ItemColumnNamesForSortingParams sortColumn;
 
 	private OrderDirectionForSortingParams sortOrder;
 
 	/**
 	 * @return the sortColumn
 	 */
-	public ColumnNamesForSortingParams getSortColumn() {
+	public ItemColumnNamesForSortingParams getSortColumn() {
 		return sortColumn;
 	}
 
@@ -17,7 +17,7 @@ public class SortingParams {
 	 * @param sortColumn
 	 *            the sortColumn to set
 	 */
-	public void setSortColumn(ColumnNamesForSortingParams sortColumn) {
+	public void setSortColumn(ItemColumnNamesForSortingParams sortColumn) {
 		this.sortColumn = sortColumn;
 	}
 
