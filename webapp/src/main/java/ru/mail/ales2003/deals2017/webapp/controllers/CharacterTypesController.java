@@ -39,6 +39,7 @@ public class CharacterTypesController {
 
 	// id-ROLE-idInOwnTable-login-password
 	private static final Object[][] userRoles = new Object[100][5];
+	
 	static {
 		userRoles[0][0] = 1;
 		userRoles[0][1] = Role.ADMIN;
@@ -68,7 +69,7 @@ public class CharacterTypesController {
 	@Inject
 	private ICharacterTypeService service;
 
-	private String thisClassN = CharacterTypesController.class.getSimpleName();
+	private String thisClassName = CharacterTypesController.class.getSimpleName();
 
 	/**
 	 * @return List&ltCharacterTypeModel&gt convertedEntitys
@@ -76,21 +77,23 @@ public class CharacterTypesController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
 
+		
+		
 		UserAuthStorage userDataStorage = context.getBean(UserAuthStorage.class);
 		Integer userId = userDataStorage.getId();
 		System.out.println(userId);
 
-		LOGGER.info("User with id = [{}] invoced method {} in {}", userId, "getAll()", thisClassN);
+		LOGGER.info("User with id = [{}] invoced method [{}] in {}", userId, "getAll()", thisClassName);
 
 		List<CharacterType> allEntitys;
 		try {
 			allEntitys = service.getAll();
 		} catch (EmptyResultDataAccessException e) {
-			String msg = String.format("[%s] store returns incorrect entity count.", CharacterType.class);
+			String msg = String.format("[%s] storage returns incorrect entity count.", CharacterType.class);
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if (allEntitys.isEmpty()) {
-			String msg = String.format("An entity store of class [%s] is empty", CharacterType.class);
+			String msg = String.format("An entity storage of class [%s] is empty", CharacterType.class);
 			return new ResponseEntity<String>(msg, HttpStatus.OK);
 		}
 		List<CharacterTypeModel> convertedEntitys = new ArrayList<>();
@@ -110,7 +113,7 @@ public class CharacterTypesController {
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer entityIdParam) {
 
 		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
-		LOGGER.info("User {} request charachterType {}", userAuthStorage, entityIdParam);
+		LOGGER.info("User {} requests charachterType {}", userAuthStorage, entityIdParam);
 		System.out.println("===========================>>>>>>>>>>>" + userAuthStorage.getId());
 
 		CharacterType entity = null;
