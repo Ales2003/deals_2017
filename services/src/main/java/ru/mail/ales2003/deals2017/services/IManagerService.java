@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
 
 public interface IManagerService {
@@ -36,5 +37,11 @@ public interface IManagerService {
 	 */
 	@Transactional
 	void delete(Integer id);
+
+	/**
+	 * @param AuthorizedManager entity
+	 */
+	@Transactional
+	void saveWithAuthorization(AuthorizedManager entity);
 
 }

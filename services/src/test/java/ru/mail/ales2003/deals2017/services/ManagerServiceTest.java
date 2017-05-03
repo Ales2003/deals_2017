@@ -7,12 +7,16 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
+import ru.mail.ales2003.deals2017.datamodel.Role;
+import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 
 public class ManagerServiceTest extends AbstractTest {
 
@@ -21,26 +25,60 @@ public class ManagerServiceTest extends AbstractTest {
 	@Inject
 	private IManagerService service;
 
+	@Inject
+	private IUserAuthService authService;
+
 	private Manager instance_1;
 	private Manager instance_2;
 	private Manager instance_1FromDb;
 	private Manager instance_2FromDb;
 	private Manager modifiedInstance;
 
+	private UserAuth authorizedData;
+	private UserAuth authorizedDataFromDb;
+
+	private AuthorizedManager authManager;
+	private AuthorizedManager authManagerFromDb;
+
 	@Before
 	public void runBeforeTestMethod() {
 		LOGGER.debug("Start preparation of the method");
+
+		LOGGER.debug("Creating managers in JVM");
 		instance_1 = getInstance("Nikita", "Sergeevich", "Samohval", "general manager");
 		instance_2 = getInstance("Andrei", "Ivanovich", "Ratich", "junior manager");
+		LOGGER.debug("Managers in JVM were created");
+
+		LOGGER.debug("Creating userAuthData in JVM");
+		authorizedData = getUserAuthInstance(null, Role.SALES_MANAGER, "s_manager", "s_password");
+		LOGGER.debug("userAuthData in JVM was created");
+
+		LOGGER.debug("Creating authManager in JVM");
+		authManager = new AuthorizedManager();
+		authManager.setManager(instance_1);
+		authManager.setAuthData(authorizedData);
+		LOGGER.debug("authManager in JVM was created");
+
 		LOGGER.debug("Finish preparation of the method");
 	}
 
 	@After
 	public void runAfterTestMethod() {
+
 		LOGGER.debug("Start completion of the method");
+
+		LOGGER.debug("Start deleting userAuths from Db");
+		for (UserAuth uA : authService.getAll()) {
+			authService.delete(uA.getId());
+		}
+		LOGGER.debug("UserAuths were deleted from Db ");
+
+		LOGGER.debug("Start deleting managers from Db");
 		for (Manager cg : service.getAll()) {
 			deleteFromDb(cg.getId());
 		}
+		LOGGER.debug("Managers were deleted from Db ");
+
 		LOGGER.debug("Finish completion of the method");
 	}
 
@@ -221,6 +259,58 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish deleteTest method");
 	}
 
+	@Ignore
+	@Test
+	public void saveWithAuthorizationTest() {
+		LOGGER.debug("Start ThissaveWithAuthorizationTest method");
+		service.save(instance_1);
+		instance_1FromDb = service.get(instance_1.getId());
+
+		Assert.notNull(instance_1FromDb, "instance must be saved");
+
+		Assert.notNull(instance_1FromDb.getFirstName(), "'firstname' column must not by empty");
+		Assert.notNull(instance_1FromDb.getPatronymic(), "'patronymic' column must not by empty");
+		Assert.notNull(instance_1FromDb.getLastName(), "'lastName' column must not by empty");
+		Assert.notNull(instance_1FromDb.getPosition(), "'position' column must not by empty");
+
+		Assert.isTrue(
+				instance_1FromDb.getFirstName().equals(instance_1.getFirstName())
+						&& instance_1FromDb.getPatronymic().equals(instance_1.getPatronymic())
+						&& instance_1FromDb.getLastName().equals(instance_1.getLastName())
+						&& instance_1FromDb.getPosition().equals(instance_1.getPosition()),
+				"values of the corresponding columns must by eq.");
+		LOGGER.debug("Finish insertTest method");
+
+		authorizedData.setInOwnTableId(instance_1FromDb.getId());
+		authService.save(authorizedData);
+		authorizedDataFromDb = authService.get(authorizedData.getId());
+
+		Assert.notNull(authorizedDataFromDb, "instance must be saved");
+
+		Assert.isTrue(
+				(authorizedDataFromDb.getInOwnTableId() != null) && (authorizedDataFromDb.getRole() != null)
+						&& (authorizedDataFromDb.getLogin() != null) && (authorizedDataFromDb.getPassword() != null),
+				"columns values must not by empty");
+
+		Assert.isTrue(authorizedDataFromDb.equals(authorizedData), "values of the corresponding columns must by eq.");
+
+		LOGGER.debug("Finish ThissaveWithAuthorizationTest method");
+
+	}
+
+	//TODO
+	@Test
+	public void ThisSaveWithAuthorizationTest() {
+		LOGGER.debug("Start ThissaveWithAuthorizationTest method");
+
+		service.saveWithAuthorization(authManager);
+
+		System.out.println(authManager.toString());
+
+		LOGGER.debug("Finish ThissaveWithAuthorizationTest method");
+
+	}
+
 	/*
 	 * method creates a new instance & gives it args
 	 */
@@ -230,6 +320,18 @@ public class ManagerServiceTest extends AbstractTest {
 		instance.setPatronymic(patronymic);
 		instance.setLastName(lastName);
 		instance.setPosition(position);
+		return instance;
+	}
+
+	/*
+	 * method creates a new manager instance & gives it args
+	 */
+	private UserAuth getUserAuthInstance(Integer inOwnTableId, Role role, String login, String password) {
+		UserAuth instance = new UserAuth();
+		instance.setInOwnTableId(inOwnTableId);
+		instance.setRole(role);
+		instance.setLogin(login);
+		instance.setPassword(password);
 		return instance;
 	}
 

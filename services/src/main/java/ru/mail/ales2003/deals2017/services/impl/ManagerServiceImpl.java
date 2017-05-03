@@ -9,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.IManagerDao;
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.services.IManagerService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 
 @Service
 public class ManagerServiceImpl implements IManagerService {
@@ -19,6 +21,9 @@ public class ManagerServiceImpl implements IManagerService {
 
 	@Inject
 	private IManagerDao managerDao;
+
+	@Inject
+	private IUserAuthService userAuthService;
 
 	private String className = Manager.class.getSimpleName();
 
@@ -78,6 +83,22 @@ public class ManagerServiceImpl implements IManagerService {
 			managerDao.delete(id);
 			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
+	}
+
+	@Override
+	public void saveWithAuthorization(AuthorizedManager entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
+			return;
+		} else {
+			Manager manager = entity.getManager();
+			save(manager);
+			Integer managerId = manager.getId();
+			entity.setManagerId(managerId);
+			entity.getAuthData().setInOwnTableId(managerId);
+			userAuthService.save(entity.getAuthData());
+		}
+
 	}
 
 }
