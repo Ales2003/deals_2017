@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +82,7 @@ public class ManagerServiceTest extends AbstractTest {
 	}
 
 	/*
-	 * Two objects with the same Id are compared: created in Java and saved in &
+	 * Two objects with the same Id are compared: created in Java and saved to &
 	 * extracted from the database
 	 */
 	@Test
@@ -110,7 +109,7 @@ public class ManagerServiceTest extends AbstractTest {
 
 	/*
 	 * Test for the insertion of several objects, for each are compared two
-	 * objects with the same Id: created in Java and saved in & extracted from
+	 * objects with the same Id: created in Java and saved to & extracted from
 	 * the database
 	 */
 	@Test
@@ -150,7 +149,7 @@ public class ManagerServiceTest extends AbstractTest {
 
 	/*
 	 * Three objects with the same Id are compared: created in Java, modified in
-	 * Java and saved in & extracted from the database
+	 * Java and saved to & extracted from the database
 	 */
 	@Test
 	public void updateTest() {
@@ -188,7 +187,7 @@ public class ManagerServiceTest extends AbstractTest {
 
 	/*
 	 * Test for the getting an object. Two objects with the same Id are
-	 * compared: created in Java and saved in & extracted from the database
+	 * compared: created in Java and saved to & extracted from the database
 	 */
 	@Test
 	public void getTest() {
@@ -214,7 +213,7 @@ public class ManagerServiceTest extends AbstractTest {
 
 	/*
 	 * Test for the getting of several objects, for each are compared two
-	 * objects with the same Id: created in Java and saved in & extracted from
+	 * objects with the same Id: created in Java and saved to & extracted from
 	 * the database
 	 */
 	@Test
@@ -259,13 +258,26 @@ public class ManagerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish deleteTest method");
 	}
 
-	@Ignore
+	/*
+	 * Two pairs of objects with the same Id are compared: created in Java and
+	 * saved to & extracted from the database: Manager and his uthorizationData
+	 */
+
 	@Test
 	public void saveWithAuthorizationTest() {
-		LOGGER.debug("Start ThissaveWithAuthorizationTest method");
-		service.save(instance_1);
-		instance_1FromDb = service.get(instance_1.getId());
+		LOGGER.debug("Start saveWithAuthorizationTest method");
 
+		service.saveWithAuthorization(authManager);
+
+		System.out.println(authManager.toString());
+
+		// extracting the saved manager
+		instance_1FromDb = service.get(authManager.getManager().getId());
+
+		// extracting the saved authorizedData
+		authorizedDataFromDb = authService.get(authManager.getAuthData().getId());
+
+		// checking manager
 		Assert.notNull(instance_1FromDb, "instance must be saved");
 
 		Assert.notNull(instance_1FromDb.getFirstName(), "'firstname' column must not by empty");
@@ -279,12 +291,8 @@ public class ManagerServiceTest extends AbstractTest {
 						&& instance_1FromDb.getLastName().equals(instance_1.getLastName())
 						&& instance_1FromDb.getPosition().equals(instance_1.getPosition()),
 				"values of the corresponding columns must by eq.");
-		LOGGER.debug("Finish insertTest method");
 
-		authorizedData.setInOwnTableId(instance_1FromDb.getId());
-		authService.save(authorizedData);
-		authorizedDataFromDb = authService.get(authorizedData.getId());
-
+		// extracting the saved authorizedData
 		Assert.notNull(authorizedDataFromDb, "instance must be saved");
 
 		Assert.isTrue(
@@ -294,20 +302,7 @@ public class ManagerServiceTest extends AbstractTest {
 
 		Assert.isTrue(authorizedDataFromDb.equals(authorizedData), "values of the corresponding columns must by eq.");
 
-		LOGGER.debug("Finish ThissaveWithAuthorizationTest method");
-
-	}
-
-	//TODO
-	@Test
-	public void ThisSaveWithAuthorizationTest() {
-		LOGGER.debug("Start ThissaveWithAuthorizationTest method");
-
-		service.saveWithAuthorization(authManager);
-
-		System.out.println(authManager.toString());
-
-		LOGGER.debug("Finish ThissaveWithAuthorizationTest method");
+		LOGGER.debug("Finish saveWithAuthorizationTest method");
 
 	}
 

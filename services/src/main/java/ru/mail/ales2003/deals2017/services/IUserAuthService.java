@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 
 public interface IUserAuthService {
