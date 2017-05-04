@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import ru.mail.ales2003.deals2017.datamodel.Role;
 import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.jedis.JedisCache;
@@ -86,6 +87,7 @@ public class BasicAuthFilter implements Filter {
 		String password = credentials[1];
 
 		Integer userIdFromStorage;
+		Role userRoleFromStorage;
 
 		LOGGER.info("Length of JedisCache [{}] = [{}].", username, cache.getLength(username));
 
@@ -95,6 +97,10 @@ public class BasicAuthFilter implements Filter {
 			Integer idFromCashe = cache.getIdFromCache(username);
 			LOGGER.info("Getting userId  = [{}] by username [{}] from Jedis Cache.", idFromCashe, username);
 			userIdFromStorage = idFromCashe;
+
+			Role roleFromCashe = cache.getRoleFromCache(username);
+			LOGGER.info("Getting userRole  = [{}] by username [{}] from Jedis Cache.", roleFromCashe, username);
+			userRoleFromStorage = roleFromCashe;
 
 			// query to DB
 		} else {
@@ -107,6 +113,10 @@ public class BasicAuthFilter implements Filter {
 			Integer userIdFromDB = service.getByLogin(username).getId();
 			LOGGER.info("Getting userId  = [{}] by username [{}] from DataBase.", userIdFromDB, username);
 			userIdFromStorage = userIdFromDB;
+
+			Role roleFromDB = service.getByLogin(username).getRole();
+			LOGGER.info("Getting userRole  = [{}] by username [{}] from Jedis Cache.", roleFromDB, username);
+			userRoleFromStorage = roleFromDB;
 
 			// TODO query to DB instead of MAP
 			// TODO get user from DB by username and check password
@@ -135,14 +145,16 @@ public class BasicAuthFilter implements Filter {
 
 			LOGGER.info("Saving userId  = [{}] to JVM Storage.", userIdFromStorage);
 			userJVMDataStorage.setId(userIdFromStorage);
+			LOGGER.info("Saving userRole  = [{}] to JVM Storage.", userRoleFromStorage);
+			userJVMDataStorage.setRole(userRoleFromStorage);
 
 			LOGGER.info("Cleaning old userData from JedisCache");
-			cache.cleanUserData(username, userIdFromStorage, password);
+			cache.cleanUserData(username, userIdFromStorage, password, userRoleFromStorage);
 
 			LOGGER.info(
-					"Chaching to JedisCache: username = [{}], userId  = [{}], password = [{}], the lifetime of cached data = [{}] sec.",
-					username, userIdFromStorage, password, cashingTimeInSec);
-			cache.addToCache(username, userIdFromStorage, password, cashingTimeInSec);
+					"Chaching to JedisCache: username = [{}], userRole  = [{}], userId  = [{}], password = [{}], the lifetime of cached data = [{}] sec.",
+					username, userRoleFromStorage, userIdFromStorage, password, cashingTimeInSec);
+			cache.addToCache(username, userRoleFromStorage, userIdFromStorage, password, cashingTimeInSec);
 
 			// userDataStorage.getId();
 
