@@ -149,7 +149,7 @@ public class CharacterTypesController {
 			entity = model2entity(entityModel);
 		} catch (Exception e) {
 			String msg = String.format(
-					"Character type with name [%s] doesn't exist in storage. Please use one of: [%s].",
+					"Character type with name [%s] is not allowed for insertion. Please use one of: [%s].",
 					entityModel.getName(), EnumArrayToMessageConvertor.measureArrayToMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
@@ -171,7 +171,15 @@ public class CharacterTypesController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> update(@RequestBody CharacterTypeModel entityModel,
 			@PathVariable(value = "id") Integer entityIdParam) {
-		CharacterType entity = service.get(entityIdParam);
+		
+		
+		
+		CharacterType entity = null;
+		
+		entity = service.get(entityIdParam);
+		
+		
+		
 		try {
 			// method toUpperCase() allows to insert in any register
 			entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));

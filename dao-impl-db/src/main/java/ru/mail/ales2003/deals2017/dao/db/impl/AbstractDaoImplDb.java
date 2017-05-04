@@ -108,7 +108,7 @@ public abstract class AbstractDaoImplDb<T, PK> implements GenericDao<T, PK> {
 	 * @return T entity
 	 */
 	@Override
-	public T getByManagerOrCustomerId(PK id) {
+	public T get(PK id) {
 		if (id == null) {
 			String errMsg = String.format("Error: as the id was sent a null reference.");
 			LOGGER.error("Error: {}", errMsg);

@@ -246,7 +246,14 @@ public class ManagersController {
 
 		// Direct implementation of the method
 
-		Manager entity = service.get(entityIdParam);
+		Manager entity = null;
+
+		try {
+			entity = service.get(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 
 		entity.setFirstName(entityModel.getFirstName());
 		entity.setPatronymic(entityModel.getPatronymic());
@@ -299,9 +306,9 @@ public class ManagersController {
 			String msg = String.format("Preparation before DELETE: %s", e.getMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		if (authService.getByManagerOrCustomerId(entityIdParam) != null) {
-			UserAuth userAuth = authService.getByManagerOrCustomerId(entityIdParam);
+		// checking of exist account in AuthorisationService
+		if (authService.getByManagerId(entityIdParam) != null) {
+			UserAuth userAuth = authService.getByManagerId(entityIdParam);
 			authService.delete(userAuth.getId());
 		}
 
@@ -579,13 +586,27 @@ public class ManagersController {
 
 		// Direct implementation of the method
 
-		UserAuth entity = authService.get(entityIdParam);
+		UserAuth entity = null;
+		try {
+			entity = authService.get(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 
-		entity.setRole(Role.valueOf(entityModel.getRole()));
 		entity.setLogin(entityModel.getLogin());
-		entity.setPassword(entityModel.getPassword());
 
-		authService.save(entity);
+		entity.setPassword(entityModel.getPassword());
+		try {
+			entity.setRole(Role.valueOf(entityModel.getRole()));
+
+			authService.save(entity);
+		} catch (Exception e) {
+			String msg = String.format("Role with name [%s] is not allowed for insertion. Please use one of: [%s].",
+					entityModel.getRole(), EnumArrayToMessageConvertor.roleArrayToMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
@@ -624,7 +645,7 @@ public class ManagersController {
 
 		// checking of existing
 		try {
-			authService.getByManagerOrCustomerId(entityIdParam);
+			authService.getByManagerId(entityIdParam);
 		} catch (IllegalArgumentException | EmptyResultDataAccessException e) {
 			String msg = String.format("Preparation before DELETE: %s", e.getMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);

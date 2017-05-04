@@ -8,6 +8,7 @@ import java.util.Set;
 
 import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
+import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.datamodel.Role;
 
@@ -30,6 +31,28 @@ public class EnumArrayToMessageConvertor {
 		measures.sort(new Comparator<Measure>() {
 			@Override
 			public int compare(Measure o1, Measure o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	/**
+	 * @return a string representation of the enumsarray from class Measure.
+	 */
+	public static String customerTypeArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<CustomerType> types = new ArrayList<CustomerType>(Arrays.asList(CustomerType.values()));
+		for (CustomerType m : types) {
+			stringBuilder.append("" + m + ", ");
+		}
+		// sorting
+		types.sort(new Comparator<CustomerType>() {
+			@Override
+			public int compare(CustomerType o1, CustomerType o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});
@@ -112,7 +135,7 @@ public class EnumArrayToMessageConvertor {
 	/**
 	 * @return a string representation of the enumsarray from class Role.
 	 */
-	public static String validRoleArrayToMessage(Set <Role> s) {
+	public static String validRoleArrayToMessage(Set<Role> s) {
 		StringBuilder stringBuilder = new StringBuilder("");
 		List<Role> roles = new ArrayList<Role>();
 		roles.addAll(s);
@@ -131,5 +154,5 @@ public class EnumArrayToMessageConvertor {
 		result = result.substring(0, result.length() - 2);
 		return result;
 	}
-	
+
 }

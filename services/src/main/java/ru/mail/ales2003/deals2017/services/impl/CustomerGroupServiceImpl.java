@@ -1,6 +1,8 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -12,6 +14,7 @@ import ru.mail.ales2003.deals2017.dao.api.ICustomerGroupDao;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.services.ICustomerGroupService;
+import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 
 @Service
 public class CustomerGroupServiceImpl implements ICustomerGroupService {
@@ -23,14 +26,16 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 	private String className = CustomerGroup.class.getSimpleName();
 
+	private static Set<String> customerGroupSet = new HashSet<>();
+
 	@Override
 	public CustomerGroup get(Integer id) {
-		if (customerGroupDao.getByManagerOrCustomerId(id) == null) {
+		if (customerGroupDao.get(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			CustomerGroup entity = customerGroupDao.getByManagerOrCustomerId(id);
+			CustomerGroup entity = customerGroupDao.get(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}
@@ -52,6 +57,17 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 			LOGGER.error("Error: as the {} entity was sent a null reference", className);
 			return;
 		} else if (entity.getId() == null) {
+
+			LOGGER.info("Refreshing CustomerGreoupSet");
+			refreshCustomerGroupSet();
+
+			if (isExist(entity)) {
+				String errMsg = String.format("You want to insert [%s] entity with name [%s]. But such exist already.",
+						className, entity.getName().name());
+				LOGGER.error("Error: Warning: {}", errMsg);
+				throw new DuplicationKeyInformationException(errMsg);
+			}
+
 			if (entity.getName() == null) {
 				entity.setName(CustomerType.INDIVIDUAL);
 			}
@@ -82,4 +98,41 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
 	}
+
+	// Methods to avoid duplication in the CharacterType storage
+
+	// LOGGING
+
+	private void refreshCustomerGroupSet() {
+		clearCustomerGroupSet();
+		fillCustomerGroupSet();
+	}
+
+	// LOGGING
+
+	private void fillCustomerGroupSet() {
+		List<CustomerGroup> members = getAll();
+		for (CustomerGroup instance : members) {
+			String word = instance.getName().name();
+			customerGroupSet.add(word);
+		}
+	}
+
+	// LOGGING
+
+	private void clearCustomerGroupSet() {
+		customerGroupSet.clear();
+	}
+
+	// LOGGING
+
+	private boolean isExist(CustomerGroup entity) {
+		Boolean isExist = false;
+		String word = entity.getName().name();
+		if (isExist = customerGroupSet.contains(word)) {
+			return isExist;
+		}
+		return isExist;
+	}
+
 }

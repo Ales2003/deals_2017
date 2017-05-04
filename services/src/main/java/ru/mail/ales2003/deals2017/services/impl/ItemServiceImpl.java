@@ -34,12 +34,12 @@ public class ItemServiceImpl implements IItemService {
 
 	@Override
 	public Item get(Integer id) {
-		if (itemDao.getByManagerOrCustomerId(id) == null) {
+		if (itemDao.get(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			Item item = itemDao.getByManagerOrCustomerId(id);
+			Item item = itemDao.get(id);
 			LOGGER.info("Read one {} entity: {}", className, item.toString());
 			return item;
 		}

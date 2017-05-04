@@ -29,12 +29,12 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 	@Override
 	public UserAuth get(Integer id) {
-		if (userAuthDao.getByManagerOrCustomerId(id) == null) {
+		if (userAuthDao.getByManagerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			UserAuth entity = userAuthDao.getByManagerOrCustomerId(id);
+			UserAuth entity = userAuthDao.getByManagerId(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}
@@ -114,14 +114,14 @@ public class UserAuthServiceImpl implements IUserAuthService {
 	}
 
 	@Override
-	public UserAuth getByManagerOrCustomerId(Integer managerOrCustomerId) {
-		if (userAuthDao.getByManagerOrCustomerId(managerOrCustomerId) == null) {
+	public UserAuth getByManagerId(Integer managerId) {
+		if (userAuthDao.getByManagerId(managerId) == null) {
 			String errMsg = String.format("[%s] entity with managerOrCustomerId = [%s] don't exist in storage",
-					className, managerOrCustomerId);
+					className, managerId);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			UserAuth entity = userAuthDao.getByManagerOrCustomerId(managerOrCustomerId);
+			UserAuth entity = userAuthDao.getByManagerId(managerId);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}

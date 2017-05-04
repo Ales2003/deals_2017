@@ -8,7 +8,9 @@ public interface IUserAuthDao extends GenericDao<UserAuth, Integer> {
 
 	UserAuth getByLogin(String login);
 
-	UserAuth getByManagerOrCustomerId(Integer managerOrCustomerId);
+	UserAuth getByManagerId(Integer managerId);
+
+	UserAuth getByCustomerId(Integer customerId);
 
 	Set<String> getAllLogins();
 

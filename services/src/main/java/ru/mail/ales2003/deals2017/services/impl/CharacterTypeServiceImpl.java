@@ -29,12 +29,12 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public CharacterType get(Integer id) {
-		if (characterTypeDao.getByManagerOrCustomerId(id) == null) {
+		if (characterTypeDao.get(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			CharacterType entity = characterTypeDao.getByManagerOrCustomerId(id);
+			CharacterType entity = characterTypeDao.get(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}
@@ -57,7 +57,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 			return;
 		} else if (entity.getId() == null) {
 
-			// LOGGING
+			LOGGER.info("Refreshing CharacteTypeSet");
 			refreshCharacterTypeSet();
 
 			if (isExist(entity)) {
@@ -67,7 +67,7 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 				throw new DuplicationKeyInformationException(errMsg);
 			}
 
-			// LOGGING
+			
 
 			characterTypeDao.insert(entity);
 			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());

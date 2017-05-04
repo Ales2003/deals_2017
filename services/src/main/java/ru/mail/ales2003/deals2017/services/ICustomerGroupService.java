@@ -37,4 +37,7 @@ public interface ICustomerGroupService {
 	@Transactional
 	void delete(Integer id);
 
+	
+	
+	
 }

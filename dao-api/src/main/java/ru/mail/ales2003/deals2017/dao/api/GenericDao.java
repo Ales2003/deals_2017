@@ -6,13 +6,13 @@ public interface GenericDao<T, PK> {
 
 	T insert(T entity);
 
-	T getByManagerOrCustomerId(PK id);
-
 	List<T> getAll();
 
 	void update(T entity);
 
 	void delete(PK id);
+
+	T get(PK id);
 	
 	
 }
