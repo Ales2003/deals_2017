@@ -29,12 +29,12 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 	@Override
 	public UserAuth get(Integer id) {
-		if (userAuthDao.getByManagerId(id) == null) {
+		if (userAuthDao.get(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			UserAuth entity = userAuthDao.getByManagerId(id);
+			UserAuth entity = userAuthDao.get(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}

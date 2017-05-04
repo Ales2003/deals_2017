@@ -37,7 +37,12 @@ public interface ICustomerGroupService {
 	@Transactional
 	void delete(Integer id);
 
-	
-	
-	
+	void refreshCustomerGroupSet();
+
+	void fillCustomerGroupSet();
+
+	void clearCustomerGroupSet();
+
+	boolean isExist(CustomerGroup entity);
+
 }

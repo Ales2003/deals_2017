@@ -120,6 +120,7 @@ public class ContractServiceTest extends AbstractTest {
 		LOGGER.debug("Start deleting customerGroups from Db");
 		for (CustomerGroup cstG : customerGroupService.getAll()) {
 			customerGroupService.delete(cstG.getId());
+			customerGroupService.clearCustomerGroupSet();
 		}
 		LOGGER.debug("CustomerGroups were deleted from Db ");
 

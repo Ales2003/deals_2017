@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +124,7 @@ public class UserAuthServiceTest extends AbstractTest {
 	 * Two objects with the same Id are compared: created in Java and saved in &
 	 * extracted from the database
 	 */
+	
 	@Test
 	public void insertTest() {
 		LOGGER.debug("Start insertTest method");
@@ -146,6 +148,7 @@ public class UserAuthServiceTest extends AbstractTest {
 	 * Test for the insertion of several objects, for each are compared two
 	 * objects with the same Id: created in Java and extracted from the database
 	 */
+	
 	@Test
 	public void insertMultipleTest() {
 		LOGGER.debug("Start insertMultipleTest method");
@@ -187,6 +190,7 @@ public class UserAuthServiceTest extends AbstractTest {
 	 * Three objects with the same Id are compared: created in Java, modified in
 	 * Java and saved in & extracted from the database
 	 */
+	
 	@Test
 	public void updateTest() {
 		LOGGER.debug("Start updateTest method");

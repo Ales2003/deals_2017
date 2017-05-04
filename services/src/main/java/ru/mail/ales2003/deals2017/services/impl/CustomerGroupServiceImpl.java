@@ -60,14 +60,14 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 			LOGGER.info("Refreshing CustomerGreoupSet");
 			refreshCustomerGroupSet();
-
+/*
 			if (isExist(entity)) {
 				String errMsg = String.format("You want to insert [%s] entity with name [%s]. But such exist already.",
 						className, entity.getName().name());
 				LOGGER.error("Error: Warning: {}", errMsg);
 				throw new DuplicationKeyInformationException(errMsg);
 			}
-
+*/
 			if (entity.getName() == null) {
 				entity.setName(CustomerType.INDIVIDUAL);
 			}
@@ -102,15 +102,15 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	// Methods to avoid duplication in the CharacterType storage
 
 	// LOGGING
-
-	private void refreshCustomerGroupSet() {
+	@Override
+	public void refreshCustomerGroupSet() {
 		clearCustomerGroupSet();
 		fillCustomerGroupSet();
 	}
 
 	// LOGGING
-
-	private void fillCustomerGroupSet() {
+	@Override
+	public void fillCustomerGroupSet() {
 		List<CustomerGroup> members = getAll();
 		for (CustomerGroup instance : members) {
 			String word = instance.getName().name();
@@ -119,14 +119,14 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 	}
 
 	// LOGGING
-
-	private void clearCustomerGroupSet() {
+	@Override
+	public void clearCustomerGroupSet() {
 		customerGroupSet.clear();
 	}
 
 	// LOGGING
-
-	private boolean isExist(CustomerGroup entity) {
+	@Override
+	public boolean isExist(CustomerGroup entity) {
 		Boolean isExist = false;
 		String word = entity.getName().name();
 		if (isExist = customerGroupSet.contains(word)) {
