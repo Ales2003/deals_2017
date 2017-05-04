@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 
 public interface IUserAuthService {
@@ -46,6 +45,8 @@ public interface IUserAuthService {
 	 */
 	UserAuth getByLogin(String login);
 
+	UserAuth getByManagerOrCustomerId(Integer managerOrCustomerId);
+
 	/**
 	 * @return Set&ltString&gt entitie logins
 	 */
@@ -54,10 +55,10 @@ public interface IUserAuthService {
 
 	Set<String> getAllLogins();
 
-	//void refreshLoginSet();
+	// void refreshLoginSet();
 
 	boolean isLoginExist(UserAuth entity);
 
-	//void clearLoginsSet();
+	// void clearLoginsSet();
 
 }

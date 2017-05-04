@@ -29,12 +29,12 @@ public class ManagerServiceImpl implements IManagerService {
 
 	@Override
 	public Manager get(Integer id) {
-		if (managerDao.get(id) == null) {
+		if (managerDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			Manager entity = managerDao.get(id);
+			Manager entity = managerDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {}: {}", className, entity.toString());
 			return entity;
 		}

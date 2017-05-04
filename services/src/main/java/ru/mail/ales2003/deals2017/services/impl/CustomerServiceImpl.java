@@ -24,12 +24,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Override
 	public Customer get(Integer id) {
-		if (customerDao.get(id) == null) {
+		if (customerDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			Customer entity = customerDao.get(id);
+			Customer entity = customerDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}

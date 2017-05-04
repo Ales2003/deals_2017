@@ -29,12 +29,12 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 	@Override
 	public UserAuth get(Integer id) {
-		if (userAuthDao.get(id) == null) {
+		if (userAuthDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			UserAuth entity = userAuthDao.get(id);
+			UserAuth entity = userAuthDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}
@@ -57,9 +57,10 @@ public class UserAuthServiceImpl implements IUserAuthService {
 			return;
 		} else if (entity.getId() == null) {
 
-			// LOGGING
+			LOGGER.info("Refresh of logins set of {}.", className);
 			refreshLoginSet();
 
+			LOGGER.info("Check for existence such a login = [{}] in storage.", entity.getLogin());
 			if (isLoginExist(entity)) {
 				String errMsg = String.format(
 						"You want to insert as login: [%s]. But such exist already. Please try another one.",
@@ -67,8 +68,6 @@ public class UserAuthServiceImpl implements IUserAuthService {
 				LOGGER.error("Error: Warning: {}", errMsg);
 				throw new DuplicationKeyInformationException(errMsg);
 			}
-
-			// LOGGING
 
 			userAuthDao.insert(entity);
 			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
@@ -103,19 +102,32 @@ public class UserAuthServiceImpl implements IUserAuthService {
 
 	@Override
 	public UserAuth getByLogin(String login) {
-		if (userAuthDao.get(login) == null) {
+		if (userAuthDao.getByLogin(login) == null) {
 			String errMsg = String.format("[%s] entity with login = [%s] don't exist in storage", className, login);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			UserAuth entity = userAuthDao.get(login);
+			UserAuth entity = userAuthDao.getByLogin(login);
+			LOGGER.info("Read one {} entity: {}", className, entity.toString());
+			return entity;
+		}
+	}
+
+	@Override
+	public UserAuth getByManagerOrCustomerId(Integer managerOrCustomerId) {
+		if (userAuthDao.getByManagerOrCustomerId(managerOrCustomerId) == null) {
+			String errMsg = String.format("[%s] entity with managerOrCustomerId = [%s] don't exist in storage",
+					className, managerOrCustomerId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		} else {
+			UserAuth entity = userAuthDao.getByManagerOrCustomerId(managerOrCustomerId);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}
 	}
 
 	// Methods to avoid duplication of logins
-
 	// LOGGING
 	// @Override
 	private void refreshLoginSet() {

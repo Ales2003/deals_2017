@@ -89,7 +89,7 @@ public class UserAuthDaoImpl extends AbstractDaoImplDb<UserAuth, Integer> implem
 	// ADVANCED METHODS
 
 	@Override
-	public UserAuth get(String login) {
+	public UserAuth getByLogin(String login) {
 		if (login == null) {
 			String errMsg = String.format("Error: as the login was sent a null reference.");
 			LOGGER.error("Error: {}", errMsg);
@@ -106,6 +106,27 @@ public class UserAuthDaoImpl extends AbstractDaoImplDb<UserAuth, Integer> implem
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg, e);
 		}
+	}
+
+	@Override
+	public UserAuth getByManagerOrCustomerId(Integer managerOrCustomerId) {
+		if (managerOrCustomerId == null) {
+			String errMsg = String.format("Error: managerOrCustomerId id was sent a null reference.");
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		}
+		final String READ_BY_LOGIN_SQL = getSelectQuery() + " where in_own_table_id = ?";
+		try {
+			return jdbcTemplate.queryForObject(READ_BY_LOGIN_SQL, new Object[] { managerOrCustomerId },
+					new BeanPropertyRowMapper<UserAuth>(UserAuth.class));
+		} catch (EmptyResultDataAccessException e) {
+			String errMsg = String.format(
+					"You want to READ the [%s] with managerOrCustomerId = [%s], but it doesn't exist in the storage.",
+					getMappedClass().getSimpleName(), managerOrCustomerId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg, e);
+		}
+
 	}
 
 	@Override

@@ -42,13 +42,13 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 	// =============READING AREA===============
 	@Override
 	public ItemVariant getItemVariant(Integer id) {
-		if (itemVariantDao.get(id) == null) {
+		if (itemVariantDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", itemVariantClassName,
 					id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			ItemVariant entity = itemVariantDao.get(id);
+			ItemVariant entity = itemVariantDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", itemVariantClassName, entity.toString());
 			return entity;
 		}
@@ -114,12 +114,12 @@ public class ItemVariantServiceImpl implements IItemVariantService {
 
 	@Override
 	public CharacterTypeInItemVariant getAttribute(Integer id) {
-		if (attributeDao.get(id) == null) {
+		if (attributeDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", attributeClassName, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			CharacterTypeInItemVariant attribute = attributeDao.get(id);
+			CharacterTypeInItemVariant attribute = attributeDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", attributeClassName, attribute.toString());
 			return attribute;
 		}

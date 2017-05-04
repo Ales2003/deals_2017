@@ -6,7 +6,7 @@ public interface GenericDao<T, PK> {
 
 	T insert(T entity);
 
-	T get(PK id);
+	T getByManagerOrCustomerId(PK id);
 
 	List<T> getAll();
 

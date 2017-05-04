@@ -38,12 +38,12 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public Contract getContract(Integer id) {
-		if (contractDao.get(id) == null) {
+		if (contractDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", contractClassName, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			Contract contract = contractDao.get(id);
+			Contract contract = contractDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", contractClassName, contract.toString());
 			return contract;
 		}
@@ -133,13 +133,13 @@ public class ContractServiceImpl implements IContractService {
 
 	@Override
 	public ItemVariantInContract getItemVariantInContract(Integer id) {
-		if (itemVariantInContractDao.get(id) == null) {
+		if (itemVariantInContractDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage",
 					itemVariantInContractClassName, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			ItemVariantInContract item = itemVariantInContractDao.get(id);
+			ItemVariantInContract item = itemVariantInContractDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", itemVariantInContractClassName, item.toString());
 			return item;
 		}

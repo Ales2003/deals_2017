@@ -25,12 +25,12 @@ public class CustomerGroupServiceImpl implements ICustomerGroupService {
 
 	@Override
 	public CustomerGroup get(Integer id) {
-		if (customerGroupDao.get(id) == null) {
+		if (customerGroupDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			CustomerGroup entity = customerGroupDao.get(id);
+			CustomerGroup entity = customerGroupDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}

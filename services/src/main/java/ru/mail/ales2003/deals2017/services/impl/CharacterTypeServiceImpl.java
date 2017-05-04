@@ -29,12 +29,12 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 
 	@Override
 	public CharacterType get(Integer id) {
-		if (characterTypeDao.get(id) == null) {
+		if (characterTypeDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			CharacterType entity = characterTypeDao.get(id);
+			CharacterType entity = characterTypeDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: {}", className, entity.toString());
 			return entity;
 		}

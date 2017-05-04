@@ -79,7 +79,9 @@ public class BasicAuthFilter implements Filter {
 		boolean isCredentialsResolved = credentials != null && credentials.length == 2;
 
 		if (!isCredentialsResolved) {
-			res.sendError(401);
+			String errMsg = "Visiting this page requires authorization. But you [username] or [password] is not correct. Please try again.";
+			res.sendError(401, errMsg);
+			// res.sendError(401, "!!!Unauthorized!!!");
 			return;
 		}
 

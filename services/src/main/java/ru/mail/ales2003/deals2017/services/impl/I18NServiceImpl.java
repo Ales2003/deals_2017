@@ -30,12 +30,12 @@ public class I18NServiceImpl implements II18NService {
 	 */
 	@Override
 	public I18N get(Integer id) {
-		if (i18nDao.get(id) == null) {
+		if (i18nDao.getByManagerOrCustomerId(id) == null) {
 			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", className, id);
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		} else {
-			I18N entity = i18nDao.get(id);
+			I18N entity = i18nDao.getByManagerOrCustomerId(id);
 			LOGGER.info("Read one {} entity: id={}, table_name={}, member_id={}, language={}, value={}", className,
 					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
 					entity.getValue());
