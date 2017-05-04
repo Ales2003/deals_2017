@@ -21,7 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.jedis.JedisCache;
 
@@ -36,7 +36,9 @@ public class BasicAuthFilter implements Filter {
 		System.out.println(USERS_DB.size());
 	}
 
-	private ICharacterTypeService service;
+	private IUserAuthService service;
+
+	// private ICharacterTypeService characterTypeService;
 
 	private ApplicationContext appContext;
 
@@ -50,7 +52,10 @@ public class BasicAuthFilter implements Filter {
 
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(config.getServletContext());
-		service = context.getBean(ICharacterTypeService.class);
+
+		// characterTypeService = context.getBean(ICharacterTypeService.class);
+		service = context.getBean(IUserAuthService.class);
+
 		appContext = context;
 	}
 
@@ -80,22 +85,26 @@ public class BasicAuthFilter implements Filter {
 		String username = credentials[0];
 		String password = credentials[1];
 
-		
 		Integer userIdFromStorage;
-		
+
+		LOGGER.info("Length of JedisCache [{}] = [{}].", username, cache.getLength(username));
+
 		// query to cashe
-		System.out.println(cache.getLength(username));
 		if (cache.isExistInCache(username)) {
 			LOGGER.info("Fortunately, the JedisCache stores the requested data.");
 			Integer idFromCashe = cache.getIdFromCache(username);
 			LOGGER.info("Getting userId  = [{}] by username [{}] from Jedis Cache.", idFromCashe, username);
 			userIdFromStorage = idFromCashe;
 
-			
 			// query to DB
 		} else {
 			LOGGER.info("Unfortunately, the JedisCache does not store the requested data.");
-			Integer userIdFromDB = USERS_DB.get(username);
+
+			// from local Map<String, Integer> USERS_DB
+			// Integer userIdFromDB = USERS_DB.get(username);
+
+			// from real DB table user_auth
+			Integer userIdFromDB = service.getByLogin(username).getId();
 			LOGGER.info("Getting userId  = [{}] by username [{}] from DataBase.", userIdFromDB, username);
 			userIdFromStorage = userIdFromDB;
 
@@ -103,10 +112,7 @@ public class BasicAuthFilter implements Filter {
 			// TODO get user from DB by username and check password
 			// get user by username
 			// user.get id
-			
-			
-			
-			
+
 		}
 		// if (cashe.isExistInCashe(username)) {
 		// Integer idFromCashe = cashe.getIdFromCashe(username);
@@ -157,12 +163,9 @@ public class BasicAuthFilter implements Filter {
 
 	// private boolean validateUserPassword(Integer userId, String password) {
 	private boolean validateUserPassword(String username, String password) {
-		
-		
+
 		Integer userIdFromStorage;
 		String userPasswordFromStorage;
-
-		System.out.println(cache.getLength(username));
 
 		// query to cashe
 		if (cache.isExistInCache(username)) {
@@ -185,10 +188,11 @@ public class BasicAuthFilter implements Filter {
 			// get user by username
 			// user.get id
 			// user.get password
-			Integer userIdFromDB = USERS_DB.get(username);
+			Integer userIdFromDB = service.getByLogin(username).getId();
 			userIdFromStorage = userIdFromDB;
 			// userPasswordFromStorage = "password";
-			userPasswordFromStorage = "password";
+
+			userPasswordFromStorage = service.getByLogin(username).getPassword();
 		}
 
 		if (userIdFromStorage == null) {

@@ -1,8 +1,10 @@
 package ru.mail.ales2003.deals2017.webapp.controllers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,7 @@ import ru.mail.ales2003.deals2017.datamodel.CharacterType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.datamodel.Role;
 import ru.mail.ales2003.deals2017.services.ICharacterTypeService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
@@ -36,23 +39,6 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 @RestController
 @RequestMapping("/charactertypes")
 public class CharacterTypesController {
-
-	// id-ROLE-idInOwnTable-login-password
-	private static final Object[][] userRoles = new Object[100][5];
-	
-	static {
-		userRoles[0][0] = 1;
-		userRoles[0][1] = Role.ADMIN;
-		userRoles[0][2] = 1;
-		userRoles[0][3] = "admin";
-		userRoles[0][4] = "password";
-
-		userRoles[1][0] = 2;
-		userRoles[1][1] = Role.CUSTOMER;
-		userRoles[1][2] = 1;
-		userRoles[1][3] = "neadmin";
-		userRoles[1][4] = "password";
-	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypesController.class);
 
@@ -69,6 +55,9 @@ public class CharacterTypesController {
 	@Inject
 	private ICharacterTypeService service;
 
+	@Inject
+	private IUserAuthService authService;
+
 	private String thisClassName = CharacterTypesController.class.getSimpleName();
 
 	/**
@@ -77,13 +66,34 @@ public class CharacterTypesController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
 
-		
-		
-		UserAuthStorage userDataStorage = context.getBean(UserAuthStorage.class);
-		Integer userId = userDataStorage.getId();
-		System.out.println(userId);
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
 
-		LOGGER.info("User with id = [{}] invoced method [{}] in {}", userId, "getAll()", thisClassName);
+		String requestName = "getAll()";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userAuthStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
+		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		if (authService.get(authorisedUserId).getRole() == null
+				|| !validUserRoles.contains(authService.get(authorisedUserId).getRole())) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+				userAuthStorage.getId(), requestName);
 
 		List<CharacterType> allEntitys;
 		try {
