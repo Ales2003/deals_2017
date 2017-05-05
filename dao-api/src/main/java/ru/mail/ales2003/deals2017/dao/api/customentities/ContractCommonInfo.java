@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
-import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
+import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 
 public class ContractCommonInfo {
 
-	//contract attributes
+	// contract attributes
 	private Integer contractId;
 	private Timestamp created;
 	private ContractStatus contractStatus;
@@ -18,13 +18,14 @@ public class ContractCommonInfo {
 	private PayStatus payStatus;
 	private BigDecimal totalAmount;
 
-	//customer attributes
+	// customer attributes
 	private Integer customerId;
-	private CustomerGroup customerGroup;
+	private CustomerType customerType;
 	private String customerCompanyName;
 	private String customerLastName;
 
-	//manager attributes
+	// manager attributes
+	private Integer managerId;
 	private String managerLastName;
 
 	public Integer getContractId() {
@@ -75,13 +76,12 @@ public class ContractCommonInfo {
 		this.customerId = customerId;
 	}
 
-
-	public CustomerGroup getCustomerGroup() {
-		return customerGroup;
+	public CustomerType getCustomerType() {
+		return customerType;
 	}
 
-	public void setCustomerGroup(CustomerGroup customerGroup) {
-		this.customerGroup = customerGroup;
+	public void setCustomerType(CustomerType customerType) {
+		this.customerType = customerType;
 	}
 
 	public String getCustomerCompanyName() {
@@ -104,6 +104,14 @@ public class ContractCommonInfo {
 		return managerLastName;
 	}
 
+	public Integer getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(Integer managerId) {
+		this.managerId = managerId;
+	}
+
 	public void setManagerLastName(String managerLastName) {
 		this.managerLastName = managerLastName;
 	}
@@ -120,11 +128,9 @@ public class ContractCommonInfo {
 	public String toString() {
 		return "ContractCommonInfo [contractId=" + contractId + ", created=" + created + ", contractStatus="
 				+ contractStatus + ", payForm=" + payForm + ", payStatus=" + payStatus + ", totalAmount=" + totalAmount
-				+ ", customerId=" + customerId + ", customerGroup=" + customerGroup + ", customerCompanyName="
-				+ customerCompanyName + ", customerLastName=" + customerLastName + ", managerLastName="
-				+ managerLastName + "]";
+				+ ", customerId=" + customerId + ", customerType=" + customerType + ", customerCompanyName="
+				+ customerCompanyName + ", customerLastName=" + customerLastName + ", managerId=" + managerId
+				+ ", managerLastName=" + managerLastName + "]";
 	}
-
-
 
 }

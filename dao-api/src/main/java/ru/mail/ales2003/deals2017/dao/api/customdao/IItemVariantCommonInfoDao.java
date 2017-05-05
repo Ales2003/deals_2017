@@ -10,20 +10,22 @@ import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
  * items name, items description, price of items variant. These methods are
  * designed to display understandable information to customers.
  * 
- * @author admin
+ * @author Aliaksandr Vishneuski ales_2003@mail.ru
+ * 
  */
+
 public interface IItemVariantCommonInfoDao {
 
 	/**
 	 * @param itemVariantId
 	 *            - the id of item variant.
-	 * @return - The method returns a common info about item variant.
+	 * @return - The method returns a common info about one item variant.
 	 */
 	ItemVariantCommonInfo getCommonInfo(Integer itemVariantId);
 
 	/**
 	 * @param filter
-	 *            - the IItemVariantFilter. 
+	 *            - the IItemVariantFilter.
 	 * @return filtered list List&ltItemVariantCommonInfo&gt entities
 	 */
 	List<ItemVariantCommonInfo> getCommonInfoFiltered(IItemVariantFilter filter);

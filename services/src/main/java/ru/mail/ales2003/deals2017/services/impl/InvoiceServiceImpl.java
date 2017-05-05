@@ -34,8 +34,17 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 	@Override
 	public ContractCommonInfo getCommonInfo(Integer contractId) {
-		// TODO Auto-generated method stub
-		return null;
+		if (commonInfoDao.getCommonInfo(contractId) == null) {
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", contractClassName,
+					contractId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		} else {
+			ContractCommonInfo commonInfo = commonInfoDao.getCommonInfo(contractId);
+			LOGGER.info("Read common information about {} with id = {} with basic info: {}", contractClassName,
+					contractId, commonInfo.toString());
+			return commonInfo;
+		}
 	}
 
 	@Override

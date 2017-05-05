@@ -89,6 +89,7 @@ public class InvoiceServiceTest extends AbstractTest {
 
 		LOGGER.debug("Creating manager in Db");
 		manager = new Manager();
+		manager.setLastName("Manager");
 		managerService.save(manager);
 		managerFromDb = managerService.get(manager.getId());
 		LOGGER.debug("Manager in Db  was created with id={}", managerFromDb.getId());
@@ -101,6 +102,8 @@ public class InvoiceServiceTest extends AbstractTest {
 
 		LOGGER.debug("Creating customer in Db");
 		customer = new Customer();
+		customer.setLastName("Customer");
+		customer.setCompanyName("BigCompany");
 		customer.setManagerId(manager.getId());
 		customer.setCustomerGroupId(customerGroupFromDb.getId());
 		customerService.save(customer);
@@ -187,6 +190,29 @@ public class InvoiceServiceTest extends AbstractTest {
 		LOGGER.debug("Managers were deleted from Db ");
 
 		LOGGER.debug("Finish completion of the method");
+	}
+
+	/*
+	 * Test for the getting an object. Given object from Db is checked for the
+	 * existence and filling of fields.
+	 */
+
+	@Test
+	public void getCommonInfoTest() {
+		LOGGER.debug("Start getCommonInfoTest method");
+		commonInfo = service.getCommonInfo(contractFromDb.getId());
+		Assert.notNull(commonInfo, "instance must not be empty");
+
+		Assert.isTrue(
+				(commonInfo.getContractId() != null) && (commonInfo.getContractStatus() != null)
+						&& (commonInfo.getCreated() != null) && (commonInfo.getCustomerCompanyName() != null)
+						&& (commonInfo.getCustomerId() != null) && (commonInfo.getCustomerLastName() != null)
+						&& (commonInfo.getCustomerType() != null) && (commonInfo.getManagerId() != null)
+						&& (commonInfo.getManagerLastName() != null) && (commonInfo.getPayForm() != null)
+						&& (commonInfo.getPayStatus() != null) && (commonInfo.getTotalAmount() != null),
+				"columns values must not by empty");
+
+		LOGGER.debug("Finish  getCommonInfoTest method");
 	}
 
 	@Test

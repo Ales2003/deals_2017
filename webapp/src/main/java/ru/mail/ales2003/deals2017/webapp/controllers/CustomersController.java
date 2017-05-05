@@ -440,7 +440,7 @@ public class CustomersController {
 
 	private void customerToNullManager(Customer customer) {
 		Manager nullManager = new Manager();
-		nullManager.setFirstName("NULL_MANAGER");
+		nullManager.setLastName("NULL_MANAGER");
 		managerService.save(nullManager);
 		Integer managerId = nullManager.getId();
 		customer.setManagerId(managerId);

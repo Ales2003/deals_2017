@@ -123,7 +123,7 @@ public class ContractServiceImpl implements IContractService {
 				&& contract.getPayStatus().equals(PayStatus.PAID)) {
 			isChangeable = false;
 		}
-		LOGGER.info("Check for changeability: []", isChangeable);
+		LOGGER.info("Check for changeability: [{}]", isChangeable);
 		return isChangeable;
 
 	}

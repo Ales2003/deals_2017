@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.webapp.controllers;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -376,6 +377,7 @@ public class ContractsController {
 	private Contract model2entity(ContractModel entityModel) {
 		Contract entity = new Contract();
 		entity.setCreated(new Timestamp(new Date().getTime()));
+		entity.setTotalPrice(new BigDecimal("0.00"));
 		entity.setContractStatus(ContractStatus.CONTRACT_PREPARATION);
 		// extract
 		entity.setPayForm(PayForm.valueOf(entityModel.getPayForm().toUpperCase()));
