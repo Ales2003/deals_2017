@@ -317,7 +317,7 @@ public class ManagersController {
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/authmanager", method = RequestMethod.POST)
+	@RequestMapping(value = "/auth/manager", method = RequestMethod.POST)
 	public ResponseEntity<?> createManagerWithAuthorizationData(
 			@RequestBody AuthorizedManagerModel authorizedManagerModel) {
 

@@ -19,29 +19,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
+import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
+import ru.mail.ales2003.deals2017.datamodel.Manager;
 import ru.mail.ales2003.deals2017.datamodel.Role;
+import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 import ru.mail.ales2003.deals2017.services.ICustomerGroupService;
+import ru.mail.ales2003.deals2017.services.ICustomerService;
+import ru.mail.ales2003.deals2017.services.IManagerService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
-import ru.mail.ales2003.deals2017.webapp.models.CustomerGroupModel;
+import ru.mail.ales2003.deals2017.webapp.models.AuthorizedManagerModel;
+import ru.mail.ales2003.deals2017.webapp.models.CustomerModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
+import ru.mail.ales2003.deals2017.webapp.models.ManagerModel;
+import ru.mail.ales2003.deals2017.webapp.models.UserAuthModel;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
-@RequestMapping("/customergroups")
-public class CustomerGroupsContoller {
+@RequestMapping("/customers")
+public class CustomersController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerGroupsContoller.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CustomersController.class);
 
 	@Inject
 	private ApplicationContext context;
 
 	@Inject
-	private ICustomerGroupService service;
+	private ICustomerService service;
+	@Inject
+	private ICustomerGroupService groupService;
 
-	private String thisClassName = CustomerGroupsContoller.class.getSimpleName();
+	@Inject
+	private IManagerService managerService;
+
+	private String thisClassName = CustomersController.class.getSimpleName();
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
@@ -52,7 +66,6 @@ public class CustomerGroupsContoller {
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.REVENEUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
-			validUserRoles.add(Role.GUEST);
 		}
 
 		String requestName = "getAll";
@@ -81,23 +94,23 @@ public class CustomerGroupsContoller {
 
 		// Direct implementation of the method
 
-		List<CustomerGroup> allEntitys;
+		List<Customer> allEntitys;
 		try {
 			allEntitys = service.getAll();
 		} catch (EmptyResultDataAccessException e) {
-			String msg = String.format("[%s] storage returns incorrect entity count.", CustomerGroup.class);
+			String msg = String.format("[%s] storage returns incorrect entity count.", Customer.class);
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if (allEntitys.isEmpty()) {
-			String msg = String.format("An storage store of class [%s] is empty", CustomerGroup.class);
+			String msg = String.format("An storage store of class [%s] is empty", Customer.class);
 			return new ResponseEntity<String>(msg, HttpStatus.OK);
 		}
-		List<CustomerGroupModel> convertedEntitys = new ArrayList<>();
-		for (CustomerGroup entity : allEntitys) {
+		List<CustomerModel> convertedEntitys = new ArrayList<>();
+		for (Customer entity : allEntitys) {
 			convertedEntitys.add(entity2model(entity));
 		}
 		// System.out.println(Locale.getDefault());
-		return new ResponseEntity<List<CustomerGroupModel>>(convertedEntitys, HttpStatus.OK);
+		return new ResponseEntity<List<CustomerModel>>(convertedEntitys, HttpStatus.OK);
 
 	}
 
@@ -110,6 +123,7 @@ public class CustomerGroupsContoller {
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.REVENEUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
 		}
 
 		String requestName = "getById";
@@ -127,9 +141,10 @@ public class CustomerGroupsContoller {
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.CUSTOMER) || authorisedUserRole == null
+				|| !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
-					"No access rights. Access is available only to users: %s (for SALES_MANAGERS only own profile is available).",
+					"No access rights. Access is available only to users: %s (for CUSTOMERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
@@ -139,25 +154,25 @@ public class CustomerGroupsContoller {
 
 		// Direct implementation of the method
 
-		CustomerGroup entity = null;
+		Customer entity = null;
 		try {
 			entity = service.get(entityIdParam);
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-		CustomerGroupModel entityModel = entity2model(entity);
-		return new ResponseEntity<CustomerGroupModel>(entityModel, HttpStatus.OK);
+		CustomerModel entityModel = entity2model(entity);
+		return new ResponseEntity<CustomerModel>(entityModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> create(@RequestBody CustomerGroupModel entityModel) {
+	public ResponseEntity<?> create(@RequestBody CustomerModel entityModel) {
 
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
 		}
 
 		String requestName = "create";
@@ -186,34 +201,23 @@ public class CustomerGroupsContoller {
 
 		// Direct implementation of the method
 
-		CustomerGroup entity = null;
+		Customer entity = null;
 
-		try {
-			entity = model2entity(entityModel);
-		} catch (Exception e) {
-			String msg = String.format(
-					"Customer type with name [%s] is not allowed for insertion. Please use one of: [%s].",
-					entityModel.getName(), EnumArrayToMessageConvertor.customerTypeArrayToMessage());
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
+		entity = model2entity(entityModel);
 
-		try {
-			service.save(entity);
-		} catch (DuplicationKeyInformationException e) {
-			String msg = e.getAttachedMsg() + " " + e.getMessage();
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
+		service.save(entity);
 
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> update(@RequestBody CustomerGroupModel entityModel,
+	public ResponseEntity<?> update(@RequestBody CustomerModel entityModel,
 			@PathVariable(value = "id") Integer entityIdParam) {
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.SALES_MANAGER);
 			validUserRoles.add(Role.REVENEUE_MANAGER);
 		}
 
@@ -244,7 +248,7 @@ public class CustomerGroupsContoller {
 
 		// Direct implementation of the method
 
-		CustomerGroup entity = null;
+		Customer entity = null;
 
 		try {
 			entity = service.get(entityIdParam);
@@ -253,21 +257,9 @@ public class CustomerGroupsContoller {
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		try {
-			entity.setName(CustomerType.valueOf(entityModel.getName()));
-		} catch (Exception e) {
-			String msg = String.format(
-					"Customer type with name [%s] is not allowed for insertion. Please use one of: [%s].",
-					entityModel.getName(), EnumArrayToMessageConvertor.customerTypeArrayToMessage());
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
+		entity = model2entity(entityModel);
 
-		try {
-			service.save(entity);
-		} catch (DuplicationKeyInformationException e) {
-			String msg = e.getAttachedMsg() + " " + e.getMessage();
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
+		service.save(entity);
 
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
@@ -320,17 +312,135 @@ public class CustomerGroupsContoller {
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
-	private CustomerGroupModel entity2model(CustomerGroup entity) {
-		CustomerGroupModel entityModel = new CustomerGroupModel();
+	@RequestMapping(value = "/auth/customer", method = RequestMethod.POST)
+	public ResponseEntity<?> createCustomerWithAuthorizationData(
+			@RequestBody AuthorizedManagerModel authorizedManagerModel) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.GUEST);
+		}
+
+		String requestName = "createWithAuthData";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (!validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
+				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+
+		// Direct implementation of the method
+
+		AuthorizedManager authorizedManager = new AuthorizedManager();
+		Manager entity = null;
+		UserAuth data = null;
+		
+		//requires yujely data
+		ManagerModel entityModel = authorizedManagerModel.getManagerModel();
+		entity = model2entity(entityModel);
+
+		
+		//!!! Role = CUSTOMER!!!
+		//requires only login&password
+		UserAuthModel dataModel = authorizedManagerModel.getAuthDataModel();
+		data = dataModel2data(dataModel);
+
+		authorizedManager.setManager(entity);
+		authorizedManager.setAuthData(data);
+
+		try {
+			service.saveWithAuthorization(authorizedManager);
+		} catch (DuplicationKeyInformationException e) {
+			String msg = String.format(e.getAttachedMsg());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		return new ResponseEntity<IdModel>(new IdModel(authorizedManager.getManagerId()), HttpStatus.CREATED);
+	}
+
+	private CustomerModel entity2model(Customer entity) {
+		CustomerModel entityModel = new CustomerModel();
 		entityModel.setId(entity.getId());
-		entityModel.setName(entity.getName().name());
+		entityModel.setFirstName(entity.getFirstName());
+		entityModel.setPatronymic(entity.getPatronymic());
+		entityModel.setLastName(entity.getLastName());
+		entityModel.setCompanyName(entity.getCompanyName());
+		entityModel.setAddress(entity.getAddress());
+		entityModel.setPhoneNumber(entity.getPhoneNumber());
+		entityModel.setCustomerGroupId(entity.getCustomerGroupId());
+		entityModel.setManagerId(entity.getManagerId());
 		return entityModel;
 	}
 
-	private CustomerGroup model2entity(CustomerGroupModel entityModel) {
-		CustomerGroup entity = new CustomerGroup();
-		entity.setName(CustomerType.valueOf(entityModel.getName()));
+	private Customer model2entity(CustomerModel entityModel) {
+		Customer entity = new Customer();
+		entity.setFirstName(entityModel.getFirstName());
+		entity.setPatronymic(entityModel.getPatronymic());
+		entity.setLastName(entityModel.getLastName());
+		entity.setCompanyName(entityModel.getCompanyName());
+		entity.setAddress(entityModel.getAddress());
+		entity.setPhoneNumber(entityModel.getPhoneNumber());
+		entity.setCustomerGroupId(entityModel.getCustomerGroupId());
+		entity.setManagerId(entityModel.getManagerId());
+
+		if (entity.getCustomerGroupId() == null) {
+			customerToNullGroup(entity);
+		}
+		if (entity.getManagerId() == null) {
+			customerToNullManager(entity);
+		}
+		if (entity.getCompanyName() == null) {
+			entity.setCompanyName("Private person");
+		}
+
 		return entity;
+	}
+
+	private void customerToNullGroup(Customer customer) {
+		Integer groupId = null;
+		List<CustomerGroup> groups = groupService.getAll();
+		for (CustomerGroup group : groups) {
+			if (group.getName().name().equals(CustomerType.NULL_TYPE.name())) {
+				groupId = group.getId();
+				customer.setCustomerGroupId(groupId);
+				return;
+
+			} else {
+				CustomerGroup nullGroup = new CustomerGroup();
+				nullGroup.setName(CustomerType.NULL_TYPE);
+				groupService.save(nullGroup);
+				groupId = nullGroup.getId();
+				customer.setCustomerGroupId(groupId);
+			}
+		}
+
+	}
+
+	private void customerToNullManager(Customer customer) {
+		Manager nullManager = new Manager();
+		nullManager.setFirstName("NULL_MANAGER");
+		managerService.save(nullManager);
+		Integer managerId = nullManager.getId();
+		customer.setManagerId(managerId);
 	}
 
 }

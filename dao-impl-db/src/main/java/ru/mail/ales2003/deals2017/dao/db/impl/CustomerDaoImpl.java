@@ -39,8 +39,11 @@ public class CustomerDaoImpl extends AbstractDaoImplDb<Customer, Integer> implem
 			ps.setString(4, entity.getCompanyName());
 			ps.setString(5, entity.getAddress());
 			ps.setString(6, entity.getPhoneNumber());
+
 			ps.setInt(7, entity.getCustomerGroupId());
+
 			ps.setInt(8, entity.getManagerId());
+
 		} catch (SQLException e) {
 			LOGGER.error("Error: prepareStatementForInsert is broken: {}", e);
 			// !!!TO REFACTOR!!!

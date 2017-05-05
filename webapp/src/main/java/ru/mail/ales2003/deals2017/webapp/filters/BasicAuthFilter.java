@@ -79,10 +79,16 @@ public class BasicAuthFilter implements Filter {
 		boolean isCredentialsResolved = credentials != null && credentials.length == 2;
 
 		if (!isCredentialsResolved) {
-			String errMsg = "Visiting this page requires authorization. But you [username] or [password] is not correct. Please try again.";
-			res.sendError(401, errMsg);
-			// res.sendError(401, "!!!Unauthorized!!!");
+
+			// OR: You Came in as unregistered visitor. guest id = -1
+			userJVMDataStorage.setId(-1);
+			userJVMDataStorage.setRole(Role.GUEST);
+			chain.doFilter(request, response);
 			return;
+			// String errMsg = "Visiting this page requires authorization. But
+			// you [username] or [password] is not correct. Please try again.";
+			// res.sendError(401, errMsg);
+			// return;
 		}
 
 		String username = credentials[0];
