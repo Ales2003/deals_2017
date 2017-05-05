@@ -46,6 +46,7 @@ public interface IUserAuthService {
 	UserAuth getByLogin(String login);
 
 	UserAuth getByManagerId(Integer managerId);
+	UserAuth getByCustomerId(Integer customerId);
 
 	/**
 	 * @return Set&ltString&gt entitie logins

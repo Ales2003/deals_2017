@@ -1,6 +1,9 @@
 package ru.mail.ales2003.deals2017.webapp.controllers;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,42 +22,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedCustomer;
-import ru.mail.ales2003.deals2017.datamodel.Customer;
-import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
-import ru.mail.ales2003.deals2017.datamodel.CustomerType;
-import ru.mail.ales2003.deals2017.datamodel.Manager;
+import ru.mail.ales2003.deals2017.datamodel.Contract;
+import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
+import ru.mail.ales2003.deals2017.datamodel.PayForm;
+import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.datamodel.Role;
-import ru.mail.ales2003.deals2017.datamodel.UserAuth;
-import ru.mail.ales2003.deals2017.services.ICustomerGroupService;
-import ru.mail.ales2003.deals2017.services.ICustomerService;
-import ru.mail.ales2003.deals2017.services.IManagerService;
+import ru.mail.ales2003.deals2017.services.IContractService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
-import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
-import ru.mail.ales2003.deals2017.webapp.models.AuthorizedCustomerModel;
-import ru.mail.ales2003.deals2017.webapp.models.CustomerModel;
+import ru.mail.ales2003.deals2017.webapp.models.ContractModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
-import ru.mail.ales2003.deals2017.webapp.models.UserAuthModel;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
-@RequestMapping("/customers")
-public class CustomersController {
+@RequestMapping("/contracts")
+public class ContractsController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CustomersController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContractsController.class);
 
 	@Inject
 	private ApplicationContext context;
 
 	@Inject
-	private ICustomerService service;
-	@Inject
-	private ICustomerGroupService groupService;
+	private IContractService service;
 
 	@Inject
-	private IManagerService managerService;
+	private IUserAuthService authService;
 
-	private String thisClassName = CustomersController.class.getSimpleName();
+	private String thisClassName = ContractsController.class.getSimpleName();
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
@@ -93,23 +88,23 @@ public class CustomersController {
 
 		// Direct implementation of the method
 
-		List<Customer> allEntitys;
+		List<Contract> allEntitys;
 		try {
-			allEntitys = service.getAll();
+			allEntitys = service.getAllContract();
 		} catch (EmptyResultDataAccessException e) {
-			String msg = String.format("[%s] storage returns incorrect entity count.", Customer.class);
+			String msg = String.format("[%s] storage returns incorrect entity count.", Contract.class);
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if (allEntitys.isEmpty()) {
-			String msg = String.format("An storage store of class [%s] is empty", Customer.class);
+			String msg = String.format("An storage store of class [%s] is empty", Contract.class);
 			return new ResponseEntity<String>(msg, HttpStatus.OK);
 		}
-		List<CustomerModel> convertedEntitys = new ArrayList<>();
-		for (Customer entity : allEntitys) {
+		List<ContractModel> convertedEntitys = new ArrayList<>();
+		for (Contract entity : allEntitys) {
 			convertedEntitys.add(entity2model(entity));
 		}
 		// System.out.println(Locale.getDefault());
-		return new ResponseEntity<List<CustomerModel>>(convertedEntitys, HttpStatus.OK);
+		return new ResponseEntity<List<ContractModel>>(convertedEntitys, HttpStatus.OK);
 
 	}
 
@@ -138,10 +133,38 @@ public class CustomersController {
 		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.CUSTOMER) || authorisedUserRole == null
-				|| !validUserRoles.contains(authorisedUserRole)) {
+
+		// Clarify the userAuthId for obtaining permission to use the method
+		// to get customer Id
+		Contract entity = null;
+		try {
+			entity = service.getContract(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		Integer customerId = entity.getCustomerId();
+		Integer customerAsUserId = authService.getByCustomerId(customerId).getId();
+		/*
+		 * System.out.println("authorisedUserId " + authorisedUserId);
+		 * System.out.println("customerAsUserId " + customerAsUserId);
+		 * System.out.println("authorisedUserRol e" + authorisedUserRole);
+		 * System.out.println("Role.CUSTOMER " + Role.CUSTOMER);
+		 */
+		Boolean isIdEq = customerAsUserId.equals(authorisedUserId);
+		Boolean roleEq = authorisedUserRole.equals(Role.CUSTOMER);
+		Boolean dataEq = isIdEq && roleEq;
+
+		Boolean b = (isIdEq || authorisedUserRole == null || validUserRoles.contains(authorisedUserRole));
+		/*
+		 * System.out.println("isIdEq " + isIdEq); System.out.println("roleEq "
+		 * + roleEq); System.out.println("dataEq " + dataEq);
+		 * System.out.println("b " + b);
+		 */
+		if (!b) {
 			String msg = String.format(
 					"No access rights. Access is available only to users: %s (for CUSTOMERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
@@ -153,25 +176,19 @@ public class CustomersController {
 
 		// Direct implementation of the method
 
-		Customer entity = null;
-		try {
-			entity = service.get(entityIdParam);
-		} catch (Exception e) {
-			String msg = e.getMessage();
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
-		CustomerModel entityModel = entity2model(entity);
-		return new ResponseEntity<CustomerModel>(entityModel, HttpStatus.OK);
+		ContractModel entityModel = entity2model(entity);
+		return new ResponseEntity<ContractModel>(entityModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> create(@RequestBody CustomerModel entityModel) {
+	public ResponseEntity<?> create(@RequestBody ContractModel entityModel) {
 
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
 		}
 
 		String requestName = "create";
@@ -200,24 +217,34 @@ public class CustomersController {
 
 		// Direct implementation of the method
 
-		Customer entity = null;
+		Contract entity = null;
 
-		entity = model2entity(entityModel);
+		try {
+			entity = model2entity(entityModel);
+		} catch (Exception e) {
+			String msg = String.format("PayForm [%s] is not allowed for insertion. Please use one of: [%s].",
+					entityModel.getPayForm(), EnumArrayToMessageConvertor.payFormArrayToMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 
-		service.save(entity);
+		if (entity.getCustomerId() == null) {
+			Integer customerIdInContract = authService.get(authorisedUserId).getInOwnTableId();
+			entity.setCustomerId(customerIdInContract);
+		}
+
+		service.saveContract(entity);
 
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> update(@RequestBody CustomerModel entityModel,
+	public ResponseEntity<?> update(@RequestBody ContractModel entityModel,
 			@PathVariable(value = "id") Integer entityIdParam) {
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.SALES_MANAGER);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
 		}
 
 		String requestName = "update";
@@ -247,18 +274,41 @@ public class CustomersController {
 
 		// Direct implementation of the method
 
-		Customer entity = null;
+		Contract entity = null;
 
 		try {
-			entity = service.get(entityIdParam);
+			entity = service.getContract(entityIdParam);
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		entity = model2entity(entityModel);
+		try {
+			if (entityModel.getContractStatus() != null) {
+				entity.setContractStatus(ContractStatus.valueOf(entityModel.getContractStatus().toUpperCase()));
+			}
+			if (entityModel.getPayForm() != null) {
+				entity.setPayForm(PayForm.valueOf(entityModel.getPayForm().toUpperCase()));
+			}
+			if (entityModel.getContractStatus() != null) {
+				entity.setPayStatus(PayStatus.valueOf(entityModel.getPayStatus().toUpperCase()));
+			}
+		} catch (Exception e) {
+			String msg = String.format(
+					"ContractStatus [%s] OR PayForm [%s] OR PayStatus [%s] is not allowed for insertion. Please use"
+							+ " for ContractStatus one of: [%s], for PayForm one of: [%s], for PayStatus one of: [%s].",
+					entityModel.getContractStatus(), entityModel.getPayForm(), entityModel.getPayStatus(),
+					EnumArrayToMessageConvertor.contractStatusArrayToMessage(),
+					EnumArrayToMessageConvertor.payFormArrayToMessage(),
+					EnumArrayToMessageConvertor.payStatusArrayToMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
 
-		service.save(entity);
+		if (entityModel.getCustomerId() != null) {
+			entity.setCustomerId(entityModel.getCustomerId());
+		}
+
+		service.saveContract(entity);
 
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
@@ -300,150 +350,47 @@ public class CustomersController {
 
 		// checking of existing
 		try {
-			service.get(entityIdParam);
+			service.getContract(entityIdParam);
 		} catch (IllegalArgumentException | EmptyResultDataAccessException e) {
 			String msg = String.format("Preparation before DELETE: %s", e.getMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		service.delete(entityIdParam);
+		service.deleteContract(entityIdParam);
 
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/auth/customer", method = RequestMethod.POST)
-	public ResponseEntity<?> createCustomerWithAuthorizationData(
-			@RequestBody AuthorizedCustomerModel authorizedCustomerModel) {
-
-		// Start ControllerAuthorization
-		Set<Role> validUserRoles = new HashSet<>();
-		{
-			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.SALES_MANAGER);
-			validUserRoles.add(Role.GUEST);
-		}
-
-		String requestName = "createWithAuthData";
-
-		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
-		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
-		// Getting authorisedUserID
-		Integer authorisedUserId = userJVMDataStorage.getId();
-		if (authorisedUserId == null) {
-			String msg = String.format("No authorization. Authorization is required to access this section.");
-			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
-		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
-
-		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
-		// Clarify the userROLE for obtaining permission to use the method
-		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if (!validUserRoles.contains(authorisedUserRole)) {
-			String msg = String.format("No access rights. Access is available only to users: %s.",
-					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
-			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
-		}
-		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
-
-		// Direct implementation of the method
-
-		AuthorizedCustomer authorizedCustomer = new AuthorizedCustomer();
-		Customer entity = null;
-		UserAuth data = null;
-
-		// requires usually data
-		CustomerModel entityModel = authorizedCustomerModel.getCustomerModel();
-		entity = model2entity(entityModel);
-
-		// !!! Role = CUSTOMER!!!
-		// requires only login&password
-		UserAuthModel dataModel = authorizedCustomerModel.getAuthDataModel();
-		data = dataModel2data(dataModel);
-		data.setRole(Role.CUSTOMER);
-
-		authorizedCustomer.setCustomer(entity);
-		authorizedCustomer.setAuthData(data);
-
-		try {
-			service.saveWithAuthorization(authorizedCustomer);
-		} catch (DuplicationKeyInformationException e) {
-			String msg = String.format(e.getAttachedMsg());
-			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
-		}
-
-		return new ResponseEntity<IdModel>(new IdModel(authorizedCustomer.getCustomerId()), HttpStatus.CREATED);
-	}
-
-	private CustomerModel entity2model(Customer entity) {
-		CustomerModel entityModel = new CustomerModel();
+	private ContractModel entity2model(Contract entity) {
+		ContractModel entityModel = new ContractModel();
 		entityModel.setId(entity.getId());
-		entityModel.setFirstName(entity.getFirstName());
-		entityModel.setPatronymic(entity.getPatronymic());
-		entityModel.setLastName(entity.getLastName());
-		entityModel.setCompanyName(entity.getCompanyName());
-		entityModel.setAddress(entity.getAddress());
-		entityModel.setPhoneNumber(entity.getPhoneNumber());
-		entityModel.setCustomerGroupId(entity.getCustomerGroupId());
-		entityModel.setManagerId(entity.getManagerId());
+		entityModel.setCreated(timestamp2String(entity.getCreated()));
+		entityModel.setContractStatus(entity.getContractStatus().name());
+		entityModel.setPayForm(entity.getPayForm().name());
+		entityModel.setPayStatus(entity.getPayStatus().name());
+		entityModel.setCustomerId(entity.getCustomerId());
+		entityModel.setTotalPrice(entity.getTotalPrice());
 		return entityModel;
 	}
 
-	private Customer model2entity(CustomerModel entityModel) {
-		Customer entity = new Customer();
-		entity.setFirstName(entityModel.getFirstName());
-		entity.setPatronymic(entityModel.getPatronymic());
-		entity.setLastName(entityModel.getLastName());
-		entity.setCompanyName(entityModel.getCompanyName());
-		entity.setAddress(entityModel.getAddress());
-		entity.setPhoneNumber(entityModel.getPhoneNumber());
-		entity.setCustomerGroupId(entityModel.getCustomerGroupId());
-		entity.setManagerId(entityModel.getManagerId());
-
-		if (entity.getCustomerGroupId() == null) {
-			customerToNullGroup(entity);
-		}
-		if (entity.getManagerId() == null) {
-			customerToNullManager(entity);
-		}
-		if (entity.getCompanyName() == null) {
-			entity.setCompanyName("Private person");
-		}
-
+	private Contract model2entity(ContractModel entityModel) {
+		Contract entity = new Contract();
+		entity.setCreated(new Timestamp(new Date().getTime()));
+		entity.setContractStatus(ContractStatus.CONTRACT_PREPARATION);
+		// extract
+		entity.setPayForm(PayForm.valueOf(entityModel.getPayForm().toUpperCase()));
+		entity.setPayStatus(PayStatus.UNPAID);
+		// maybe extract
+		entity.setCustomerId(entityModel.getCustomerId());
 		return entity;
 	}
 
-	private UserAuth dataModel2data(UserAuthModel dataModel) {
-		UserAuth data = new UserAuth();
-		data.setLogin(dataModel.getLogin());
-		data.setPassword(dataModel.getPassword());
-		return data;
-	}
+	private String timestamp2String(Timestamp tstmp) {
+		Date date = new Date(tstmp.getTime());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		String string = dateFormat.format(date);
+		return string;
 
-	private void customerToNullGroup(Customer customer) {
-		Integer groupId = null;
-		List<CustomerGroup> groups = groupService.getAll();
-		for (CustomerGroup group : groups) {
-			if (group.getName().name().equals(CustomerType.NULL_TYPE.name())) {
-				groupId = group.getId();
-				customer.setCustomerGroupId(groupId);
-				return;
-			}
-		}
-		CustomerGroup nullGroup = new CustomerGroup();
-		nullGroup.setName(CustomerType.NULL_TYPE);
-		groupService.save(nullGroup);
-		groupId = nullGroup.getId();
-		customer.setCustomerGroupId(groupId);
-	}
-
-	private void customerToNullManager(Customer customer) {
-		Manager nullManager = new Manager();
-		nullManager.setFirstName("NULL_MANAGER");
-		managerService.save(nullManager);
-		Integer managerId = nullManager.getId();
-		customer.setManagerId(managerId);
 	}
 
 }

@@ -127,6 +127,20 @@ public class UserAuthServiceImpl implements IUserAuthService {
 		}
 	}
 
+	@Override
+	public UserAuth getByCustomerId(Integer customerId) {
+		if (userAuthDao.getByCustomerId(customerId) == null) {
+			String errMsg = String.format("[%s] entity with managerOrCustomerId = [%s] don't exist in storage",
+					className, customerId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		} else {
+			UserAuth entity = userAuthDao.getByCustomerId(customerId);
+			LOGGER.info("Read one {} entity: {}", className, entity.toString());
+			return entity;
+		}
+	}
+
 	// Methods to avoid duplication of logins
 	// LOGGING
 	// @Override

@@ -8,8 +8,11 @@ import java.util.Set;
 
 import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
+import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
+import ru.mail.ales2003.deals2017.datamodel.PayForm;
+import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.datamodel.Role;
 
 /**
@@ -41,7 +44,8 @@ public class EnumArrayToMessageConvertor {
 	}
 
 	/**
-	 * @return a string representation of the enumsarray from class Measure.
+	 * @return a string representation of the CustomerType from class
+	 *         CustomerGroup.
 	 */
 	public static String customerTypeArrayToMessage() {
 		StringBuilder stringBuilder = new StringBuilder("");
@@ -53,6 +57,73 @@ public class EnumArrayToMessageConvertor {
 		types.sort(new Comparator<CustomerType>() {
 			@Override
 			public int compare(CustomerType o1, CustomerType o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	/**
+	 * @return a string representation of the ContractStatus from class
+	 *         Contract.
+	 */
+	public static String contractStatusArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<ContractStatus> statuses = new ArrayList<ContractStatus>(Arrays.asList(ContractStatus.values()));
+		for (ContractStatus status : statuses) {
+			stringBuilder.append("" + status + ", ");
+		}
+		// sorting
+		statuses.sort(new Comparator<ContractStatus>() {
+			@Override
+			public int compare(ContractStatus o1, ContractStatus o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	/**
+	 * @return a string representation of the payForm from class Contract.
+	 */
+	public static String payFormArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<PayForm> forms = new ArrayList<PayForm>(Arrays.asList(PayForm.values()));
+		for (PayForm form : forms) {
+			stringBuilder.append("" + form + ", ");
+		}
+		// sorting
+		forms.sort(new Comparator<PayForm>() {
+			@Override
+			public int compare(PayForm o1, PayForm o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	/**
+	 * @return a string representation of the payStatus from class Contract.
+	 */
+	public static String payStatusArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<PayStatus> statuses = new ArrayList<PayStatus>(Arrays.asList(PayStatus.values()));
+		for (PayStatus status : statuses) {
+			stringBuilder.append("" + status + ", ");
+		}
+		// sorting
+		statuses.sort(new Comparator<PayStatus>() {
+			@Override
+			public int compare(PayStatus o1, PayStatus o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});

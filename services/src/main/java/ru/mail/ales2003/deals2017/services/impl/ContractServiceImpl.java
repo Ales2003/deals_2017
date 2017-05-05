@@ -116,15 +116,16 @@ public class ContractServiceImpl implements IContractService {
 	// =============CHECK FOR CHANGEABILITY===============
 	@Override
 	public Boolean isChangeable(Integer id) {
-		// ADD LOGGING
+		LOGGER.info("Check for changeability");
 		Boolean isChangeable = true;
 		Contract contract = getContract(id);
 		if (contract.getContractStatus().equals(ContractStatus.EXECUTED)
 				&& contract.getPayStatus().equals(PayStatus.PAID)) {
 			isChangeable = false;
 		}
+		LOGGER.info("Check for changeability: []", isChangeable);
 		return isChangeable;
-		// ADD LOGGING
+
 	}
 
 	// ======================ItemVariant management and handling in a contract
@@ -180,7 +181,7 @@ public class ContractServiceImpl implements IContractService {
 
 		}
 
-		// ADD LOGGING
+		
 		else if (isChangeable(item.getId()))
 		// ADD LOGGING
 		{

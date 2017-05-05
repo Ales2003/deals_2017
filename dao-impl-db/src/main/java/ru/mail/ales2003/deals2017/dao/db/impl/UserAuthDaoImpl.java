@@ -135,7 +135,7 @@ public class UserAuthDaoImpl extends AbstractDaoImplDb<UserAuth, Integer> implem
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		}
-		final String READ_BY_LOGIN_SQL = getSelectQuery() + " where in_own_table_id = ? role = 'CUSTOMER'";
+		final String READ_BY_LOGIN_SQL = getSelectQuery() + " where in_own_table_id = ? and role = 'CUSTOMER'";
 		try {
 			return jdbcTemplate.queryForObject(READ_BY_LOGIN_SQL, new Object[] { customerId },
 					new BeanPropertyRowMapper<UserAuth>(UserAuth.class));
