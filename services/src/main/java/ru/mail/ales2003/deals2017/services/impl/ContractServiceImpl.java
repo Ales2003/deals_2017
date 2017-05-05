@@ -115,10 +115,10 @@ public class ContractServiceImpl implements IContractService {
 
 	// =============CHECK FOR CHANGEABILITY===============
 	@Override
-	public Boolean isChangeable(Integer id) {
+	public Boolean isChangeable(Integer contractId) {
 		LOGGER.info("Check for changeability");
 		Boolean isChangeable = true;
-		Contract contract = getContract(id);
+		Contract contract = getContract(contractId);
 		if (contract.getContractStatus().equals(ContractStatus.EXECUTED)
 				&& contract.getPayStatus().equals(PayStatus.PAID)) {
 			isChangeable = false;
@@ -181,8 +181,7 @@ public class ContractServiceImpl implements IContractService {
 
 		}
 
-		
-		else if (isChangeable(item.getId()))
+		else if (isChangeable(item.getContractId()))
 		// ADD LOGGING
 		{
 			itemVariantInContractDao.update(item);
@@ -203,22 +202,23 @@ public class ContractServiceImpl implements IContractService {
 	// =============DELETE AREA===============
 
 	@Override
-	public void deleteItemVariantInContract(Integer id) {
+	public void deleteItemVariantInContract(Integer itemVarInContrId) {
 		// ADD LOGGING
+		if (itemVarInContrId == null) {
+			LOGGER.error("Error: as the id was sent a null reference");
+			return;
+		}
 
-		if (isChangeable(id)) {
+		ItemVariantInContract itemVar = itemVariantInContractDao.get(itemVarInContrId);
+		Integer contractId = itemVar.getContractId();
 
-			
+		if (isChangeable(contractId)) {
 
 			// ADD LOGGING
 
-			if (id == null) {
-				LOGGER.error("Error: as the id was sent a null reference");
-				return;
-			} else {
-				itemVariantInContractDao.delete(id);
-				LOGGER.info("Deleted {} entity by id: {}", itemVariantInContractClassName, id);
-			}
+			itemVariantInContractDao.delete(itemVarInContrId);
+			LOGGER.info("Deleted {} entity by id: {}", itemVariantInContractClassName, itemVarInContrId);
+
 		}
 	}
 

@@ -48,6 +48,7 @@ public class ItemVariantSpecificationServiceTest extends AbstractTest {
 	private List<ItemVariantCommonInfo> commonInfos;
 
 	private List<ItemVariantDetail> details;
+	
 	private ItemVariantSpecification specification;
 
 	private Item item;
