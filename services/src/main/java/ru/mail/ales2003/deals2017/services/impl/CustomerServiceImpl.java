@@ -9,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.ICustomerDao;
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedCustomer;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.services.ICustomerService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
@@ -19,6 +21,9 @@ public class CustomerServiceImpl implements ICustomerService {
 
 	@Inject
 	private ICustomerDao customerDao;
+
+	@Inject
+	private IUserAuthService userAuthService;
 
 	private String className = Customer.class.getSimpleName();
 
@@ -77,5 +82,21 @@ public class CustomerServiceImpl implements ICustomerService {
 			customerDao.delete(id);
 			LOGGER.info("Deleted {} entity by id: {}", className, id);
 		}
+	}
+
+	@Override
+	public void saveWithAuthorization(AuthorizedCustomer entity) {
+		if (entity == null) {
+			LOGGER.error("Error: as the {} entity was sent a null reference", className);
+			return;
+		} else {
+			Customer customer = entity.getCustomer();
+			save(customer);
+			Integer customerId = customer.getId();
+			entity.setCustomerId(customerId);
+			entity.getAuthData().setInOwnTableId(customerId);
+			userAuthService.save(entity.getAuthData());
+		}
+
 	}
 }

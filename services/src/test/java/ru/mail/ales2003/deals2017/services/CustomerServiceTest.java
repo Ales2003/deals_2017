@@ -12,9 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedCustomer;
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 import ru.mail.ales2003.deals2017.datamodel.Manager;
+import ru.mail.ales2003.deals2017.datamodel.Role;
+import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 
 public class CustomerServiceTest extends AbstractTest {
 
@@ -28,6 +32,9 @@ public class CustomerServiceTest extends AbstractTest {
 
 	@Inject
 	private ICustomerGroupService customerGroupService;
+	
+	@Inject
+	private IUserAuthService authService;
 
 	private Customer instance_1;
 	private Customer instance_2;
@@ -40,6 +47,13 @@ public class CustomerServiceTest extends AbstractTest {
 
 	private CustomerGroup customerGroup;
 	private CustomerGroup customerGroupFromDb;
+	
+	private UserAuth authorizedData;
+	private UserAuth authorizedDataFromDb;
+
+	private AuthorizedCustomer authCustomer;
+	//private AuthorizedCustomer authCustomerFromDb;
+	
 
 	@Before
 	public void runBeforeTestMethod() {
@@ -63,7 +77,17 @@ public class CustomerServiceTest extends AbstractTest {
 		instance_2 = getInstance("Andrei", "Ivanovich", "Ratich", "Company2", "Minsk", "+37529...",
 				customerGroupFromDb.getId(), managerFromDb.getId());
 		LOGGER.debug("Customers in JVM were created");
+		
+		LOGGER.debug("Creating userAuthData in JVM");
+		authorizedData = getUserAuthInstance(null, Role.CUSTOMER, "customer", "customer");
+		LOGGER.debug("userAuthData in JVM was created");
 
+		LOGGER.debug("Creating authCustomer in JVM");
+		authCustomer = new AuthorizedCustomer();
+		authCustomer.setCustomer(instance_1);
+		authCustomer.setAuthData(authorizedData);
+		LOGGER.debug("authCustomer in JVM was created");
+		
 		LOGGER.debug("Finish preparation of the method");
 	}
 
@@ -308,6 +332,9 @@ public class CustomerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish getAllTest method");
 	}
 
+	
+	
+	
 	/*
 	 * Test for the deleting. One object is created, saved in DB and deleted.
 	 * Then the object is checked for absence in the database
@@ -323,6 +350,60 @@ public class CustomerServiceTest extends AbstractTest {
 		LOGGER.debug("Finish deleteTest method");
 	}
 
+	/*
+	 * Two pairs of objects with the same Id are compared: created in Java and
+	 * saved to & extracted from the database: Manager and his uthorizationData
+	 */
+
+	@Test
+	public void saveWithAuthorizationTest() {
+		LOGGER.debug("Start saveWithAuthorizationTest method");
+
+		service.saveWithAuthorization(authCustomer);
+
+		System.out.println(authCustomer.toString());
+
+		// extracting the saved customer
+		instance_1FromDb = service.get(authCustomer.getCustomer().getId());
+
+		// extracting the saved authorizedData
+		authorizedDataFromDb = authService.get(authCustomer.getAuthData().getId());
+
+		// checking manager
+		Assert.notNull(instance_1FromDb, "instance must be saved");
+
+		Assert.isTrue(instance_1FromDb.getFirstName() != null && instance_1FromDb.getPatronymic() != null
+				&& instance_1FromDb.getPatronymic() != null && instance_1FromDb.getLastName() != null
+				&& instance_1FromDb.getCompanyName() != null && instance_1FromDb.getAddress() != null
+				&& instance_1FromDb.getPhoneNumber() != null && instance_1FromDb.getCustomerGroupId() != null
+				&& instance_1FromDb.getManagerId() != null, "columns must not by empty");
+
+		Assert.isTrue(
+				instance_1FromDb.getFirstName().equals(instance_1.getFirstName())
+						&& instance_1FromDb.getPatronymic().equals(instance_1.getPatronymic())
+						&& instance_1FromDb.getLastName().equals(instance_1.getLastName())
+						&& instance_1FromDb.getCompanyName().equals(instance_1.getCompanyName())
+						&& instance_1FromDb.getAddress().equals(instance_1.getAddress())
+						&& instance_1FromDb.getPhoneNumber().equals(instance_1.getPhoneNumber())
+						&& instance_1FromDb.getCustomerGroupId().equals(instance_1.getCustomerGroupId())
+						&& instance_1FromDb.getManagerId().equals(instance_1.getManagerId()),
+				"values of the corresponding columns must by eq.");
+
+		// extracting the saved authorizedData
+		Assert.notNull(authorizedDataFromDb, "instance must be saved");
+
+		Assert.isTrue(
+				(authorizedDataFromDb.getInOwnTableId() != null) && (authorizedDataFromDb.getRole() != null)
+						&& (authorizedDataFromDb.getLogin() != null) && (authorizedDataFromDb.getPassword() != null),
+				"columns values must not by empty");
+
+		Assert.isTrue(authorizedDataFromDb.equals(authorizedData), "values of the corresponding columns must by eq.");
+
+		LOGGER.debug("Finish saveWithAuthorizationTest method");
+
+	}
+	
+	
 	/*
 	 * method creates a new instance & gives it args
 	 */
@@ -340,6 +421,18 @@ public class CustomerServiceTest extends AbstractTest {
 		return instance;
 	}
 
+	/*
+	 * method creates a new manager instance & gives it args
+	 */
+	private UserAuth getUserAuthInstance(Integer inOwnTableId, Role role, String login, String password) {
+		UserAuth instance = new UserAuth();
+		instance.setInOwnTableId(inOwnTableId);
+		instance.setRole(role);
+		instance.setLogin(login);
+		instance.setPassword(password);
+		return instance;
+	}
+	
 	/*
 	 * method deletes an instance by id
 	 */

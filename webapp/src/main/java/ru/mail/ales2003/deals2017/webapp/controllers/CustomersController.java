@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedCustomer;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
@@ -31,10 +31,9 @@ import ru.mail.ales2003.deals2017.services.ICustomerService;
 import ru.mail.ales2003.deals2017.services.IManagerService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
-import ru.mail.ales2003.deals2017.webapp.models.AuthorizedManagerModel;
+import ru.mail.ales2003.deals2017.webapp.models.AuthorizedCustomerModel;
 import ru.mail.ales2003.deals2017.webapp.models.CustomerModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
-import ru.mail.ales2003.deals2017.webapp.models.ManagerModel;
 import ru.mail.ales2003.deals2017.webapp.models.UserAuthModel;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
@@ -314,7 +313,7 @@ public class CustomersController {
 
 	@RequestMapping(value = "/auth/customer", method = RequestMethod.POST)
 	public ResponseEntity<?> createCustomerWithAuthorizationData(
-			@RequestBody AuthorizedManagerModel authorizedManagerModel) {
+			@RequestBody AuthorizedCustomerModel authorizedCustomerModel) {
 
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
@@ -350,31 +349,31 @@ public class CustomersController {
 
 		// Direct implementation of the method
 
-		AuthorizedManager authorizedManager = new AuthorizedManager();
-		Manager entity = null;
+		AuthorizedCustomer authorizedCustomer = new AuthorizedCustomer();
+		Customer entity = null;
 		UserAuth data = null;
-		
-		//requires yujely data
-		ManagerModel entityModel = authorizedManagerModel.getManagerModel();
+
+		// requires usually data
+		CustomerModel entityModel = authorizedCustomerModel.getCustomerModel();
 		entity = model2entity(entityModel);
 
-		
-		//!!! Role = CUSTOMER!!!
-		//requires only login&password
-		UserAuthModel dataModel = authorizedManagerModel.getAuthDataModel();
+		// !!! Role = CUSTOMER!!!
+		// requires only login&password
+		UserAuthModel dataModel = authorizedCustomerModel.getAuthDataModel();
 		data = dataModel2data(dataModel);
+		data.setRole(Role.CUSTOMER);
 
-		authorizedManager.setManager(entity);
-		authorizedManager.setAuthData(data);
+		authorizedCustomer.setCustomer(entity);
+		authorizedCustomer.setAuthData(data);
 
 		try {
-			service.saveWithAuthorization(authorizedManager);
+			service.saveWithAuthorization(authorizedCustomer);
 		} catch (DuplicationKeyInformationException e) {
 			String msg = String.format(e.getAttachedMsg());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<IdModel>(new IdModel(authorizedManager.getManagerId()), HttpStatus.CREATED);
+		return new ResponseEntity<IdModel>(new IdModel(authorizedCustomer.getCustomerId()), HttpStatus.CREATED);
 	}
 
 	private CustomerModel entity2model(Customer entity) {
@@ -413,6 +412,13 @@ public class CustomersController {
 		}
 
 		return entity;
+	}
+
+	private UserAuth dataModel2data(UserAuthModel dataModel) {
+		UserAuth data = new UserAuth();
+		data.setLogin(dataModel.getLogin());
+		data.setPassword(dataModel.getPassword());
+		return data;
 	}
 
 	private void customerToNullGroup(Customer customer) {

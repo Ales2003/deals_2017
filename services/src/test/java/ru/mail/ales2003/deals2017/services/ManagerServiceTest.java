@@ -37,7 +37,7 @@ public class ManagerServiceTest extends AbstractTest {
 	private UserAuth authorizedDataFromDb;
 
 	private AuthorizedManager authManager;
-	private AuthorizedManager authManagerFromDb;
+	//private AuthorizedManager authManagerFromDb;
 
 	@Before
 	public void runBeforeTestMethod() {

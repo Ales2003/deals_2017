@@ -687,7 +687,7 @@ public class ManagersController {
 
 	private UserAuth dataModel2data(UserAuthModel dataModel) {
 		UserAuth data = new UserAuth();
-		data.setInOwnTableId(dataModel.getInOwnTableId());
+		//data.setInOwnTableId(dataModel.getInOwnTableId());
 		data.setRole(Role.valueOf(dataModel.getRole()));
 		data.setLogin(dataModel.getLogin());
 		data.setPassword(dataModel.getPassword());

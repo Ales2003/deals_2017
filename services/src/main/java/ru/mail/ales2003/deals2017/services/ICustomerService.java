@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedCustomer;
+import ru.mail.ales2003.deals2017.dao.api.customentities.AuthorizedManager;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 
 public interface ICustomerService {
@@ -36,4 +38,10 @@ public interface ICustomerService {
 	 */
 	@Transactional
 	void delete(Integer id);
+	
+	/**
+	 * @param AuthorizedCustomer entity
+	 */
+	@Transactional
+	void saveWithAuthorization(AuthorizedCustomer entity);
 }
