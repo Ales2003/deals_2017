@@ -17,10 +17,17 @@ import org.springframework.util.Assert;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.Invoice;
+import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.IContractFilter;
+import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
+import ru.mail.ales2003.deals2017.dao.db.filters.impl.ContractCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
 import ru.mail.ales2003.deals2017.datamodel.CustomerGroup;
+import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.Item;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
@@ -196,7 +203,7 @@ public class InvoiceServiceTest extends AbstractTest {
 	 * Test for the getting an object. Given object from Db is checked for the
 	 * existence and filling of fields.
 	 */
-
+	// @Ignore
 	@Test
 	public void getCommonInfoTest() {
 		LOGGER.debug("Start getCommonInfoTest method");
@@ -213,6 +220,106 @@ public class InvoiceServiceTest extends AbstractTest {
 				"columns values must not by empty");
 
 		LOGGER.debug("Finish  getCommonInfoTest method");
+	}
+
+	/*
+	 * Test for the getting of several objects, for each are checked for the
+	 * existence and filling of fields
+	 */
+
+	@Test
+	public void getCommonInfoForAllTest() {
+		LOGGER.debug("Start getCommonInfoForAllTest method");
+
+		commonInfos = service.getCommonInfoForAll();
+		for (ContractCommonInfo instance : commonInfos) {
+
+			Assert.notNull(instance, "instance must not be empty");
+
+			Assert.isTrue(instance.getContractId() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getContractStatus() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCreated() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerCompanyName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerType() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getManagerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getManagerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getPayForm() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getPayStatus() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getTotalAmount() != null, "columns values must not by empty");
+
+		}
+		LOGGER.debug("Finish  getCommonInfoForAllTest method");
+	}
+
+	@Test
+	public void getCommonInfoFilteredTest() {
+		LOGGER.debug("Start getCommonInfoFilteredTest method");
+		ContractCommonInfoFilter filter = new ContractCommonInfoFilter();
+
+		Integer customerId = customerFromDb.getId();
+		String customerLastName = customerFromDb.getLastName();
+		String customerCompany = customerFromDb.getCompanyName();
+		CustomerType customerType = customerGroupFromDb.getName();
+
+		Integer managerId = managerFromDb.getId();
+		String managerLastName = managerFromDb.getLastName();
+
+		Timestamp createdFROM = contractFromDb.getCreated();
+		Timestamp createdTO = contractFromDb.getCreated();
+		BigDecimal amountMIN = contractFromDb.getTotalPrice().multiply(new BigDecimal("0.5"));
+		BigDecimal amountMAX = contractFromDb.getTotalPrice().multiply(new BigDecimal("1.5"));
+		ContractStatus contractStatus = contractFromDb.getContractStatus();
+		PayForm payForm = contractFromDb.getPayForm();
+		PayStatus payStatus = contractFromDb.getPayStatus();
+
+		PaginationParams paginationParams = new PaginationParams();
+		paginationParams.setLimit(5);
+		paginationParams.setOffset(0);
+
+		SortingParams sortingParams = new SortingParams();
+		sortingParams.setContractSortColumn(ContractColumnNamesForSortingParams.creation_date);
+
+		sortingParams.setSortOrder(OrderDirectionForSortingParams.desc);
+
+		filter.setCustomerId(customerId);
+		filter.setCustomerLastName(customerLastName);
+		filter.setCustomerCompany(customerCompany);
+		filter.setCustomerType(customerType);
+
+		filter.setManagerId(managerId);
+		filter.setManagerLastName(managerLastName);
+
+		filter.setCreatedFROM(createdFROM);
+		filter.setCreatedTO(createdTO);
+		filter.setAmountMIN(amountMIN);
+		filter.setAmountMAX(amountMAX);
+		filter.setContractStatus(contractStatus);
+		filter.setPayForm(payForm);
+		filter.setPayStatus(payStatus);
+
+		filter.setPaginationParams(paginationParams);
+		filter.setSortingParams(sortingParams);
+
+		commonInfos = service.getCommonInfoFiltered(filter);
+
+		for (ContractCommonInfo instance : commonInfos) {
+			Assert.notNull(instance, "instance must not be empty");
+
+			Assert.isTrue(instance.getContractId() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getContractStatus() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCreated() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerCompanyName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getCustomerType() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getManagerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getManagerLastName() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getPayForm() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getPayStatus() != null, "columns values must not by empty");
+			Assert.isTrue(instance.getTotalAmount() != null, "columns values must not by empty");
+
+		}
+		LOGGER.debug("Finish  getCommonInfoFilteredTest method");
 	}
 
 	@Test

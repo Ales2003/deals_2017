@@ -2,7 +2,9 @@ package ru.mail.ales2003.deals2017.dao.api.filters;
 
 public class SortingParams {
 
-	private ItemColumnNamesForSortingParams sortColumn;
+	private ItemColumnNamesForSortingParams itemSortColumn;
+
+	private ContractColumnNamesForSortingParams contractSortColumn;
 
 	private OrderDirectionForSortingParams sortOrder;
 
@@ -10,15 +12,23 @@ public class SortingParams {
 	 * @return the sortColumn
 	 */
 	public ItemColumnNamesForSortingParams getSortColumn() {
-		return sortColumn;
+		return itemSortColumn;
 	}
 
 	/**
 	 * @param sortColumn
 	 *            the sortColumn to set
 	 */
-	public void setSortColumn(ItemColumnNamesForSortingParams sortColumn) {
-		this.sortColumn = sortColumn;
+	public void setSortColumn(ItemColumnNamesForSortingParams itemSortColumn) {
+		this.itemSortColumn = itemSortColumn;
+	}
+
+	public ContractColumnNamesForSortingParams getContractSortColumn() {
+		return contractSortColumn;
+	}
+
+	public void setContractSortColumn(ContractColumnNamesForSortingParams contractSortColumn) {
+		this.contractSortColumn = contractSortColumn;
 	}
 
 	/**
@@ -36,14 +46,10 @@ public class SortingParams {
 		this.sortOrder = sortOrder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "SortingParams [sortColumn=" + sortColumn + ", sortOrder=" + sortOrder + "]";
+		return "SortingParams [itemSortColumn=" + itemSortColumn + ", contractSortColumn=" + contractSortColumn
+				+ ", sortOrder=" + sortOrder + "]";
 	}
 
 }

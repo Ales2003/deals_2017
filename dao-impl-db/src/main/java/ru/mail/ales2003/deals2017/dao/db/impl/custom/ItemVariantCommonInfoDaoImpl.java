@@ -56,11 +56,11 @@ public class ItemVariantCommonInfoDaoImpl implements IItemVariantCommonInfoDao {
 
 	@Override
 	public List<ItemVariantCommonInfo> getCommonInfoForAll() {
-		final String READ_BY_ID_SQL = "select v.id as id, i.name as name, i.description as description, v.variant_price as price"
+		final String READ_ALL_SQL = "select v.id as id, i.name as name, i.description as description, v.variant_price as price"
 				+ " from item_variant as v left join item as i on i.id=v.item_id";
 
 		try {
-			List<ItemVariantCommonInfo> commonInfos = jdbcTemplate.query(READ_BY_ID_SQL,
+			List<ItemVariantCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL,
 					new ItemVariantCommonInfoMapper());
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", itemVariantClassName,
 					commonInfos.size());

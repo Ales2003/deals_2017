@@ -1,31 +1,43 @@
 package ru.mail.ales2003.deals2017.dao.api.filters;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
+import ru.mail.ales2003.deals2017.datamodel.CustomerType;
+import ru.mail.ales2003.deals2017.datamodel.PayForm;
+import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 
 public interface IContractFilter extends IDealsFilter {
 
-	/**
-	 * @param itemVariantName
-	 *            the name of item variant to set
-	 */
-	public void setItemVariantName(String itemVariantName);
+	// setters about customer
+	public void setCustomerId(Integer customerId);
 
-	/**
-	 * @param itemVariantPriceMIN
-	 *            the price of item variant to set
-	 */
-	public void setItemVariantPriceMIN (BigDecimal itemVariantPriceMIN);
-	
-	/**
-	 * @param itemVariantPriceMAX
-	 *            the price of item variant to set
-	 */
-	public void setItemVariantPriceMAX (BigDecimal itemVariantPriceMAX);
+	public void setCustomerLastName(String customerLastName);
 
-	/**
-	 * @param itemVariantDescription
-	 *            the the description of item variant to set
-	 */
-	public void setItemVariantDescription(String itemVariantDescription);
+	public void setCustomerCompany(String customerCompany);
+
+	public void setCustomerType(CustomerType customerType);
+
+	// setters about manager
+	public void setManagerId(Integer managerId);
+
+	public void setManagerLastName(String managerLastName);
+
+	// setters about contract
+
+	public void setCreatedFROM(Timestamp createdFROM);
+
+	public void setCreatedTO(Timestamp createdTO);
+
+	public void setAmountMIN(BigDecimal amountMIN);
+
+	public void setAmountMAX(BigDecimal amountMAX);
+
+	public void setContractStatus(ContractStatus contractStatus);
+
+	public void setPayForm(PayForm payForm);
+
+	public void setPayStatus(PayStatus payStatus);
 
 }

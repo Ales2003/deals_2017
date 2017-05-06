@@ -108,7 +108,7 @@ public class ItemVariantCommonInfoFilter implements IItemVariantFilter {
 	public void filterInitialize() {
 
 		StringBuilder sqlWhereBuilder = new StringBuilder("");
-
+		//!!!Does not accept pseudonyms of columns (...as []) - only name, maximum [table_alias].[column_name]
 		if (itemVariantName != null) {
 			sqlWhereFragmentsAndList.add("name = ? ");
 			// sqlWhereFragmentsAndList.add("name like ? ");

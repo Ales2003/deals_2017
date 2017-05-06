@@ -61,15 +61,53 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 	}
 
 	@Override
-	public List<ContractCommonInfo> getCommonInfoFiltered(IContractFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ContractCommonInfo> getCommonInfoForAll() {
+		final String READ_ALL_SQL = "select c.id as contract_id, c.created as creation_date,"
+				+ " c.contract_status as status, c.pay_form as pay_form, c.pay_status as pay_status, c.total_price as total_amount,"
+				+ " customer_group.name as customer_type, c.customer_id as customer_id,"
+				+ " customer.last_name as customer_name, customer.company_name as customer_company,"
+				+ " customer.manager_id, manager.last_name as manager_name from contract as c"
+				+ " left join customer on c.customer_id=customer.id"
+				+ " left join manager on customer.manager_id=manager.id"
+				+ " left join customer_group on customer.customer_group_id=customer_group.id";
+
+		try {
+			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL, new ContractCommonInfoMapper());
+			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
+			return commonInfos;
+
+		} catch (EmptyResultDataAccessException e) {
+			String errMsg = String.format("Class [%s] storage returns incorrect entity count.", contractClassName);
+			LOGGER.error("Error: {}", errMsg);
+			throw e;
+		}
 	}
 
 	@Override
-	public List<ContractCommonInfo> getCommonInfoForAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ContractCommonInfo> getCommonInfoFiltered(IContractFilter filter) {
+		IContractFilter givenFilter = new ContractCommonInfoFilter();
+		givenFilter = filter;
+		givenFilter.filterInitialize();
+		LOGGER.debug("[{}] is initialized: [{}].", filterClassName, givenFilter.toString());
+		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
+		Object[] paramsArray = givenFilter.getQueryParamsArray();
+		try {
+			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
+					new ContractCommonInfoMapper());
+			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
+			if (commonInfos.size() == 0) {
+				String errMsg = String.format("[%s] entities storage is epty", contractClassName);
+				LOGGER.error("Error: {}", errMsg);
+				// throw new EmptyResultDataAccessException(1);
+				// return null;
+				return commonInfos;
+			} else {
+				return commonInfos;
+			}
+		} catch (EmptyResultDataAccessException e) {
+			String errMsg = String.format("Class [%s]. Storage returns incorrect entity count.", contractClassName);
+			LOGGER.error("Error: {}", errMsg);
+			throw e;
+		}
 	}
-
 }

@@ -49,14 +49,34 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 	@Override
 	public List<ContractCommonInfo> getCommonInfoForAll() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ContractCommonInfo> entities = commonInfoDao.getCommonInfoForAll();
+		if (entities == null) {
+			String errMsg = String.format("[%s] entities storage is epty", contractClassName);
+			LOGGER.error("Error: {}", errMsg);
+			// return null;
+		}
+		LOGGER.info("{} entities storage returns {} entities: ", contractClassName, entities.size());
+		LOGGER.info("Read all {} entities with common info: ", contractClassName);
+		for (ContractCommonInfo cI : entities) {
+			LOGGER.info("{} entity = {}", commonInfoClassName, cI.toString());
+		}
+		return entities;
 	}
 
 	@Override
 	public List<ContractCommonInfo> getCommonInfoFiltered(IContractFilter filter) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ContractCommonInfo> entities = commonInfoDao.getCommonInfoFiltered(filter);
+		if (entities == null) {
+			String errMsg = String.format("[%s] entities storage is epty", contractClassName);
+			LOGGER.error("Error: {}", errMsg);
+			// return null;
+		}
+		LOGGER.info("{} entities storage returns {} entities: ", contractClassName, entities.size());
+		LOGGER.info("Read all {} entities with common info with filter: {}", contractClassName, filter.toString());
+		for (ContractCommonInfo cI : entities) {
+			LOGGER.info("{} entity = {}", commonInfoClassName, cI.toString());
+		}
+		return entities;
 	}
 
 	@Override
