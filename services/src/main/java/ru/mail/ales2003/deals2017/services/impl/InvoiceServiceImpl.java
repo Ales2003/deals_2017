@@ -98,8 +98,25 @@ public class InvoiceServiceImpl implements IInvoiceService {
 
 	@Override
 	public Invoice getInvoice(Integer contractId) {
-		// TODO Auto-generated method stub
-		return null;
+		if (commonInfoDao.getCommonInfo(contractId) == null || detailsDao.getDetails(contractId) == null) {
+			String errMsg = String.format("[%s] entity with id = [%s] don't exist in storage", contractClassName,
+					contractId);
+			LOGGER.error("Error: {}", errMsg);
+			throw new IllegalArgumentException(errMsg);
+		} else {
+			LOGGER.info("Read specification of {} with id = {} with basic info and details: ", contractClassName,
+					contractId);
+			Invoice invoice = new Invoice();
+			invoice.setCommonInfo(commonInfoDao.getCommonInfo(contractId));
+			invoice.setDetails(detailsDao.getDetails(contractId));
+			LOGGER.info("Specification is created: ");
+
+			LOGGER.info("Common info of {} = {} ", contractClassName, invoice.getCommonInfo().toString());
+			for (ContractDetail i : invoice.getDetails()) {
+				LOGGER.info("Detail of {} = {}", i.toString());
+			}
+			return invoice;
+		}
 	}
 
 }

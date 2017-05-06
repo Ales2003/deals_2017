@@ -2,6 +2,7 @@ package ru.mail.ales2003.deals2017.services;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,6 @@ import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.Invoice;
 import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
-import ru.mail.ales2003.deals2017.dao.api.filters.IContractFilter;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
@@ -336,6 +336,24 @@ public class InvoiceServiceTest extends AbstractTest {
 					"columns values must not by empty");
 		}
 		LOGGER.debug("Finish  getDetailsTest method");
+	}
+
+	@Test
+	public void getInvoiceTest() {
+		LOGGER.debug("Start getInvoiceTest method");
+		commonInfo = service.getCommonInfo(contractFromDb.getId());
+		details = new ArrayList<>();
+		details = service.getDetails(contractFromDb.getId());
+		invoice = new Invoice();
+		invoice.setCommonInfo(commonInfo);
+		invoice.setDetails(details);
+		LOGGER.debug("Invoice is created: {}", invoice.toString());
+		Assert.notNull(invoice, "instance must be saved");
+
+		Assert.isTrue((invoice.getCommonInfo() != null) && (invoice.getDetails() != null),
+				"columns values must not by empty");
+
+		LOGGER.debug("Finish  getInvoiceTest method");
 	}
 
 	/*
