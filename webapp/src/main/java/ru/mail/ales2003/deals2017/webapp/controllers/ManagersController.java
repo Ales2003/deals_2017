@@ -153,7 +153,7 @@ public class ManagersController {
 				|| authorisedUserRole.equals(Role.ITEM_MANAGER) || authorisedUserRole.equals(Role.REVENUE_MANAGER)))
 				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
-					"No access rights. Access is available only to users: %s (for SALES_MANAGERS only own profile is available).",
+					"No access rights. Access is available only to users: %s (for SALES-, REVENUE- and ITEM-MANAGERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
@@ -260,7 +260,7 @@ public class ManagersController {
 				|| authorisedUserRole.equals(Role.ITEM_MANAGER) || authorisedUserRole.equals(Role.REVENUE_MANAGER)))
 				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
-					"No access rights. Access is available only to users: %s (for SALES_MANAGERS only own profile is available).",
+					"No access rights. Access is available only to users: %s (for SALES-, REVENUE- and ITEM-MANAGERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}

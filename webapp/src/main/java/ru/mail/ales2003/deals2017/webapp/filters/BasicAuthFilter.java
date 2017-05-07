@@ -45,8 +45,9 @@ public class BasicAuthFilter implements Filter {
 
 	private static JedisCache cache = new JedisCache();// = new
 														// JedisCache();
-
-	private int cashingTimeInSec = 30;
+//To avoid problems in jmeter I need a  short cache
+	//usually it can by 30s 
+	private int cashingTimeInSec = 1;
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
@@ -100,6 +101,7 @@ public class BasicAuthFilter implements Filter {
 		LOGGER.info("Length of JedisCache [{}] = [{}].", username, cache.getLength(username));
 
 		// query to cashe
+	/* FOR JMETER
 		if (cache.isExistInCache(username)) {
 			LOGGER.info("Fortunately, the JedisCache stores the requested data.");
 			Integer idFromCashe = cache.getIdFromCache(username);
@@ -111,8 +113,11 @@ public class BasicAuthFilter implements Filter {
 			userRoleFromStorage = roleFromCashe;
 
 			// query to DB
-		} else {
-			LOGGER.info("Unfortunately, the JedisCache does not store the requested data.");
+		} else
+		
+		FOR JMETER*/
+		{
+			LOGGER.info("Unfortunately, the JedisCache does not store the requested data. We are going to the DataBase. ");
 
 			// from local Map<String, Integer> USERS_DB
 			// Integer userIdFromDB = USERS_DB.get(username);
@@ -123,7 +128,7 @@ public class BasicAuthFilter implements Filter {
 			userIdFromStorage = userIdFromDB;
 
 			Role roleFromDB = service.getByLogin(username).getRole();
-			LOGGER.info("Getting userRole  = [{}] by username [{}] from Jedis Cache.", roleFromDB, username);
+			LOGGER.info("Getting userRole  = [{}] by username [{}] from DataBase.", roleFromDB, username);
 			userRoleFromStorage = roleFromDB;
 
 			// TODO query to DB instead of MAP

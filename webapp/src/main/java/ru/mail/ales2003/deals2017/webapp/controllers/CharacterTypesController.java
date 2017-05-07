@@ -76,9 +76,9 @@ public class CharacterTypesController {
 		String requestName = "getAll()";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
-		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
 		// Getting authorisedUserID
-		Integer authorisedUserId = userAuthStorage.getId();
+		Integer authorisedUserId = userJVMDataStorage.getId();
 		if (authorisedUserId == null) {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
@@ -86,14 +86,16 @@ public class CharacterTypesController {
 		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
 		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
-		if (authService.get(authorisedUserId).getRole() == null
-				|| !validUserRoles.contains(authService.get(authorisedUserId).getRole())) {
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format("No access rights. Access is available only to users: %s.",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
-				userAuthStorage.getId(), requestName);
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
 
 		List<CharacterType> allEntitys;
 		try {
@@ -122,9 +124,36 @@ public class CharacterTypesController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable(value = "id") Integer entityIdParam) {
 
-		UserAuthStorage userAuthStorage = context.getBean(UserAuthStorage.class);
-		LOGGER.info("User {} requests charachterType {}", userAuthStorage, entityIdParam);
-		System.out.println("===========================>>>>>>>>>>>" + userAuthStorage.getId());
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "getAll()";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
+		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
 
 		CharacterType entity = null;
 		try {
@@ -144,6 +173,38 @@ public class CharacterTypesController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody CharacterTypeModel entityModel) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "getAll()";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
+		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
 		CharacterType entity = null;
 		try {
 			entity = model2entity(entityModel);
@@ -171,15 +232,42 @@ public class CharacterTypesController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> update(@RequestBody CharacterTypeModel entityModel,
 			@PathVariable(value = "id") Integer entityIdParam) {
-		
-		
-		
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "getAll()";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
+		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
 		CharacterType entity = null;
-		
+
 		entity = service.get(entityIdParam);
-		
-		
-		
+
 		try {
 			// method toUpperCase() allows to insert in any register
 			entity.setName(Measure.valueOf(entityModel.getName().toUpperCase()));
@@ -199,6 +287,38 @@ public class CharacterTypesController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> delete(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "getAll()";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
+		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
 		service.delete(entityIdParam);
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
