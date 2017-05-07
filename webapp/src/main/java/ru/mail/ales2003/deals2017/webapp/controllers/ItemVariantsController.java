@@ -20,21 +20,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ru.mail.ales2003.deals2017.datamodel.Item;
+import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Role;
-import ru.mail.ales2003.deals2017.services.IItemService;
+import ru.mail.ales2003.deals2017.services.IItemVariantService;
 import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
-import ru.mail.ales2003.deals2017.webapp.models.ItemModel;
+import ru.mail.ales2003.deals2017.webapp.models.ItemVariantModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
-@RequestMapping("/items")
-public class ItemsController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemsController.class);
+@RequestMapping("/itemvariants")
+public class ItemVariantsController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypesController.class);
 
 	@Inject
 	private ApplicationContext context;
@@ -47,12 +46,12 @@ public class ItemsController {
 	private Translator translator;
 
 	@Inject
-	private IItemService service;
+	private IItemVariantService service;
 
 	@Inject
 	private IUserAuthService authService;
 
-	private String thisClassName = ItemsController.class.getSimpleName();
+	private String thisClassName = ItemVariantsController.class.getSimpleName();
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAll(@RequestParam(required = false) String name) {
@@ -62,11 +61,8 @@ public class ItemsController {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			//validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.ITEM_MANAGER);
-			//validUserRoles.add(Role.SALES_MANAGER);
-			//validUserRoles.add(Role.CUSTOMER);
-			//validUserRoles.add(Role.GUEST);
+
 		}
 
 		String requestName = "getAll";
@@ -95,16 +91,16 @@ public class ItemsController {
 
 		// Direct implementation of the method
 
-		List<Item> allItems;
+		List<ItemVariant> allItems;
 
-		allItems = service.getAll();
+		allItems = service.getAllItemVariants();
 
-		List<ItemModel> convertedItems = new ArrayList<>();
-		for (Item item : allItems) {
+		List<ItemVariantModel> convertedItems = new ArrayList<>();
+		for (ItemVariant item : allItems) {
 			convertedItems.add(entity2model(item));
 		}
 
-		return new ResponseEntity<List<ItemModel>>(convertedItems, HttpStatus.OK);
+		return new ResponseEntity<List<ItemVariantModel>>(convertedItems, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -114,11 +110,7 @@ public class ItemsController {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			//validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.ITEM_MANAGER);
-			//validUserRoles.add(Role.SALES_MANAGER);
-			// validUserRoles.add(Role.CUSTOMER);
-			// validUserRoles.add(Role.GUEST);
 		}
 
 		String requestName = "getById";
@@ -147,19 +139,19 @@ public class ItemsController {
 
 		// Direct implementation of the method
 
-		Item entity = null;
+		ItemVariant entity = null;
 		try {
-			entity = service.get(entityIdParam);
+			entity = service.getItemVariant(entityIdParam);
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-		ItemModel entityModel = entity2model(entity);
-		return new ResponseEntity<ItemModel>(entityModel, HttpStatus.OK);
+		ItemVariantModel entityModel = entity2model(entity);
+		return new ResponseEntity<ItemVariantModel>(entityModel, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> create(@RequestBody ItemModel entityModel) {
+	public ResponseEntity<?> create(@RequestBody ItemVariantModel entityModel) {
 
 		// Start ControllerAuthorization
 		Set<Role> validUserRoles = new HashSet<>();
@@ -194,17 +186,17 @@ public class ItemsController {
 
 		// Direct implementation of the method
 
-		Item entity = null;
+		ItemVariant entity = null;
 
 		entity = model2entity(entityModel);
 
-		service.save(entity);
+		service.saveItemVariant(entity);
 
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<?> update(@RequestBody ItemModel entityModel,
+	public ResponseEntity<?> update(@RequestBody ItemVariantModel entityModel,
 			@PathVariable(value = "id") Integer entityIdParam) {
 
 		// Start ControllerAuthorization
@@ -240,15 +232,15 @@ public class ItemsController {
 
 		// Direct implementation of the method
 
-		Item entity = null;
+		ItemVariant entity = null;
 
-		entity = service.get(entityIdParam);
+		entity = service.getItemVariant(entityIdParam);
 
-		entity.setName(entityModel.getName());
-		entity.setDescription(entityModel.getDescription());
-		entity.setBasicPrice(entityModel.getBasicPrice());
+		entity.setItemId(entityModel.getItemId());
+		entity.setVariantPrice(entityModel.getVariantPrice());
 
-		service.save(entity);
+		service.saveItemVariant(entity);
+
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
@@ -288,29 +280,31 @@ public class ItemsController {
 
 		// Direct implementation of the method
 
-		service.delete(entityIdParam);
+		service.deleteItemVariant(entityIdParam);
+
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 
 	}
 
-	private ItemModel entity2model(Item item) {
-		ItemModel itemModel = new ItemModel();
+	private ItemVariantModel entity2model(ItemVariant itemVariant) {
 
-		itemModel.setId(item.getId());
-		itemModel.setName(item.getName());
-		itemModel.setDescription(item.getDescription());
-		itemModel.setBasicPrice(item.getBasicPrice());
+		ItemVariantModel itemVariantModel = new ItemVariantModel();
 
-		return itemModel;
+		itemVariantModel.setId(itemVariant.getId());
+		itemVariantModel.setItemId(itemVariant.getItemId());
+		itemVariantModel.setVariantPrice(itemVariant.getVariantPrice());
+
+		return itemVariantModel;
 	}
 
-	private Item model2entity(ItemModel itemModel) {
-		Item item = new Item();
+	private ItemVariant model2entity(ItemVariantModel itemVariantModel) {
 
-		item.setName(itemModel.getName());
-		item.setDescription(itemModel.getDescription());
-		item.setBasicPrice(itemModel.getBasicPrice());
-		return item;
+		ItemVariant itemVariant = new ItemVariant();
+
+		itemVariant.setItemId(itemVariantModel.getItemId());
+		itemVariant.setVariantPrice(itemVariantModel.getVariantPrice());
+
+		return itemVariant;
 	}
 
 }
