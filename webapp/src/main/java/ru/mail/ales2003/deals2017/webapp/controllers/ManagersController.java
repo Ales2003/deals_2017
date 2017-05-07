@@ -137,7 +137,20 @@ public class ManagersController {
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.SALES_MANAGER)
+		// getting managerId from UserAuth Table
+		Integer managerAsUserId = null;
+		try {
+			managerAsUserId = authService.getByManagerId(entityIdParam).getId();
+		} catch (Exception e) {
+			String msg = e.getMessage();
+
+			// because we need to continue method we don't return
+			// return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		// !!! Only EQUALS!!! SALES_MANAGER, ITEM_MANAGER, REVENUE_MANAGER can
+		// get only about Thyself
+		if ((!authorisedUserId.equals(managerAsUserId) && (authorisedUserRole.equals(Role.SALES_MANAGER)
+				|| authorisedUserRole.equals(Role.ITEM_MANAGER) || authorisedUserRole.equals(Role.REVENUE_MANAGER)))
 				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
 					"No access rights. Access is available only to users: %s (for SALES_MANAGERS only own profile is available).",
@@ -224,19 +237,30 @@ public class ManagersController {
 		Integer authorisedUserId = userJVMDataStorage.getId();
 		if (authorisedUserId == null) {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
-			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+			// return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
 		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.SALES_MANAGER)
-				|| (entityIdParam != authorisedUserId && authorisedUserRole == Role.ITEM_MANAGER)
-				|| (entityIdParam != authorisedUserId && authorisedUserRole == Role.REVENUE_MANAGER)
+		// getting managerId from UserAuth Table
+		Integer managerAsUserId = null;
+		try {
+			managerAsUserId = authService.getByManagerId(entityIdParam).getId();
+		} catch (Exception e) {
+			String msg = e.getMessage();
+
+			// because we need to continue method we don't return
+			// return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		// !!! Only EQUALS!!! SALES_MANAGER, ITEM_MANAGER, REVENUE_MANAGER can
+		// get only about Thyself
+		if ((!authorisedUserId.equals(managerAsUserId) && (authorisedUserRole.equals(Role.SALES_MANAGER)
+				|| authorisedUserRole.equals(Role.ITEM_MANAGER) || authorisedUserRole.equals(Role.REVENUE_MANAGER)))
 				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
-					"No access rights. Access is available only to users: %s (for MANAGERS only own profile is available).",
+					"No access rights. Access is available only to users: %s (for SALES_MANAGERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
