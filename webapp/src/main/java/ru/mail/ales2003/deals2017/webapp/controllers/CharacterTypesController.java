@@ -67,13 +67,14 @@ public class CharacterTypesController {
 	public ResponseEntity<?> getAll() {
 
 		// Start ControllerAuthorization
+		
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
 
-		String requestName = "getAll()";
+		String requestName = "getAll";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -83,8 +84,9 @@ public class CharacterTypesController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
-		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
@@ -92,7 +94,8 @@ public class CharacterTypesController {
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -131,7 +134,7 @@ public class CharacterTypesController {
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
 
-		String requestName = "getAll()";
+		String requestName = "getById";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -141,8 +144,9 @@ public class CharacterTypesController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
-		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
@@ -150,7 +154,8 @@ public class CharacterTypesController {
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -181,7 +186,7 @@ public class CharacterTypesController {
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
 
-		String requestName = "getAll()";
+		String requestName = "create";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -191,8 +196,9 @@ public class CharacterTypesController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
-		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
@@ -200,7 +206,8 @@ public class CharacterTypesController {
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -240,7 +247,7 @@ public class CharacterTypesController {
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
 
-		String requestName = "getAll()";
+		String requestName = "update";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -250,8 +257,9 @@ public class CharacterTypesController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
-		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
@@ -259,7 +267,8 @@ public class CharacterTypesController {
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -295,7 +304,7 @@ public class CharacterTypesController {
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
 
-		String requestName = "getAll()";
+		String requestName = "delete";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -305,8 +314,9 @@ public class CharacterTypesController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User with id = [{}] makes requests [{}] in [{}]", authorisedUserId, requestName, thisClassName);
-		LOGGER.info("UserAuthorizationin {}: Verification of access rights.", thisClassName);
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
@@ -314,7 +324,8 @@ public class CharacterTypesController {
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes requests = {}", thisClassName,
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method

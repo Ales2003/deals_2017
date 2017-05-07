@@ -88,8 +88,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -148,8 +148,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -195,8 +195,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -242,8 +242,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -293,8 +293,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -344,8 +344,8 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
