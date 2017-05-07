@@ -50,7 +50,7 @@ public class CustomerGroupsContoller {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
 			validUserRoles.add(Role.GUEST);
 		}
@@ -108,7 +108,7 @@ public class CustomerGroupsContoller {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
 		}
 
@@ -157,7 +157,7 @@ public class CustomerGroupsContoller {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 		}
 
 		String requestName = "create";
@@ -214,7 +214,7 @@ public class CustomerGroupsContoller {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 		}
 
 		String requestName = "update";

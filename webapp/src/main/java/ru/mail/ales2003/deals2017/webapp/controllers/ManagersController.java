@@ -61,7 +61,7 @@ public class ManagersController {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 		}
 
 		String requestName = "getAll";
@@ -117,7 +117,7 @@ public class ManagersController {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
 			validUserRoles.add(Role.ITEM_MANAGER);
 		}
@@ -213,7 +213,7 @@ public class ManagersController {
 			validUserRoles.add(Role.ADMIN);
 			validUserRoles.add(Role.ITEM_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
-			validUserRoles.add(Role.REVENEUE_MANAGER);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 		}
 
 		String requestName = "update";
@@ -233,7 +233,7 @@ public class ManagersController {
 		Role authorisedUserRole = userJVMDataStorage.getRole();
 		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.SALES_MANAGER)
 				|| (entityIdParam != authorisedUserId && authorisedUserRole == Role.ITEM_MANAGER)
-				|| (entityIdParam != authorisedUserId && authorisedUserRole == Role.REVENEUE_MANAGER)
+				|| (entityIdParam != authorisedUserId && authorisedUserRole == Role.REVENUE_MANAGER)
 				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
 					"No access rights. Access is available only to users: %s (for MANAGERS only own profile is available).",
@@ -306,12 +306,26 @@ public class ManagersController {
 			String msg = String.format("Preparation before DELETE: %s", e.getMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		// checking of exist account in AuthorisationService
-		if (authService.getByManagerId(entityIdParam) != null) {
+
+		try {
+			authService.getByManagerId(entityIdParam);
 			UserAuth userAuth = authService.getByManagerId(entityIdParam);
+			// delete userAuth account in AuthorisationService
 			authService.delete(userAuth.getId());
+		} catch (IllegalArgumentException e) {
+			LOGGER.info("Deleted manager with id = [{}] doesn't have authData. ", entityIdParam);
 		}
 
+		/*
+		 * // checking of exist account in AuthorisationService if
+		 * (authService.getByManagerId(entityIdParam) != null) { UserAuth
+		 * userAuth = authService.getByManagerId(entityIdParam); // delete
+		 * userAuth account in AuthorisationService
+		 * authService.delete(userAuth.getId()); }
+		 * 
+		 */
+
+		// delete Manager account in ManagerService
 		service.delete(entityIdParam);
 
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
@@ -687,8 +701,8 @@ public class ManagersController {
 
 	private UserAuth dataModel2data(UserAuthModel dataModel) {
 		UserAuth data = new UserAuth();
-		//data.setInOwnTableId(dataModel.getInOwnTableId());
-		data.setRole(Role.valueOf(dataModel.getRole()));
+		// data.setInOwnTableId(dataModel.getInOwnTableId());
+		data.setRole(Role.valueOf(dataModel.getRole().toUpperCase()));
 		data.setLogin(dataModel.getLogin());
 		data.setPassword(dataModel.getPassword());
 		return data;

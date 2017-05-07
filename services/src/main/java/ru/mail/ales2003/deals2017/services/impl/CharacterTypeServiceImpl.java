@@ -67,11 +67,19 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 				throw new DuplicationKeyInformationException(errMsg);
 			}
 
-			
-
 			characterTypeDao.insert(entity);
 			LOGGER.info("Inserted new {} entity: {}", className, entity.toString());
 		} else {
+			LOGGER.info("Refreshing CharacteTypeSet");
+			refreshCharacterTypeSet();
+
+			if (isExist(entity)) {
+				String errMsg = String.format("You want to update [%s] entity with name [%s]. But such exist already.",
+						className, entity.getName().name());
+				LOGGER.error("Error: Warning: {}", errMsg);
+				throw new DuplicationKeyInformationException(errMsg);
+			}
+
 			characterTypeDao.update(entity);
 			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
@@ -127,9 +135,12 @@ public class CharacterTypeServiceImpl implements ICharacterTypeService {
 	public boolean isExist(CharacterType entity) {
 		Boolean isExist = false;
 		String word = entity.getName().name();
+		LOGGER.info("Checing of existing {} entity with value: {}", className, word);
 		if (isExist = characterTypeSet.contains(word)) {
+			LOGGER.info("Entity with value {} exist i nstorage", word);
 			return isExist;
 		}
+		LOGGER.info("Entity with value {} doesn't exist i nstorage", word);
 		return isExist;
 	}
 

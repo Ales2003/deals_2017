@@ -198,7 +198,7 @@ public class UserAuthServiceTest extends AbstractTest {
 
 		modifiedInstance = service.get(instance_1.getId());
 		// id in own table must be not changed!!!
-		modifiedInstance.setRole(Role.REVENEUE_MANAGER);
+		modifiedInstance.setRole(Role.REVENUE_MANAGER);
 		modifiedInstance.setLogin("r_manager");
 		modifiedInstance.setPassword("r_password");
 
