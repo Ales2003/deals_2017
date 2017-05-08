@@ -46,7 +46,7 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
  */
 @RestController
 @RequestMapping("/itemspecifications")
-public class ItemVariantSpecificationsController {
+public class ItemSpecificationsController {
 
 	@Inject
 	private ApplicationContext context;
@@ -57,9 +57,9 @@ public class ItemVariantSpecificationsController {
 	@Inject
 	private IUserAuthService authService;
 
-	private String thisClassName = ItemVariantSpecificationsController.class.getSimpleName();
+	private String thisClassName = ItemSpecificationsController.class.getSimpleName();
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantSpecificationsController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ItemSpecificationsController.class);
 
 	private String className = ItemVariant.class.getSimpleName();
 

@@ -73,7 +73,7 @@ public class ContractsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -84,8 +84,8 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -131,7 +131,7 @@ public class ContractsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 
@@ -147,33 +147,50 @@ public class ContractsController {
 			String msg = e.getMessage();
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-		Integer customerId = entity.getCustomerId();
-		Integer customerAsUserId = authService.getByCustomerId(customerId).getId();
-		/*
-		 * System.out.println("authorisedUserId " + authorisedUserId);
-		 * System.out.println("customerAsUserId " + customerAsUserId);
-		 * System.out.println("authorisedUserRol e" + authorisedUserRole);
-		 * System.out.println("Role.CUSTOMER " + Role.CUSTOMER);
-		 */
-		Boolean isIdEq = customerAsUserId.equals(authorisedUserId);
-		Boolean roleEq = authorisedUserRole.equals(Role.CUSTOMER);
-		Boolean dataEq = isIdEq && roleEq;
 
-		Boolean b = (isIdEq || authorisedUserRole == null || validUserRoles.contains(authorisedUserRole));
-		/*
-		 * System.out.println("isIdEq " + isIdEq); System.out.println("roleEq "
-		 * + roleEq); System.out.println("dataEq " + dataEq);
-		 * System.out.println("b " + b);
-		 */
-		if (!b) {
-			String msg = String.format(
-					"No access rights. Access is available only to users: %s (for CUSTOMERS only own profile is available).",
+		// in course user!=customer, but manager
+		if (authorisedUserRole.equals(Role.CUSTOMER)) {
+
+			Integer customerId = null;
+			Integer customerAsUserId = null;
+
+			customerId = entity.getCustomerId();
+			customerAsUserId = authService.getByCustomerId(customerId).getId();
+
+			/*
+			 * System.out.println("authorisedUserId " + authorisedUserId);
+			 * System.out.println("customerAsUserId " + customerAsUserId);
+			 * System.out.println("authorisedUserRol e" + authorisedUserRole);
+			 * System.out.println("Role.CUSTOMER " + Role.CUSTOMER);
+			 */
+			Boolean isIdEq = customerAsUserId.equals(authorisedUserId);
+			Boolean roleEq = authorisedUserRole.equals(Role.CUSTOMER);
+			Boolean dataEq = isIdEq && roleEq;
+
+			Boolean b = (isIdEq || authorisedUserRole == null || validUserRoles.contains(authorisedUserRole));
+			/*
+			 * System.out.println("isIdEq " + isIdEq);
+			 * System.out.println("roleEq " + roleEq);
+			 * System.out.println("dataEq " + dataEq); System.out.println("b " +
+			 * b);
+			 */
+			if (!b) {
+				String msg = String.format(
+						"No access rights. Access is available only to users: %s (for CUSTOMERS only own profile is available).",
+						EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+				return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+			}
+
+			// in course user EQUALS customer
+		} else if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
+
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -202,7 +219,7 @@ public class ContractsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -213,8 +230,8 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -258,7 +275,7 @@ public class ContractsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -270,8 +287,8 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 
@@ -333,7 +350,7 @@ public class ContractsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -344,8 +361,8 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} and role = {} makes requests = {}",
-				thisClassName, authorisedUserId, authorisedUserRole, requestName);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
 

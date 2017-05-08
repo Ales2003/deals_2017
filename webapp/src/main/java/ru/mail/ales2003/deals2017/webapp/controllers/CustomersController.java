@@ -77,7 +77,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -88,7 +88,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -135,7 +135,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -148,7 +148,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -184,7 +184,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -195,7 +195,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -230,7 +230,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -242,7 +242,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -282,7 +282,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -293,7 +293,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
@@ -333,7 +333,7 @@ public class CustomersController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -344,7 +344,7 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
