@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
+import ru.mail.ales2003.deals2017.datamodel.ItemVariantInContract;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.datamodel.Role;
@@ -33,6 +34,7 @@ import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.ContractModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
+import ru.mail.ales2003.deals2017.webapp.models.ItemVariantInContractModel;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
@@ -244,7 +246,7 @@ public class ContractsController {
 					entityModel.getPayForm(), EnumArrayToMessageConvertor.payFormArrayToMessage());
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
-
+		// if customer doesn't give his own id, this id we get from storage
 		if (entity.getCustomerId() == null) {
 			Integer customerIdInContract = authService.get(authorisedUserId).getInOwnTableId();
 			entity.setCustomerId(customerIdInContract);
@@ -377,6 +379,61 @@ public class ContractsController {
 		service.deleteContract(entityIdParam);
 
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<?> addItemToContract(@RequestBody ItemVariantInContractModel entityModel) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+		}
+
+		String requestName = "addItemToContract";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		ItemVariantInContract entity = null;
+
+		entity = itemInContractl2itemInContract(entityModel);
+
+		service.saveItemVariantInContract(entity);
+
+		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
+	}
+
+	private ItemVariantInContract itemInContractl2itemInContract(ItemVariantInContractModel entityModel) {
+		ItemVariantInContract entity = new ItemVariantInContract();
+		entity.setQuantity(entityModel.getQuantity());
+		entity.setContractId(entityModel.getContractId());
+		entity.setItemVariantId(entityModel.getItemVariantId());
+
+		return entity;
 	}
 
 	private ContractModel entity2model(Contract entity) {

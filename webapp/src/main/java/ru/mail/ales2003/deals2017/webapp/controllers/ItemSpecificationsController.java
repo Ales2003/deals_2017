@@ -319,7 +319,7 @@ public class ItemSpecificationsController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getItemVariantSpecificationById(@PathVariable(value = "id") Integer entityIdParam) {
+	public ResponseEntity<?> getItemSpecificationById(@PathVariable(value = "id") Integer entityIdParam) {
 
 		// Start ControllerAuthorization
 
