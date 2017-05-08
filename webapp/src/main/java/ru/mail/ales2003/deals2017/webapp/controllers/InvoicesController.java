@@ -17,12 +17,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ContractDetail;
+import ru.mail.ales2003.deals2017.dao.api.customentities.Invoice;
 import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
@@ -38,6 +41,8 @@ import ru.mail.ales2003.deals2017.services.IInvoiceService;
 import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.ContractCommonInfoModel;
+import ru.mail.ales2003.deals2017.webapp.models.ContractDetailModel;
+import ru.mail.ales2003.deals2017.webapp.models.InvoiceModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
@@ -272,15 +277,205 @@ public class InvoicesController {
 		return new ResponseEntity<List<ContractCommonInfoModel>>(convertedCommonInfos, HttpStatus.OK);
 	}
 
-	private Timestamp fromStringToTimestamp(String date) throws Exception {
-		Timestamp timestamp = null;
+	@RequestMapping(value = "/commoninfos/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getCommonInfoById(@PathVariable(value = "id") Integer entityIdParam) {
 
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-		Date parsedDate = dateFormat.parse(date);
-		timestamp = new java.sql.Timestamp(parsedDate.getTime());
+		// Start ControllerAuthorization
 
-		return timestamp;
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
 
+		}
+
+		String requestName = "getCommonInfoById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		ContractCommonInfo entity = null;
+		try {
+			entity = service.getCommonInfo(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (entity == null) {
+			String msg = String.format("Information about the requested products is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		ContractCommonInfoModel model = commonInfo2model(entity);
+
+		return new ResponseEntity<ContractCommonInfoModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getDetailsById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.ITEM_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+			validUserRoles.add(Role.GUEST);
+
+		}
+
+		String requestName = "getDetailsById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		List<ContractDetail> details = null;
+		try {
+			details = service.getDetails(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (details == null) {
+			String msg = String.format("Information about the requested invoice is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		List<ContractDetailModel> detailsModel = new ArrayList<>();
+		for (ContractDetail detail : details) {
+			detailsModel.add(detail2detailModel(detail));
+		}
+
+		return new ResponseEntity<List<ContractDetailModel>>(detailsModel, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getInvoiceById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+		}
+
+		String requestName = "getCommonInfoById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		Invoice entity = null;
+		try {
+			entity = service.getInvoice(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (entity == null) {
+			String msg = String.format("Information about the requested invoice is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		InvoiceModel model = invoice2model(entity);
+
+		return new ResponseEntity<InvoiceModel>(model, HttpStatus.OK);
+	}
+
+	private InvoiceModel invoice2model(Invoice invoice) {
+
+		InvoiceModel model = new InvoiceModel();
+
+		ContractCommonInfo commonInfo = invoice.getCommonInfo();
+		ContractCommonInfoModel commonInfoModel = commonInfo2model(commonInfo);
+
+		List<ContractDetailModel> detailModels = new ArrayList<>();
+		List<ContractDetail> details = invoice.getDetails();
+		for (ContractDetail detail : details) {
+			detailModels.add(detail2detailModel(detail));
+		}
+
+		model.setInvoiceNumber(invoice.getInvoiceNumber());
+		model.setCommonInfo(commonInfoModel);
+		model.setDetails(detailModels);
+
+		return model;
 	}
 
 	private ContractCommonInfoModel commonInfo2model(ContractCommonInfo commonInfo) {
@@ -307,11 +502,35 @@ public class InvoicesController {
 		// Translator.translate(commonInfo.getItemName(), locale);
 	}
 
+	private ContractDetailModel detail2detailModel(ContractDetail detail) {
+
+		ContractDetailModel detailModel = new ContractDetailModel();
+		detailModel.setContractId(detail.getContractId());
+		detailModel.setItemVariantId(detail.getItemVariantId());
+		detailModel.setItemName(detail.getItemName());
+		detailModel.setItemVariantPrice(detail.getItemVariantPrice());
+		detailModel.setItemVariantQuantity(detail.getItemVariantQuantity());
+		detailModel.setItemVariantTotalPrice(detail.getItemVariantTotalPrice());
+
+		return detailModel;
+	}
+
 	private String timestamp2String(Timestamp tstmp) {
 		Date date = new Date(tstmp.getTime());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String string = dateFormat.format(date);
 		return string;
+
+	}
+
+	private Timestamp fromStringToTimestamp(String date) throws Exception {
+		Timestamp timestamp = null;
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Date parsedDate = dateFormat.parse(date);
+		timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
+		return timestamp;
 
 	}
 

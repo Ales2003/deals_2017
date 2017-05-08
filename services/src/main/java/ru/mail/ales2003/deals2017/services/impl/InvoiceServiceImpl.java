@@ -109,6 +109,7 @@ public class InvoiceServiceImpl implements IInvoiceService {
 			Invoice invoice = new Invoice();
 			invoice.setCommonInfo(commonInfoDao.getCommonInfo(contractId));
 			invoice.setDetails(detailsDao.getDetails(contractId));
+			invoice.setInvoiceNumber(contractId);
 			LOGGER.info("Specification is created: ");
 
 			LOGGER.info("Common info of {} = {} ", contractClassName, invoice.getCommonInfo().toString());
