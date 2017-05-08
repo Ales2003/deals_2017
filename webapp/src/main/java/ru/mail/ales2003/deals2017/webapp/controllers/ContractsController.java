@@ -150,7 +150,7 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		// in course user!=customer, but manager
+		// in course user EQUALS customer
 		if (authorisedUserRole.equals(Role.CUSTOMER)) {
 
 			Integer customerId = null;
@@ -183,7 +183,7 @@ public class ContractsController {
 				return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 			}
 
-			// in course user EQUALS customer
+			// in course user IS NOT customer
 		} else if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format("No access rights. Access is available only to users: %s.",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
@@ -381,7 +381,7 @@ public class ContractsController {
 		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/items", method = RequestMethod.POST)
 	public ResponseEntity<?> addItemToContract(@RequestBody ItemVariantInContractModel entityModel) {
 
 		// Start ControllerAuthorization
@@ -420,11 +420,120 @@ public class ContractsController {
 
 		ItemVariantInContract entity = null;
 
+		if ((entityModel.getContractId() == null) || (entityModel.getItemVariantId() == null)) {
+			String msg = "You must provide the contract id and itemVariant id.";
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
 		entity = itemInContractl2itemInContract(entityModel);
 
 		service.saveItemVariantInContract(entity);
 
 		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/items/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateItemInContract(@RequestBody ItemVariantInContractModel entityModel,
+			@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+		}
+
+		String requestName = "updateItemInContract";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format(
+					"No access rights. Access is available only to users: %s (for MANAGERS only own profile is available).",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		ItemVariantInContract entity = null;
+
+		try {
+			entity = service.getItemVariantInContract(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		entity.setQuantity(entityModel.getQuantity());
+
+		service.saveItemVariantInContract(entity);
+
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/items/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteItemFromContract(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.SALES_MANAGER);
+		}
+
+		String requestName = "deleteItemFromContract";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (!validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s).",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		// checking of existing
+		try {
+			service.getItemVariantInContract(entityIdParam);
+		} catch (IllegalArgumentException | EmptyResultDataAccessException e) {
+			String msg = String.format("Preparation before DELETE: %s", e.getMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		service.deleteItemVariantInContract(entityIdParam);
+
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
 	}
 
 	private ItemVariantInContract itemInContractl2itemInContract(ItemVariantInContractModel entityModel) {
