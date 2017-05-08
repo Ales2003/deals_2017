@@ -1,7 +1,7 @@
 package ru.mail.ales2003.deals2017.webapp.models;
 
 public class ItemVariantDetailModel {
-	
+
 	private String attributeName;
 
 	private String attributeValue;
@@ -16,7 +16,8 @@ public class ItemVariantDetailModel {
 	}
 
 	/**
-	 * @param attributeName the attributeName to set
+	 * @param attributeName
+	 *            the attributeName to set
 	 */
 	public void setAttributeName(String attributeName) {
 		this.attributeName = attributeName;
@@ -30,7 +31,8 @@ public class ItemVariantDetailModel {
 	}
 
 	/**
-	 * @param attributeValue the attributeValue to set
+	 * @param attributeValue
+	 *            the attributeValue to set
 	 */
 	public void setAttributeValue(String attributeValue) {
 		this.attributeValue = attributeValue;
@@ -44,12 +46,17 @@ public class ItemVariantDetailModel {
 	}
 
 	/**
-	 * @param attributeMeasure the attributeMeasure to set
+	 * @param attributeMeasure
+	 *            the attributeMeasure to set
 	 */
 	public void setAttributeMeasure(String attributeMeasure) {
 		this.attributeMeasure = attributeMeasure;
 	}
 
-	
-	
+	@Override
+	public String toString() {
+		return "ItemVariantDetailModel [attributeName=" + attributeName + ", attributeValue=" + attributeValue
+				+ ", attributeMeasure=" + attributeMeasure + "]";
+	}
+
 }

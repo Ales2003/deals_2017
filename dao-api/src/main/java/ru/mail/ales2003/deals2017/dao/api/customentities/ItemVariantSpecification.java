@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ItemVariantSpecification {
 
+	//id of ItemVariant
 	private Integer id;
 
 	private ItemVariantCommonInfo info;

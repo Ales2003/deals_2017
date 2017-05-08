@@ -97,7 +97,6 @@ public class ItemVariantSpecificationServiceImpl implements IItemVariantSpecific
 		}
 	}
 
-
 	@Override
 	public ItemVariantSpecification getSpecification(Integer itemVariantId) {
 		if (commonInfoDao.getCommonInfo(itemVariantId) == null || detailsDao.getDetails(itemVariantId) == null) {
@@ -111,6 +110,7 @@ public class ItemVariantSpecificationServiceImpl implements IItemVariantSpecific
 			ItemVariantSpecification specification = new ItemVariantSpecification();
 			specification.setInfo(commonInfoDao.getCommonInfo(itemVariantId));
 			specification.setDetails(detailsDao.getDetails(itemVariantId));
+			specification.setId(itemVariantId);
 			LOGGER.info("Specification is created: ");
 
 			LOGGER.info("Common info of {} = {} ", itemVariantClassName, specification.getInfo().toString());

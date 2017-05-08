@@ -3,51 +3,55 @@ package ru.mail.ales2003.deals2017.webapp.models;
 import java.util.List;
 
 public class ItemVariantSpecificationModel {
-	private ItemVariantCommonInfoModel basicInfoModel;
-	//private ItemVariantDetailModel [] detailModel;
-	private List <ItemVariantDetailModel> detailModel;
-	
+
+	private Integer itemVariantId;
+
+	private ItemVariantCommonInfoModel commonInfoModel;
+	// private ItemVariantDetailModel [] detailModel;
+	private List<ItemVariantDetailModel> detailModel;
+
+	public Integer getItemVariantId() {
+		return itemVariantId;
+	}
+
+	public void setItemVariantId(Integer itemVariantId) {
+		this.itemVariantId = itemVariantId;
+	}
+
 	/**
 	 * @return the basicInfoModel
 	 */
-	public ItemVariantCommonInfoModel getBasicInfoModel() {
-		return basicInfoModel;
+	public ItemVariantCommonInfoModel getCommonInfoModel() {
+		return commonInfoModel;
 	}
+
 	/**
-	 * @param basicInfoModel the basicInfoModel to set
+	 * @param basicInfoModel
+	 *            the basicInfoModel to set
 	 */
-	public void setBasicInfoModel(ItemVariantCommonInfoModel basicInfoModel) {
-		this.basicInfoModel = basicInfoModel;
+	public void setCommonInfoModel(ItemVariantCommonInfoModel commonInfoModel) {
+		this.commonInfoModel = commonInfoModel;
 	}
+
 	/**
 	 * @return the detailModel
 	 */
 	public List<ItemVariantDetailModel> getDetailModel() {
 		return detailModel;
 	}
+
 	/**
-	 * @param detailModel the detailModel to set
+	 * @param detailModel
+	 *            the detailModel to set
 	 */
 	public void setDetailModel(List<ItemVariantDetailModel> detailModel) {
 		this.detailModel = detailModel;
 	}
 
-/*	*//**
-	 * @return the detailModel
-	 *//*
-	public ItemVariantDetailModel[] getDetailModel() {
-		return detailModel;
+	@Override
+	public String toString() {
+		return "ItemVariantSpecificationModel [itemVariantId=" + itemVariantId + ", commonInfoModel=" + commonInfoModel
+				+ ", detailModel=" + detailModel + "]";
 	}
-	*//**
-	 * @param detailModel the detailModel to set
-	 *//*
-	public void setDetailModel(ItemVariantDetailModel[] detailModel) {
-		this.detailModel = detailModel;
-	}*/
-	
-	
-	
-
-	
 
 }

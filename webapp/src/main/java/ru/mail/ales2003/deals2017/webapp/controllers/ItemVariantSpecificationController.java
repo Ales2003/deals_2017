@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,20 +22,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantDetail;
-import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemVariantSpecification;
 import ru.mail.ales2003.deals2017.dao.api.filters.IItemVariantFilter;
+import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
 import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Role;
-import ru.mail.ales2003.deals2017.services.IItemVariantService;
 import ru.mail.ales2003.deals2017.services.IItemVariantSpecificationService;
 import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantCommonInfoModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantDetailModel;
+import ru.mail.ales2003.deals2017.webapp.models.ItemVariantSpecificationModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
@@ -51,12 +53,12 @@ public class ItemVariantSpecificationController {
 
 	@Inject
 	private Translator translator;
-	
+
 	@Inject
 	private IUserAuthService authService;
 
 	private String thisClassName = ItemVariantSpecificationController.class.getSimpleName();
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantSpecificationController.class);
 
 	private String className = ItemVariant.class.getSimpleName();
@@ -67,7 +69,6 @@ public class ItemVariantSpecificationController {
 
 	// private PropertyResourceBundle pr = null;
 
-	
 	@Inject
 	private IItemVariantSpecificationService service;
 
@@ -88,7 +89,7 @@ public class ItemVariantSpecificationController {
 
 		}
 
-		String requestName = "getAll";
+		String requestName = "getCommonInfoFiltered";
 
 		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
 		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
@@ -98,7 +99,7 @@ public class ItemVariantSpecificationController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -109,11 +110,11 @@ public class ItemVariantSpecificationController {
 			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
 		}
 		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
-		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
 				userJVMDataStorage.getId(), requestName);
 
 		// Direct implementation of the method
-		
+
 		List<ItemVariantCommonInfo> commonInfos;
 
 		IItemVariantFilter filter = new ItemVariantCommonInfoFilter();
@@ -130,12 +131,11 @@ public class ItemVariantSpecificationController {
 			LOGGER.info("Because maxprice in customerquery ==null, maxprice=1000000");
 			maxprice = new BigDecimal("1000000.00");
 		}
-		
+
 		if (minprice == null) {
 			LOGGER.info("Because minprice in customerquery ==null, minprice=0");
 			minprice = new BigDecimal("0.00");
 		}
-		
 
 		if ((maxprice.subtract(minprice)).intValue() < 0) {
 
@@ -147,8 +147,8 @@ public class ItemVariantSpecificationController {
 
 		filter.setItemVariantPriceMAX(maxprice);
 
-	//default 10 rows
-		
+		// default 10 rows
+
 		if (limit == null) {
 			pParams.setLimit(10);
 		} else {
@@ -193,8 +193,192 @@ public class ItemVariantSpecificationController {
 		return new ResponseEntity<List<ItemVariantCommonInfoModel>>(convertedCommonInfos, HttpStatus.OK);
 	}
 
-	
-	
+	@RequestMapping(value = "/commoninfos/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getCommonInfoById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.ITEM_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+			validUserRoles.add(Role.GUEST);
+
+		}
+
+		String requestName = "getCommonInfoById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		ItemVariantCommonInfo entity = null;
+		try {
+			entity = service.getCommonInfo(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (entity == null) {
+			String msg = String.format("Information about the requested products is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		ItemVariantCommonInfoModel model = info2model(entity);
+
+		return new ResponseEntity<ItemVariantCommonInfoModel>(model, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getDetailsById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.ITEM_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+			validUserRoles.add(Role.GUEST);
+
+		}
+
+		String requestName = "getDetailsById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		List<ItemVariantDetail> details = null;
+		try {
+			details = service.getDetails(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (details == null) {
+			String msg = String.format("Information about the requested products is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		List<ItemVariantDetailModel> detailsModel = new ArrayList<>();
+		for (ItemVariantDetail detail : details) {
+			detailsModel.add(detail2detailModel(detail));
+		}
+
+		return new ResponseEntity<List<ItemVariantDetailModel>>(detailsModel, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getItemVariantSpecificationById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
+			validUserRoles.add(Role.ITEM_MANAGER);
+			validUserRoles.add(Role.SALES_MANAGER);
+			validUserRoles.add(Role.CUSTOMER);
+			validUserRoles.add(Role.GUEST);
+
+		}
+
+		String requestName = "getCommonInfoById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		ItemVariantSpecification entity = null;
+		try {
+			entity = service.getSpecification(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+
+		if (entity == null) {
+			String msg = String.format("Information about the requested products is missing");
+			LOGGER.error("Error: {}s storage is empty. Message was sent to the user: {}", className, msg);
+			return new ResponseEntity<String>(msg, HttpStatus.NOT_FOUND);
+		}
+
+		ItemVariantSpecificationModel model = specification2model(entity);
+
+		return new ResponseEntity<ItemVariantSpecificationModel>(model, HttpStatus.OK);
+	}
+
 	/*
 	 * @RequestMapping(value = "/details", method = RequestMethod.GET) public
 	 * ResponseEntity<?> getAllInDetails(@RequestParam(required = false) String
@@ -272,7 +456,7 @@ public class ItemVariantSpecificationController {
 	 * HttpStatus.OK);
 	 */
 
-	private ItemVariantDetailModel detailEntity2detailModel(ItemVariantDetail detail) {
+	private ItemVariantDetailModel detail2detailModel(ItemVariantDetail detail) {
 		ItemVariantDetailModel detailModel = new ItemVariantDetailModel();
 		detailModel.setAttributeName(detail.getAttributeName().name());
 		detailModel.setAttributeValue(detail.getAttributeValue());
@@ -284,7 +468,7 @@ public class ItemVariantSpecificationController {
 		ItemVariantCommonInfoModel model = new ItemVariantCommonInfoModel();
 
 		model.setItemVariantId(commonInfo.getItemVariantId());
-		
+
 		String translatedItemName = Translator.translate(commonInfo.getItemName(), locale);
 
 		model.setItemName(translatedItemName);
@@ -292,6 +476,27 @@ public class ItemVariantSpecificationController {
 		model.setItemVariantPrice(commonInfo.getItemVariantPrice());
 		return model;
 	}
+
+	private ItemVariantSpecificationModel specification2model(ItemVariantSpecification specification) {
+
+		ItemVariantSpecificationModel model = new ItemVariantSpecificationModel();
+
+		ItemVariantCommonInfo commonInfo = specification.getInfo();
+		ItemVariantCommonInfoModel commonInfoModel = info2model(commonInfo);
+
+		List<ItemVariantDetailModel> detailModel = new ArrayList<ItemVariantDetailModel>();
+		List<ItemVariantDetail> details = specification.getDetails();
+		for (ItemVariantDetail detail : details) {
+			detailModel.add(detail2detailModel(detail));
+		}
+
+		model.setItemVariantId(specification.getId());
+		model.setCommonInfoModel(commonInfoModel);
+		model.setDetailModel(detailModel);
+
+		return model;
+	}
+
 	/*
 	 * private String translate(String name, Locale locale) { pr =
 	 * (PropertyResourceBundle) PropertyResourceBundle .getBundle(
