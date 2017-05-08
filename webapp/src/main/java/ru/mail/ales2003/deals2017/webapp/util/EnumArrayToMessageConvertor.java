@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.datamodel.Attribute;
@@ -168,6 +169,26 @@ public class EnumArrayToMessageConvertor {
 		params.sort(new Comparator<ItemColumnNamesForSortingParams>() {
 			@Override
 			public int compare(ItemColumnNamesForSortingParams o1, ItemColumnNamesForSortingParams o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	public static String contractColumnNameEnumArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<ContractColumnNamesForSortingParams> params = new ArrayList<ContractColumnNamesForSortingParams>(
+				Arrays.asList(ContractColumnNamesForSortingParams.values()));
+		for (ContractColumnNamesForSortingParams p : params) {
+			stringBuilder.append("" + p + ", ");
+		}
+		// sorting
+		params.sort(new Comparator<ContractColumnNamesForSortingParams>() {
+			@Override
+			public int compare(ContractColumnNamesForSortingParams o1, ContractColumnNamesForSortingParams o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});
