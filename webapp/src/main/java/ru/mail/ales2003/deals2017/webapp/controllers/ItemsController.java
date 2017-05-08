@@ -79,7 +79,7 @@ public class ItemsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is  defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -131,7 +131,7 @@ public class ItemsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -178,7 +178,7 @@ public class ItemsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -224,7 +224,7 @@ public class ItemsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
@@ -272,7 +272,7 @@ public class ItemsController {
 			String msg = String.format("No authorization. Authorization is required to access this section.");
 			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
 		}
-		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+		LOGGER.info("User id is defined as id = [{}].", authorisedUserId);
 
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method

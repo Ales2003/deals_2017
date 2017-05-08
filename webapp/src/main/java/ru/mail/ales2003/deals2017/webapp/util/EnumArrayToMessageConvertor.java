@@ -8,6 +8,7 @@ import java.util.Set;
 
 import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
+import ru.mail.ales2003.deals2017.datamodel.Attribute;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
@@ -124,6 +125,25 @@ public class EnumArrayToMessageConvertor {
 		statuses.sort(new Comparator<PayStatus>() {
 			@Override
 			public int compare(PayStatus o1, PayStatus o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	public static String itemsAttributeArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<Attribute> attributes = new ArrayList<Attribute>(Arrays.asList(Attribute.values()));
+		for (Attribute attribute : attributes) {
+			stringBuilder.append("" + attribute + ", ");
+		}
+		// sorting
+		attributes.sort(new Comparator<Attribute>() {
+			@Override
+			public int compare(Attribute o1, Attribute o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});

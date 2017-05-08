@@ -47,7 +47,7 @@ public class BasicAuthFilter implements Filter {
 														// JedisCache();
 //To avoid problems in jmeter I need a  short cache
 	//usually it can by 30s 
-	private int cashingTimeInSec = 1;
+	private int cashingTimeInSec = 30;
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
@@ -101,7 +101,7 @@ public class BasicAuthFilter implements Filter {
 		LOGGER.info("Length of JedisCache [{}] = [{}].", username, cache.getLength(username));
 
 		// query to cashe
-	/* FOR JMETER
+	//* FOR JMETER
 		if (cache.isExistInCache(username)) {
 			LOGGER.info("Fortunately, the JedisCache stores the requested data.");
 			Integer idFromCashe = cache.getIdFromCache(username);
@@ -115,7 +115,7 @@ public class BasicAuthFilter implements Filter {
 			// query to DB
 		} else
 		
-		FOR JMETER*/
+		//FOR JMETER*/
 		{
 			LOGGER.info("Unfortunately, the JedisCache does not store the requested data. We are going to the DataBase. ");
 
@@ -162,6 +162,7 @@ public class BasicAuthFilter implements Filter {
 			userJVMDataStorage.setRole(userRoleFromStorage);
 
 			LOGGER.info("Cleaning old userData from JedisCache");
+			
 			cache.cleanUserData(username, userIdFromStorage, password, userRoleFromStorage);
 
 			LOGGER.info(

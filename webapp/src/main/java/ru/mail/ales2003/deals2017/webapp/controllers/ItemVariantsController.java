@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.mail.ales2003.deals2017.datamodel.Attribute;
+import ru.mail.ales2003.deals2017.datamodel.CharacterTypeInItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Role;
 import ru.mail.ales2003.deals2017.services.IItemVariantService;
 import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
+import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeInItemVariantModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantModel;
 import ru.mail.ales2003.deals2017.webapp.translate.Translator;
@@ -33,7 +36,8 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 @RestController
 @RequestMapping("/itemvariants")
 public class ItemVariantsController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CharacterTypesController.class);
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ItemVariantsController.class);
 
 	@Inject
 	private ApplicationContext context;
@@ -286,6 +290,261 @@ public class ItemVariantsController {
 
 	}
 
+	@RequestMapping(value = "/attributes", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllAttributes(@RequestParam(required = false) String name) {
+
+		// Start ControllerAuthorization
+
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+
+		}
+
+		String requestName = "getAll";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in {}. User with id = {} makes request = {}", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		List<CharacterTypeInItemVariant> allItems;
+
+		allItems = service.getAllAttributes();
+
+		List<CharacterTypeInItemVariantModel> convertedItems = new ArrayList<>();
+		for (CharacterTypeInItemVariant item : allItems) {
+			convertedItems.add(attribute2model(item));
+		}
+
+		return new ResponseEntity<List<CharacterTypeInItemVariantModel>>(convertedItems, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/attributes/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getAttributeById(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "getById";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		CharacterTypeInItemVariant entity = null;
+		try {
+			entity = service.getAttribute(entityIdParam);
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		CharacterTypeInItemVariantModel entityModel = attribute2model(entity);
+
+		return new ResponseEntity<CharacterTypeInItemVariantModel>(entityModel, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/attributes", method = RequestMethod.POST)
+	public ResponseEntity<?> createAttribute(@RequestBody CharacterTypeInItemVariantModel entityModel) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "create";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		CharacterTypeInItemVariant entity = null;
+
+		entity = model2attribute(entityModel);
+		
+		
+		try {
+			service.saveAttribute(entity);
+		} catch (Exception e) {
+			String msg = String.format(
+					"Character type with name [%s] is not allowed for insertion. Please use one of: [%s].",
+					entityModel.getAttribute(), EnumArrayToMessageConvertor.itemsAttributeArrayToMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+
+		}
+
+		return new ResponseEntity<IdModel>(new IdModel(entity.getId()), HttpStatus.CREATED);
+	}
+
+	@RequestMapping(value = "/attributes/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateAttribute(@RequestBody CharacterTypeInItemVariantModel entityModel,
+			@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "update";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		CharacterTypeInItemVariant entity = null;
+
+		entity = service.getAttribute(entityIdParam);
+
+		entity.setItemVariantId(entityModel.getItemVariantId());
+
+		try {
+			entity.setAttribute(Attribute.valueOf(entityModel.getAttribute().toUpperCase()));
+		} catch (Exception e) {
+			String msg = String.format(
+					"Character type with name [%s] is not allowed for insertion. Please use one of: [%s].",
+					entityModel.getAttribute(), EnumArrayToMessageConvertor.itemsAttributeArrayToMessage());
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+
+		}
+
+		entity.setValue(entityModel.getValue());
+		entity.setCharacterTypeId(entityModel.getCharacterTypeId());
+
+		service.saveAttribute(entity);
+
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/attributes/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteAttribute(@PathVariable(value = "id") Integer entityIdParam) {
+
+		// Start ControllerAuthorization
+		Set<Role> validUserRoles = new HashSet<>();
+		{
+			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.ITEM_MANAGER);
+		}
+
+		String requestName = "delete";
+
+		LOGGER.info("Start UserAuthorization in {}: Extracting userId.", thisClassName);
+		UserAuthStorage userJVMDataStorage = context.getBean(UserAuthStorage.class);
+		// Getting authorisedUserID
+		Integer authorisedUserId = userJVMDataStorage.getId();
+		if (authorisedUserId == null) {
+			String msg = String.format("No authorization. Authorization is required to access this section.");
+			return new ResponseEntity<String>(msg, HttpStatus.UNAUTHORIZED);
+		}
+		LOGGER.info("User id is is defined as id = [{}].", authorisedUserId);
+
+		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
+		// Clarify the userROLE for obtaining permission to use the method
+		Role authorisedUserRole = userJVMDataStorage.getRole();
+		if (authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
+			String msg = String.format("No access rights. Access is available only to users: %s.",
+					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
+			return new ResponseEntity<String>(msg, HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User role is defined as role = [{}].", authorisedUserRole);
+		LOGGER.info("Finish UserAuthorization in [{}]. User with id = [{}] makes request = [{}]", thisClassName,
+				userJVMDataStorage.getId(), requestName);
+
+		// Direct implementation of the method
+
+		service.deleteAttribute(entityIdParam);
+
+		return new ResponseEntity<IdModel>(HttpStatus.OK);
+
+	}
+
 	private ItemVariantModel entity2model(ItemVariant itemVariant) {
 
 		ItemVariantModel itemVariantModel = new ItemVariantModel();
@@ -305,6 +564,31 @@ public class ItemVariantsController {
 		itemVariant.setVariantPrice(itemVariantModel.getVariantPrice());
 
 		return itemVariant;
+	}
+
+	private CharacterTypeInItemVariantModel attribute2model(CharacterTypeInItemVariant item) {
+
+		CharacterTypeInItemVariantModel model = new CharacterTypeInItemVariantModel();
+
+		model.setId(item.getId());
+		model.setItemVariantId(item.getItemVariantId());
+		model.setAttribute(item.getAttribute().name());
+		model.setValue(item.getValue());
+		model.setCharacterTypeId(item.getCharacterTypeId());
+
+		return model;
+	}
+
+	private CharacterTypeInItemVariant model2attribute(CharacterTypeInItemVariantModel model) {
+
+		CharacterTypeInItemVariant item = new CharacterTypeInItemVariant();
+
+		item.setItemVariantId(model.getItemVariantId());
+		item.setAttribute(Attribute.valueOf(model.getAttribute().toUpperCase()));
+		item.setValue(model.getValue());
+		item.setCharacterTypeId(model.getCharacterTypeId());
+
+		return item;
 	}
 
 }
