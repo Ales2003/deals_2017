@@ -1,0 +1,9 @@
+<ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>
+  <rows>
+    <ru.mail.ales2003.deals2017.datamodel.CharacterType>
+      <id>421</id>
+      <name>MM</name>
+    </ru.mail.ales2003.deals2017.datamodel.CharacterType>
+  </rows>
+  <lastId class="int">421</lastId>
+</ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>

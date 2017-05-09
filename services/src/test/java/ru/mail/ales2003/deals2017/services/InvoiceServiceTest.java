@@ -19,10 +19,10 @@ import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.Invoice;
 import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.IContractFilter;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
-import ru.mail.ales2003.deals2017.dao.db.filters.impl.ContractCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.Customer;
@@ -59,6 +59,9 @@ public class InvoiceServiceTest extends AbstractTest {
 
 	@Inject
 	private IItemVariantService itemVariantService;
+
+	@Inject
+	IContractFilter filter;
 
 	private Manager manager;
 	private Manager managerFromDb;
@@ -255,7 +258,7 @@ public class InvoiceServiceTest extends AbstractTest {
 	@Test
 	public void getCommonInfoFilteredTest() {
 		LOGGER.debug("Start getCommonInfoFilteredTest method");
-		ContractCommonInfoFilter filter = new ContractCommonInfoFilter();
+		// ContractCommonInfoFilter filter = new ContractCommonInfoFilter();
 
 		Integer customerId = customerFromDb.getId();
 		String customerLastName = customerFromDb.getLastName();

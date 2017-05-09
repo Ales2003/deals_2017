@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,6 @@ public class ItemServiceTest extends AbstractTest {
 	private Item instance_2FromDb;
 	private Item modifiedInstance;
 
-	
-	
 	@Before
 	public void runBeforeTestMethod() {
 		LOGGER.debug("Start preparation of the method");
@@ -49,6 +48,7 @@ public class ItemServiceTest extends AbstractTest {
 		LOGGER.debug("Finish preparation of the method");
 	}
 
+	
 	@After
 	public void runAfterTestMethod() {
 		LOGGER.debug("Start completion of the method");

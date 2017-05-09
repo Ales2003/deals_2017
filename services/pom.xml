@@ -12,8 +12,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.mail.ales2003.deals2017</groupId>
-			<artifactId>dao-impl-db</artifactId>
-			<!--<artifactId>dao-impl-xml</artifactId> -->
+			<!--<artifactId>dao-impl-db</artifactId> -->
+			<artifactId>dao-impl-xml</artifactId>
 		</dependency>
 
 		<!-- for testing -->

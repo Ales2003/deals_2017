@@ -1,0 +1,13 @@
+<ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>
+  <rows>
+    <ru.mail.ales2003.deals2017.datamodel.I18N>
+      <id>513</id>
+      <keyword>Table</keyword>
+      <tableName>ITEM</tableName>
+      <memberId>146</memberId>
+      <language>RU</language>
+      <value>перевод на русский язык from word Table</value>
+    </ru.mail.ales2003.deals2017.datamodel.I18N>
+  </rows>
+  <lastId class="int">513</lastId>
+</ru.mail.ales2003.deals2017.dao.xml.impl.wrapper.XmlModelWrapper>

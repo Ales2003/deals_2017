@@ -1,8 +1,6 @@
 package ru.mail.ales2003.deals2017.dao.xml.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -99,14 +97,6 @@ public class ItemDaoXmlImpl extends AbstractDaoXmlImp<Item, Integer> implements 
 
 		writeNewData(file, wrapper);
 
-	}
-
-	private void writeNewData(File file, XmlModelWrapper obj) {
-		try {
-			xstream.toXML(obj, new FileOutputStream(file));
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private File getFile() {
