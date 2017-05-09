@@ -27,10 +27,10 @@ import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractDetail;
 import ru.mail.ales2003.deals2017.dao.api.customentities.Invoice;
 import ru.mail.ales2003.deals2017.dao.api.filters.ContractColumnNamesForSortingParams;
+import ru.mail.ales2003.deals2017.dao.api.filters.IContractFilter;
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
-import ru.mail.ales2003.deals2017.dao.db.filters.impl.ContractCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.Contract;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
@@ -62,6 +62,9 @@ public class InvoicesController {
 
 	@Inject
 	private IUserAuthService authService;
+
+	@Inject
+	IContractFilter filter;
 
 	private String thisClassName = InvoicesController.class.getSimpleName();
 
@@ -122,7 +125,7 @@ public class InvoicesController {
 
 		List<ContractCommonInfo> commonInfos;
 
-		ContractCommonInfoFilter filter = new ContractCommonInfoFilter();
+		// ContractCommonInfoFilter filter = new ContractCommonInfoFilter();
 
 		PaginationParams pParams = new PaginationParams();
 

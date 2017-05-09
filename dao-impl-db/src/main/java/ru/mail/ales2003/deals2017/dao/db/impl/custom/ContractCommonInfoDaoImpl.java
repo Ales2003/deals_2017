@@ -1,6 +1,8 @@
 package ru.mail.ales2003.deals2017.dao.db.impl.custom;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -20,6 +22,8 @@ import ru.mail.ales2003.deals2017.datamodel.Contract;
 @Repository
 public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
+	private static final Map<String, List<ContractCommonInfo>> CACHE_ITEM_COMMON_INFO = new HashMap<>();
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(ContractCommonInfoDaoImpl.class);
 
 	@Inject
@@ -37,6 +41,9 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 			LOGGER.error("Error: {}", errMsg);
 			throw new IllegalArgumentException(errMsg);
 		}
+
+		// query to CASH
+
 		final String READ_BY_ID_SQL = "select c.id as contract_id, c.created as creation_date,"
 				+ " c.contract_status as status, c.pay_form as pay_form, c.pay_status as pay_status, c.total_price as total_amount,"
 				+ " customer_group.name as customer_type, c.customer_id as customer_id,"
@@ -50,6 +57,9 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
 			ContractCommonInfo commonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { contractId },
 					new ContractCommonInfoMapper());
+
+			// save to CASH
+
 			return commonInfo;
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format(
@@ -71,9 +81,14 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 				+ " left join manager on customer.manager_id=manager.id"
 				+ " left join customer_group on customer.customer_group_id=customer_group.id";
 
+		// query to CASH
+
 		try {
 			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL, new ContractCommonInfoMapper());
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
+
+			// save to CASH
+
 			return commonInfos;
 
 		} catch (EmptyResultDataAccessException e) {
@@ -90,10 +105,16 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 		givenFilter.filterInitialize();
 		LOGGER.debug("[{}] is initialized: [{}].", filterClassName, givenFilter.toString());
 		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
+
+		// query to CASH
+
 		Object[] paramsArray = givenFilter.getQueryParamsArray();
 		try {
 			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
 					new ContractCommonInfoMapper());
+
+			// save to CASH
+
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
 			if (commonInfos.size() == 0) {
 				String errMsg = String.format("[%s] entities storage is epty", contractClassName);
