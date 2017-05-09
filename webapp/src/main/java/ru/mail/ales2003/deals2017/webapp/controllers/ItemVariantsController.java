@@ -30,7 +30,7 @@ import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeInItemVariantModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantModel;
-import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.translate.StaticTranslator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
@@ -47,7 +47,7 @@ public class ItemVariantsController {
 	private Locale locale = new Locale("ru_RU");
 
 	@Inject
-	private Translator translator;
+	private StaticTranslator translator;
 
 	@Inject
 	private IItemVariantService service;

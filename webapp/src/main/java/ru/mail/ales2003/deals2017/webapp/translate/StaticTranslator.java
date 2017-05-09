@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Component
-public class Translator {
+public class StaticTranslator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Translator.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StaticTranslator.class);
 
 	/**
 	 * @param name
@@ -21,6 +21,7 @@ public class Translator {
 	 * @return translated variable
 	 */
 	public static String translate(String key, Locale locale) {
+		LOGGER.info("Getting key={}, locale = {}", key, locale);
 		if (key == null) {
 			return null;
 		}
@@ -28,7 +29,8 @@ public class Translator {
 			locale = new Locale("en_EN");
 		}
 		PropertyResourceBundle pr = null;
-		String translated;
+		String translated = null;
+		LOGGER.info("Start translate word ={} used locale ={}", translated, locale);
 		try {
 			pr = (PropertyResourceBundle) PropertyResourceBundle
 					.getBundle("ru.mail.ales2003.deals2017.webapp.translate.entitieNames", locale);
@@ -36,8 +38,9 @@ public class Translator {
 				throw new MissingResourceException("Property file not found!",
 						"ru.mail.ales2003.deals2017.webapp.translate.entitieNames", key);
 			}
+			LOGGER.info("Continue translate key = {}, word ={} used locale ={}", key, translated, locale);
 			translated = pr.getString(key);
-
+			LOGGER.info("Continue translate key = {}, word ={} used locale ={}", key, translated, locale);
 			// Perhaps extra - it works without it - he starts using the key in
 			// the absence of a pair.
 

@@ -37,7 +37,7 @@ import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantCommonInfoModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantDetailModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemVariantSpecificationModel;
-import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.translate.StaticTranslator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 /**
@@ -52,7 +52,7 @@ public class ItemSpecificationsController {
 	private ApplicationContext context;
 
 	@Inject
-	private Translator translator;
+	private StaticTranslator translator;
 
 	@Inject
 	private IUserAuthService authService;
@@ -67,14 +67,21 @@ public class ItemSpecificationsController {
 	// request header.
 	private Locale locale = new Locale("ru_RU");
 
+	private Locale localeFromRequest;
 	// private PropertyResourceBundle pr = null;
 
 	@Inject
 	private IItemVariantSpecificationService service;
 
 	@RequestMapping(value = "/commoninfos", method = RequestMethod.GET)
-	public ResponseEntity<?> getCommonInfoFiltered(@RequestParam(required = false) String name, String description,
-			BigDecimal minprice, BigDecimal maxprice, String column, String direction, Integer limit, Integer offset) {
+	public ResponseEntity<?> getCommonInfoFiltered(@RequestParam(required = false) Locale loc, String name,
+			String description, BigDecimal minprice, BigDecimal maxprice, String column, String direction,
+			Integer limit, Integer offset) {
+		LOGGER.info("Locale localeFromRequest : {}.", loc);
+
+		if (loc != null) {
+			localeFromRequest = loc;
+		}
 
 		// Start ControllerAuthorization
 
@@ -194,8 +201,12 @@ public class ItemSpecificationsController {
 	}
 
 	@RequestMapping(value = "/commoninfos/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getCommonInfoById(@PathVariable(value = "id") Integer entityIdParam) {
+	public ResponseEntity<?> getCommonInfoById(@PathVariable(value = "id") Integer entityIdParam,
+			@RequestParam(required = false) Locale loc) {
 
+		if (loc != null) {
+			localeFromRequest = loc;
+		}
 		// Start ControllerAuthorization
 
 		Set<Role> validUserRoles = new HashSet<>();
@@ -255,7 +266,12 @@ public class ItemSpecificationsController {
 	}
 
 	@RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getDetailsById(@PathVariable(value = "id") Integer entityIdParam) {
+	public ResponseEntity<?> getDetailsById(@PathVariable(value = "id") Integer entityIdParam,
+			@RequestParam(required = false) Locale loc) {
+
+		if (loc != null) {
+			localeFromRequest = loc;
+		}
 
 		// Start ControllerAuthorization
 
@@ -319,7 +335,12 @@ public class ItemSpecificationsController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> getItemSpecificationById(@PathVariable(value = "id") Integer entityIdParam) {
+	public ResponseEntity<?> getItemSpecificationById(@PathVariable(value = "id") Integer entityIdParam,
+			@RequestParam(required = false) Locale loc) {
+
+		if (loc != null) {
+			localeFromRequest = loc;
+		}
 
 		// Start ControllerAuthorization
 
@@ -381,9 +402,21 @@ public class ItemSpecificationsController {
 
 	private ItemVariantDetailModel detail2detailModel(ItemVariantDetail detail) {
 		ItemVariantDetailModel detailModel = new ItemVariantDetailModel();
-		detailModel.setAttributeName(detail.getAttributeName().name());
+
+		Locale givenLocale;
+		if (localeFromRequest != null) {
+			givenLocale = localeFromRequest;
+		} else {
+			givenLocale = locale;
+		}
+		String translatedAttribute = StaticTranslator.translate(detail.getAttributeName().name(), givenLocale);
+
+		detailModel.setAttributeName(translatedAttribute);
 		detailModel.setAttributeValue(detail.getAttributeValue());
-		detailModel.setAttributeMeasure(detail.getAttributeMeasure().name());
+
+		String translatedMeasureUnit = StaticTranslator.translate(detail.getAttributeMeasure().name(), givenLocale);
+
+		detailModel.setAttributeMeasure(translatedMeasureUnit);
 		return detailModel;
 	}
 
@@ -392,7 +425,15 @@ public class ItemSpecificationsController {
 
 		model.setItemVariantId(commonInfo.getItemVariantId());
 
-		String translatedItemName = Translator.translate(commonInfo.getItemName(), locale);
+		LOGGER.info("Getting locale from request in Controller= {}", localeFromRequest);
+
+		Locale givenLocale;
+		if (localeFromRequest != null) {
+			givenLocale = localeFromRequest;
+		} else {
+			givenLocale = locale;
+		}
+		String translatedItemName = StaticTranslator.translate(commonInfo.getItemName(), givenLocale);
 
 		model.setItemName(translatedItemName);
 		model.setItemDescription(commonInfo.getItemDescription());

@@ -19,7 +19,7 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 
 	@Override
 	protected String getInsertQuery() {
-		final String INSERT_SQL = "insert into i18n (table_name, member_id, language, value) values(?,?,?,?)";
+		final String INSERT_SQL = "insert into i18n (table_name, member_id, language, value, keyword) values(?,?,?,?,?)";
 		return INSERT_SQL;
 	}
 
@@ -36,6 +36,7 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 			ps.setInt(2, entity.getMemberId());
 			ps.setString(3, entity.getLanguage().name());
 			ps.setString(4, entity.getValue());
+			ps.setString(5, entity.getKeyword());
 		} catch (SQLException e) {
 			LOGGER.error("Error: prepareStatementForInsert is broken: {}", e);
 			// !!!TO REFACTOR!!!
@@ -60,7 +61,7 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 
 	@Override
 	protected String getUpdateQuery() {
-		final String UPDATE_SQL = "update i18n set table_name = ?, member_id = ?, language = ?, value =? where id = ?";
+		final String UPDATE_SQL = "update i18n set table_name = ?, member_id = ?, language = ?, value =?, keyword =? where id = ?";
 		return UPDATE_SQL;
 	}
 
@@ -71,7 +72,8 @@ public class I18NDaoImpl extends AbstractDaoImplDb<I18N, Integer> implements II1
 			ps.setInt(2, entity.getMemberId());
 			ps.setString(3, entity.getLanguage().name());
 			ps.setString(4, entity.getValue());
-			ps.setInt(5, entity.getId());
+			ps.setString(5, entity.getKeyword());
+			ps.setInt(6, entity.getId());
 		} catch (SQLException e) {
 			LOGGER.error("Error: prepareStatementForInsert is broken", e);
 			// !!!TO REFACTOR!!!

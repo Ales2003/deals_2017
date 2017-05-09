@@ -29,7 +29,7 @@ import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 import ru.mail.ales2003.deals2017.webapp.models.CharacterTypeModel;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
-import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.translate.StaticTranslator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 /**
@@ -50,7 +50,7 @@ public class CharacterTypesController {
 	private Locale locale = new Locale("ru_RU");
 
 	@Inject
-	private Translator translator;
+	private StaticTranslator translator;
 
 	@Inject
 	private ICharacterTypeService service;
@@ -343,7 +343,7 @@ public class CharacterTypesController {
 	private CharacterTypeModel entity2model(CharacterType entity) {
 		CharacterTypeModel entityModel = new CharacterTypeModel();
 		entityModel.setId(entity.getId());
-		entityModel.setName(entity.getName() == null ? null : Translator.translate(entity.getName().name(), locale));
+		entityModel.setName(entity.getName() == null ? null : StaticTranslator.translate(entity.getName().name(), locale));
 		return entityModel;
 	}
 

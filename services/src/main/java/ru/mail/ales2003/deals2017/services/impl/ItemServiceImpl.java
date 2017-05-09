@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.IItemDao;
 import ru.mail.ales2003.deals2017.datamodel.Item;
+import ru.mail.ales2003.deals2017.datamodel.Table;
+import ru.mail.ales2003.deals2017.services.II18NService;
 import ru.mail.ales2003.deals2017.services.IItemService;
 
 @Service
@@ -19,6 +21,9 @@ public class ItemServiceImpl implements IItemService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceImpl.class);
 
 	private String className = Item.class.getSimpleName();
+
+	@Inject
+	private II18NService i18nService;
 
 	// dependency injection (внедряем зависимость в этот класс - ссылку на бин
 	// имплементатора IItemDao)
@@ -63,8 +68,13 @@ public class ItemServiceImpl implements IItemService {
 		} else if (item.getId() == null) {
 			itemDao.insert(item);
 			LOGGER.info("Inserted new {} entity: {}", className, item.toString());
+
+			i18nService.saveMultilingual(item.getName(), Table.ITEM, item.getId());
+			LOGGER.info("Inserted new I18N entity from method Save in {}", className);
 		} else {
 			itemDao.update(item);
+			// TODO ADD IF item.getNameNEW != item.getNameOLD
+			// UPDATE IN I18N all apropr. rows
 			LOGGER.info("Updated one {} entity: {}", className, item.toString());
 		}
 	}

@@ -28,6 +28,8 @@ public class ItemServiceTest extends AbstractTest {
 	private Item instance_2FromDb;
 	private Item modifiedInstance;
 
+	
+	
 	@Before
 	public void runBeforeTestMethod() {
 		LOGGER.debug("Start preparation of the method");

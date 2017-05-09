@@ -27,7 +27,7 @@ import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.IdModel;
 import ru.mail.ales2003.deals2017.webapp.models.ItemModel;
-import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.translate.StaticTranslator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
@@ -43,8 +43,10 @@ public class ItemsController {
 	// request header.
 	private Locale locale = new Locale("ru_RU");
 
+	private Locale locFromRequest;
+	
 	@Inject
-	private Translator translator;
+	private StaticTranslator translator;
 
 	@Inject
 	private IItemService service;
@@ -55,8 +57,10 @@ public class ItemsController {
 	private String thisClassName = ItemsController.class.getSimpleName();
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> getAll(@RequestParam(required = false) String name) {
+	public ResponseEntity<?> getAll(@RequestParam(required = false) String name, Locale locFromRequest) {
 
+		
+		
 		// Start ControllerAuthorization
 
 		Set<Role> validUserRoles = new HashSet<>();
@@ -297,6 +301,9 @@ public class ItemsController {
 		ItemModel itemModel = new ItemModel();
 
 		itemModel.setId(item.getId());
+		
+		String translatedItemName = StaticTranslator.translate(item.getName(), locFromRequest);
+		
 		itemModel.setName(item.getName());
 		itemModel.setDescription(item.getDescription());
 		itemModel.setBasicPrice(item.getBasicPrice());

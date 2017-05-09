@@ -43,7 +43,7 @@ import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.webapp.models.ContractCommonInfoModel;
 import ru.mail.ales2003.deals2017.webapp.models.ContractDetailModel;
 import ru.mail.ales2003.deals2017.webapp.models.InvoiceModel;
-import ru.mail.ales2003.deals2017.webapp.translate.Translator;
+import ru.mail.ales2003.deals2017.webapp.translate.StaticTranslator;
 import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 /**
@@ -58,7 +58,7 @@ public class InvoicesController {
 	private ApplicationContext context;
 
 	@Inject
-	private Translator translator;
+	private StaticTranslator translator;
 
 	@Inject
 	private IUserAuthService authService;

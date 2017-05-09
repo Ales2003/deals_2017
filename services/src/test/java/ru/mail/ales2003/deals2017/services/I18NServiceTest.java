@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -234,6 +235,9 @@ public class I18NServiceTest extends AbstractTest {
 	@Test
 	public void getAllTest() {
 		LOGGER.debug("Start getAllTest method");
+		for (I18N entity : service.getAll()) {
+			deleteFromDb(entity.getId());
+		}
 		List<I18N> instances = new ArrayList<>();
 		instances.add(instance_1);
 		instances.add(instance_2);
@@ -271,6 +275,18 @@ public class I18NServiceTest extends AbstractTest {
 		// here it is expected the IllegalArgumentException.
 		Assert.isNull(service.get(instance_1.getId()), "instance must be deleted");
 		LOGGER.debug("Finish deleteTest method");
+	}
+
+	//@Ignore
+	@Test
+	public void saveMultilingualTest() {
+		LOGGER.debug("Start saveMultilingualTest method");
+
+		service.saveMultilingual("good", Table.ITEM, 1000000);
+		List<I18N> instancesFromDb = service.getAll();
+		Assert.isTrue(instancesFromDb.size() > 0, "count of from Db instances must by not ZERO");
+
+		LOGGER.debug("Finish saveMultilingualTest method");
 	}
 
 	/*

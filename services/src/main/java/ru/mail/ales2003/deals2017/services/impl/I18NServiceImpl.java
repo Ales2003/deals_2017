@@ -1,5 +1,7 @@
 package ru.mail.ales2003.deals2017.services.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import ru.mail.ales2003.deals2017.dao.api.II18NDao;
 import ru.mail.ales2003.deals2017.datamodel.I18N;
+import ru.mail.ales2003.deals2017.datamodel.Language;
+import ru.mail.ales2003.deals2017.datamodel.Table;
 import ru.mail.ales2003.deals2017.services.II18NService;
 
 @Service
@@ -19,6 +23,9 @@ public class I18NServiceImpl implements II18NService {
 
 	@Inject
 	private II18NDao i18nDao;
+
+	@Inject
+	private ForeignTranslateServiceStub translator;
 
 	private String className = I18N.class.getSimpleName();
 
@@ -36,9 +43,9 @@ public class I18NServiceImpl implements II18NService {
 			throw new IllegalArgumentException(errMsg);
 		} else {
 			I18N entity = i18nDao.get(id);
-			LOGGER.info("Read one {} entity: id={}, table_name={}, member_id={}, language={}, value={}", className,
-					entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
-					entity.getValue());
+			LOGGER.info("Read one {} entity: id={}, table_name={}, member_id={}, language={}, value={}, keyword={}",
+					className, entity.getId(), entity.getTableName(), entity.getMemberId(), entity.getLanguage(),
+					entity.getValue(), entity.getKeyword());
 			return entity;
 		}
 	}
@@ -77,6 +84,39 @@ public class I18NServiceImpl implements II18NService {
 			i18nDao.update(entity);
 			LOGGER.info("Updated one {} entity: {}", className, entity.toString());
 		}
+	}
+
+	@Override
+	public void saveMultilingual(String keyword, Table tableName, Integer inOwnTableId) {
+		LOGGER.info("Saving to I18N keyword = {} from table = {} with id in own table = {}.", keyword, tableName,
+				inOwnTableId);
+		List<Language> langs = new ArrayList<>(Arrays.asList(Language.values()));
+		for (Language language : langs) {
+			I18N entity = new I18N();
+
+			entity.setTableName(tableName);
+			entity.setKeyword(keyword);
+			entity.setMemberId(inOwnTableId);
+
+			entity.setLanguage(language);
+			String value;
+			try {
+				value = ForeignTranslateServiceStub.translateFromEnglish(language, keyword);
+			} catch (Exception e) {
+				String errMsg = String.format(
+						"Because keyword = [%s] from table = [%s] and id in own table = [%s] wasn't translated and  wasn't saved",
+						keyword, tableName, inOwnTableId);
+				LOGGER.error("Error: {}", errMsg);
+				return;
+			}
+			entity.setValue(value);
+			save(entity);
+			Integer savedId = entity.getId();
+			LOGGER.info(
+					"Keyword = {} from table = {} with id in own table = {} was sacsessfull saved to I18N with id = {} and value = {}.",
+					keyword, tableName, inOwnTableId, savedId, value);
+		}
+
 	}
 
 	/*

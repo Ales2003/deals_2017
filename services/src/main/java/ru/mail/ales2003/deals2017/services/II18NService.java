@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.mail.ales2003.deals2017.datamodel.I18N;
+import ru.mail.ales2003.deals2017.datamodel.Table;
 
 public interface II18NService {
-	
+
 	/**
 	 * @param id
 	 * @return I18N entity
@@ -15,7 +16,7 @@ public interface II18NService {
 	I18N get(Integer id);
 
 	/**
-	 * @return List&ltI18N&gt  entities
+	 * @return List&ltI18N&gt entities
 	 */
 	List<I18N> getAll();
 
@@ -24,6 +25,9 @@ public interface II18NService {
 	 */
 	@Transactional
 	void save(I18N entity);
+
+	@Transactional
+	void saveMultilingual(String wordToTranslate, Table tableName, Integer inOwnTableId);
 
 	/**
 	 * @param entityArray
