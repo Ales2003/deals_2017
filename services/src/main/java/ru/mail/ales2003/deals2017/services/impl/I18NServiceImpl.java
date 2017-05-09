@@ -87,10 +87,11 @@ public class I18NServiceImpl implements II18NService {
 	}
 
 	@Override
-	public void saveMultilingual(String keyword, Table tableName, Integer inOwnTableId) {
+	public List<Integer> saveMultilingual(String keyword, Table tableName, Integer inOwnTableId) {
 		LOGGER.info("Saving to I18N keyword = {} from table = {} with id in own table = {}.", keyword, tableName,
 				inOwnTableId);
 		List<Language> langs = new ArrayList<>(Arrays.asList(Language.values()));
+		List<Integer> ids = new ArrayList<>();
 		for (Language language : langs) {
 			I18N entity = new I18N();
 
@@ -107,7 +108,7 @@ public class I18NServiceImpl implements II18NService {
 						"Because keyword = [%s] from table = [%s] and id in own table = [%s] wasn't translated and  wasn't saved",
 						keyword, tableName, inOwnTableId);
 				LOGGER.error("Error: {}", errMsg);
-				return;
+				return null;
 			}
 			entity.setValue(value);
 			save(entity);
@@ -115,8 +116,9 @@ public class I18NServiceImpl implements II18NService {
 			LOGGER.info(
 					"Keyword = {} from table = {} with id in own table = {} was sacsessfull saved to I18N with id = {} and value = {}.",
 					keyword, tableName, inOwnTableId, savedId, value);
+			ids.add(savedId);
 		}
-
+		return ids;
 	}
 
 	/*

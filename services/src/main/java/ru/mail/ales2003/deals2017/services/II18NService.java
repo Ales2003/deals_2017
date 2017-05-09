@@ -27,7 +27,7 @@ public interface II18NService {
 	void save(I18N entity);
 
 	@Transactional
-	void saveMultilingual(String wordToTranslate, Table tableName, Integer inOwnTableId);
+	List<Integer> saveMultilingual(String wordToTranslate, Table tableName, Integer inOwnTableId);
 
 	/**
 	 * @param entityArray

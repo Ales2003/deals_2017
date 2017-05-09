@@ -12,10 +12,12 @@ import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams
 import ru.mail.ales2003.deals2017.datamodel.Attribute;
 import ru.mail.ales2003.deals2017.datamodel.ContractStatus;
 import ru.mail.ales2003.deals2017.datamodel.CustomerType;
+import ru.mail.ales2003.deals2017.datamodel.Language;
 import ru.mail.ales2003.deals2017.datamodel.Measure;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 import ru.mail.ales2003.deals2017.datamodel.Role;
+import ru.mail.ales2003.deals2017.datamodel.Table;
 
 /**
  * @author Aliaksandr Vishneuski ales_2003@mail.ru
@@ -126,6 +128,44 @@ public class EnumArrayToMessageConvertor {
 		statuses.sort(new Comparator<PayStatus>() {
 			@Override
 			public int compare(PayStatus o1, PayStatus o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	public static String languagesArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<Language> languages = new ArrayList<Language>(Arrays.asList(Language.values()));
+		for (Language language : languages) {
+			stringBuilder.append("" + language + ", ");
+		}
+		// sorting
+		languages.sort(new Comparator<Language>() {
+			@Override
+			public int compare(Language o1, Language o2) {
+				return o1.name().compareTo(o2.name());
+			}
+		});
+
+		String result = String.format("%s", stringBuilder);
+		result = result.substring(0, result.length() - 2);
+		return result;
+	}
+
+	public static String tableNamesArrayToMessage() {
+		StringBuilder stringBuilder = new StringBuilder("");
+		List<Table> tables = new ArrayList<Table>(Arrays.asList(Table.values()));
+		for (Table table : tables) {
+			stringBuilder.append("" + table + ", ");
+		}
+		// sorting
+		tables.sort(new Comparator<Table>() {
+			@Override
+			public int compare(Table o1, Table o2) {
 				return o1.name().compareTo(o2.name());
 			}
 		});
