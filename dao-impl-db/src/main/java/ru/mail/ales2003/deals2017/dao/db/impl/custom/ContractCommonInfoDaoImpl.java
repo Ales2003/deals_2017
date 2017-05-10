@@ -76,8 +76,13 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 			ContractCommonInfo commonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { contractId },
 					new ContractCommonInfoMapper());
 
-			// save to CASHE (TO one map for 3 requests - wrapped commonInfo in
-			// a list)
+			// save to CASHE (TO one map for 3 request types - wrapped
+			// commonInfo in a list)
+			
+			// You need to add logic, what to do if you first ask for an ID that
+			// IS NOT in the database and THEN ADDED. In the present case, the
+			// cache is saved to a null on a specific id and it will return when
+			// asked for this id.
 
 			LOGGER.info("Saving data to the cache {}.", "CACHE_ITEM_COMMON_INFO");
 
@@ -86,6 +91,9 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 			CACHE_ITEM_COMMON_INFO.put(READ_BY_ID_SQL + contractId.toString(),
 					(ArrayList<ContractCommonInfo>) itemCommonInfolist);
 			LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
+			//
+			//
+
 			LOGGER.info("Return data from the database.");
 			return commonInfo;
 			//
@@ -162,12 +170,12 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 		}
 	}
 
-	public static Map<String, ArrayList<ContractCommonInfo>> getCACHE_ITEM_COMMON_INFO() {
+	public Map<String, ArrayList<ContractCommonInfo>> getCACHEToPersistendSave() {
 		return CACHE_ITEM_COMMON_INFO;
 	}
 
-	public static void setCACHE_ITEM_COMMON_INFO(Map<String, ArrayList<ContractCommonInfo>> cACHE_ITEM_COMMON_INFO) {
-		CACHE_ITEM_COMMON_INFO = cACHE_ITEM_COMMON_INFO;
+	public void SetPersistentSavedCACHE(Map<String, ArrayList<ContractCommonInfo>> cache) {
+		CACHE_ITEM_COMMON_INFO = cache;
 	}
 
 }

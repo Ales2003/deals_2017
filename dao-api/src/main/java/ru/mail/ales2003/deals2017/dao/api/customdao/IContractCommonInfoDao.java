@@ -1,6 +1,8 @@
 package ru.mail.ales2003.deals2017.dao.api.customdao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 import ru.mail.ales2003.deals2017.dao.api.filters.IContractFilter;
@@ -34,5 +36,16 @@ public interface IContractCommonInfoDao {
 	 *         contracts.
 	 */
 	List<ContractCommonInfo> getCommonInfoForAll();
+
+	/**
+	 * @return Map&ltString, ArrayList&ltContractCommonInfo&gt&gt
+	 */
+	Map<String, ArrayList<ContractCommonInfo>> getCACHEToPersistendSave();
+
+	/**
+	 * @param cache
+	 * @return
+	 */
+	void SetPersistentSavedCACHE(Map<String, ArrayList<ContractCommonInfo>> cache);
 
 }
