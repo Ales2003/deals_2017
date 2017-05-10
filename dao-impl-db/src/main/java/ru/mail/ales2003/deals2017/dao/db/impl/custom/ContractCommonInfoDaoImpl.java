@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.dao.db.impl.custom;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ import ru.mail.ales2003.deals2017.datamodel.Contract;
 @Repository
 public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
-	private static final Map<String, List<ContractCommonInfo>> CACHE_ITEM_COMMON_INFO = new HashMap<>();
+	private static Map<String, ArrayList<ContractCommonInfo>> CACHE_ITEM_COMMON_INFO = new HashMap<>();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ContractCommonInfoDaoImpl.class);
 
@@ -42,8 +43,6 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 			throw new IllegalArgumentException(errMsg);
 		}
 
-		// query to CASH
-
 		final String READ_BY_ID_SQL = "select c.id as contract_id, c.created as creation_date,"
 				+ " c.contract_status as status, c.pay_form as pay_form, c.pay_status as pay_status, c.total_price as total_amount,"
 				+ " customer_group.name as customer_type, c.customer_id as customer_id,"
@@ -53,14 +52,45 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 				+ " left join manager on customer.manager_id=manager.id"
 				+ " left join customer_group on customer.customer_group_id=customer_group.id where c.id = ? ";
 
+		//
+		//
+		LOGGER.info("[Checking the availability] of data on the request for commoninfo in the cache: {}.",
+				"CACHE_ITEM_COMMON_INFO");
+		// query to CASHE
+		if (CACHE_ITEM_COMMON_INFO.containsKey(READ_BY_ID_SQL + contractId.toString())) {
+			List<ContractCommonInfo> commonInfosFromMapList = CACHE_ITEM_COMMON_INFO
+					.get(READ_BY_ID_SQL + contractId.toString());
+			ContractCommonInfo CommonInfoFromMap = commonInfosFromMapList.get(0);
+			LOGGER.info("The [DATA] in the cache {} [IS PRESENT] - the [QUERY] to the database is [NOT PERFOMED].",
+					"CACHE_ITEM_COMMON_INFO");
+			LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
+			return CommonInfoFromMap;
+		}
+		LOGGER.info("There is [NO DATA] in the cache {} - the query is [EXECUTED] in the database.",
+				"CACHE_ITEM_COMMON_INFO");
+		LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
+		//
+		//
 		try {
 
 			ContractCommonInfo commonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { contractId },
 					new ContractCommonInfoMapper());
 
-			// save to CASH
+			// save to CASHE (TO one map for 3 requests - wrapped commonInfo in
+			// a list)
 
+			LOGGER.info("Saving data to the cache {}.", "CACHE_ITEM_COMMON_INFO");
+
+			List<ContractCommonInfo> itemCommonInfolist = new ArrayList<>();
+			itemCommonInfolist.add(0, commonInfo);
+			CACHE_ITEM_COMMON_INFO.put(READ_BY_ID_SQL + contractId.toString(),
+					(ArrayList<ContractCommonInfo>) itemCommonInfolist);
+			LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
+			LOGGER.info("Return data from the database.");
 			return commonInfo;
+			//
+			//
+
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format(
 					"You want to READ common information about the [%s] with id = [%s], but it doesn't exist in the storage.",
@@ -81,13 +111,13 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 				+ " left join manager on customer.manager_id=manager.id"
 				+ " left join customer_group on customer.customer_group_id=customer_group.id";
 
-		// query to CASH
+		// query to CASHE
 
 		try {
 			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL, new ContractCommonInfoMapper());
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
 
-			// save to CASH
+			// save to CASHE
 
 			return commonInfos;
 
@@ -106,14 +136,14 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 		LOGGER.debug("[{}] is initialized: [{}].", filterClassName, givenFilter.toString());
 		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
 
-		// query to CASH
+		// query to CASHE
 
 		Object[] paramsArray = givenFilter.getQueryParamsArray();
 		try {
 			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
 					new ContractCommonInfoMapper());
 
-			// save to CASH
+			// save to CASHE
 
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
 			if (commonInfos.size() == 0) {
@@ -131,4 +161,13 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 			throw e;
 		}
 	}
+
+	public static Map<String, ArrayList<ContractCommonInfo>> getCACHE_ITEM_COMMON_INFO() {
+		return CACHE_ITEM_COMMON_INFO;
+	}
+
+	public static void setCACHE_ITEM_COMMON_INFO(Map<String, ArrayList<ContractCommonInfo>> cACHE_ITEM_COMMON_INFO) {
+		CACHE_ITEM_COMMON_INFO = cACHE_ITEM_COMMON_INFO;
+	}
+
 }

@@ -1,5 +1,6 @@
 package ru.mail.ales2003.deals2017.dao.api.customentities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -8,7 +9,7 @@ import ru.mail.ales2003.deals2017.datamodel.CustomerType;
 import ru.mail.ales2003.deals2017.datamodel.PayForm;
 import ru.mail.ales2003.deals2017.datamodel.PayStatus;
 
-public class ContractCommonInfo {
+public class ContractCommonInfo implements Serializable {
 
 	// contract attributes
 	private Integer contractId;
