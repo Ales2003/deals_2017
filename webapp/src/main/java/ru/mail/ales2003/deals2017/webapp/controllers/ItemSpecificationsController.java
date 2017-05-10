@@ -28,6 +28,7 @@ import ru.mail.ales2003.deals2017.dao.api.filters.ItemColumnNamesForSortingParam
 import ru.mail.ales2003.deals2017.dao.api.filters.OrderDirectionForSortingParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.PaginationParams;
 import ru.mail.ales2003.deals2017.dao.api.filters.SortingParams;
+import ru.mail.ales2003.deals2017.dao.db.filters.impl.ItemVariantCommonInfoFilter;
 import ru.mail.ales2003.deals2017.datamodel.ItemVariant;
 import ru.mail.ales2003.deals2017.datamodel.Role;
 import ru.mail.ales2003.deals2017.services.IItemVariantSpecificationService;
@@ -57,7 +58,7 @@ public class ItemSpecificationsController {
 	private IUserAuthService authService;
 
 	@Inject
-	private IItemVariantFilter filter;
+	private IItemVariantFilter itemFilter;
 
 	private String thisClassName = ItemSpecificationsController.class.getSimpleName();
 
@@ -126,7 +127,7 @@ public class ItemSpecificationsController {
 
 		List<ItemVariantCommonInfo> commonInfos;
 
-		// IItemVariantFilter filter = new ItemVariantCommonInfoFilter();
+		IItemVariantFilter filter = new ItemVariantCommonInfoFilter();
 
 		PaginationParams pParams = new PaginationParams();
 

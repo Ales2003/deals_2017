@@ -1,6 +1,8 @@
 package ru.mail.ales2003.deals2017.dao.xml.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +29,18 @@ public class ContractCommonInfoDaoXmlImpl implements IContractCommonInfoDao {
 		throw new NotSupportedMethodException();
 	}
 
+	@Override
+	public Map<String, ArrayList<ContractCommonInfo>> getCACHEToPersistendSave() {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public void SetPersistentSavedCACHE(Map<String, ArrayList<ContractCommonInfo>> cache) {
+		throw new NotSupportedMethodException();
+	}
+
+	@Override
+	public void clearCACHE() {
+		throw new NotSupportedMethodException();
+	}
 }

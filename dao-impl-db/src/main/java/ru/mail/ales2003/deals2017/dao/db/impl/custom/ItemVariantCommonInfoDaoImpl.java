@@ -42,9 +42,9 @@ public class ItemVariantCommonInfoDaoImpl implements IItemVariantCommonInfoDao {
 
 		try {
 
-			ItemVariantCommonInfo commonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL,
+			ItemVariantCommonInfo itemCommonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL,
 					new Object[] { itemVariantId }, new ItemVariantCommonInfoMapper());
-			return commonInfo;
+			return itemCommonInfo;
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format(
 					"You want to READ common information about the [%s] with id = [%s], but it doesn't exist in the storage.",
@@ -60,11 +60,11 @@ public class ItemVariantCommonInfoDaoImpl implements IItemVariantCommonInfoDao {
 				+ " from item_variant as v left join item as i on i.id=v.item_id";
 
 		try {
-			List<ItemVariantCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL,
+			List<ItemVariantCommonInfo> itemCommonInfos = jdbcTemplate.query(READ_ALL_SQL,
 					new ItemVariantCommonInfoMapper());
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", itemVariantClassName,
-					commonInfos.size());
-			return commonInfos;
+					itemCommonInfos.size());
+			return itemCommonInfos;
 
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format("Class [%s] storage returns incorrect entity count.", itemVariantClassName);
@@ -82,18 +82,18 @@ public class ItemVariantCommonInfoDaoImpl implements IItemVariantCommonInfoDao {
 		final String SQL_WITH_FILTERING = givenFilter.getFullSqlQuery();
 		Object[] paramsArray = givenFilter.getQueryParamsArray();
 		try {
-			List<ItemVariantCommonInfo> commonInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
+			List<ItemVariantCommonInfo> itemCommonInfos = jdbcTemplate.query(SQL_WITH_FILTERING, paramsArray,
 					new ItemVariantCommonInfoMapper());
 			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", itemVariantClassName,
-					commonInfos.size());
-			if (commonInfos.size() == 0) {
+					itemCommonInfos.size());
+			if (itemCommonInfos.size() == 0) {
 				String errMsg = String.format("[%s] entities storage is epty", itemVariantClassName);
 				LOGGER.error("Error: {}", errMsg);
 				// throw new EmptyResultDataAccessException(1);
 				// return null;
-				return commonInfos;
+				return itemCommonInfos;
 			} else {
-				return commonInfos;
+				return itemCommonInfos;
 			}
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format("Class [%s]. Storage returns incorrect entity count.", itemVariantClassName);

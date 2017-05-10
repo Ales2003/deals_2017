@@ -58,13 +58,13 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 				"CACHE_ITEM_COMMON_INFO");
 		// query to CASHE
 		if (CACHE_ITEM_COMMON_INFO.containsKey(READ_BY_ID_SQL + contractId.toString())) {
-			List<ContractCommonInfo> commonInfosFromMapList = CACHE_ITEM_COMMON_INFO
+			List<ContractCommonInfo> contractCommonInfosFromMapList = CACHE_ITEM_COMMON_INFO
 					.get(READ_BY_ID_SQL + contractId.toString());
-			ContractCommonInfo CommonInfoFromMap = commonInfosFromMapList.get(0);
+			ContractCommonInfo contractCommonInfoFromMap = contractCommonInfosFromMapList.get(0);
 			LOGGER.info("The [DATA] in the cache {} [IS PRESENT] - the [QUERY] to the database is [NOT PERFOMED].",
 					"CACHE_ITEM_COMMON_INFO");
 			LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
-			return CommonInfoFromMap;
+			return contractCommonInfoFromMap;
 		}
 		LOGGER.info("There is [NO DATA] in the cache {} - the query is [EXECUTED] in the database.",
 				"CACHE_ITEM_COMMON_INFO");
@@ -73,8 +73,8 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 		//
 		try {
 
-			ContractCommonInfo commonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL, new Object[] { contractId },
-					new ContractCommonInfoMapper());
+			ContractCommonInfo contractCommonInfo = jdbcTemplate.queryForObject(READ_BY_ID_SQL,
+					new Object[] { contractId }, new ContractCommonInfoMapper());
 
 			// save to CASHE (TO one map for 3 request types - wrapped
 			// commonInfo in a list)
@@ -86,16 +86,16 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
 			LOGGER.info("Saving data to the cache {}.", "CACHE_ITEM_COMMON_INFO");
 
-			List<ContractCommonInfo> itemCommonInfolist = new ArrayList<>();
-			itemCommonInfolist.add(0, commonInfo);
+			List<ContractCommonInfo> contractCommonInfolist = new ArrayList<>();
+			contractCommonInfolist.add(0, contractCommonInfo);
 			CACHE_ITEM_COMMON_INFO.put(READ_BY_ID_SQL + contractId.toString(),
-					(ArrayList<ContractCommonInfo>) itemCommonInfolist);
+					(ArrayList<ContractCommonInfo>) contractCommonInfolist);
 			LOGGER.info("Size of cache {} = [{}] entities.", "CACHE_ITEM_COMMON_INFO", CACHE_ITEM_COMMON_INFO.size());
 			//
 			//
 
 			LOGGER.info("Return data from the database.");
-			return commonInfo;
+			return contractCommonInfo;
 			//
 			//
 
@@ -122,12 +122,14 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 		// query to CASHE
 
 		try {
-			List<ContractCommonInfo> commonInfos = jdbcTemplate.query(READ_ALL_SQL, new ContractCommonInfoMapper());
-			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName, commonInfos.size());
+			List<ContractCommonInfo> contractCommonInfos = jdbcTemplate.query(READ_ALL_SQL,
+					new ContractCommonInfoMapper());
+			LOGGER.debug("[{}] storage returns [{}] entitys with common info.", contractClassName,
+					contractCommonInfos.size());
 
 			// save to CASHE
 
-			return commonInfos;
+			return contractCommonInfos;
 
 		} catch (EmptyResultDataAccessException e) {
 			String errMsg = String.format("Class [%s] storage returns incorrect entity count.", contractClassName);
