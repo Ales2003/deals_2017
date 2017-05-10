@@ -78,7 +78,7 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
 			// save to CASHE (TO one map for 3 request types - wrapped
 			// commonInfo in a list)
-			
+
 			// You need to add logic, what to do if you first ask for an ID that
 			// IS NOT in the database and THEN ADDED. In the present case, the
 			// cache is saved to a null on a specific id and it will return when
@@ -176,6 +176,15 @@ public class ContractCommonInfoDaoImpl implements IContractCommonInfoDao {
 
 	public void SetPersistentSavedCACHE(Map<String, ArrayList<ContractCommonInfo>> cache) {
 		CACHE_ITEM_COMMON_INFO = cache;
+	}
+
+	@Override
+	public void clearCACHE() {
+		LOGGER.info("Start clearing {}. Size of cache before = [{}] entities.", "CACHE_ITEM_COMMON_INFO",
+				CACHE_ITEM_COMMON_INFO.size());
+		CACHE_ITEM_COMMON_INFO.clear();
+		LOGGER.info("{} is empty. Size of cache after = [{}] entities.", "CACHE_ITEM_COMMON_INFO",
+				CACHE_ITEM_COMMON_INFO.size());
 	}
 
 }

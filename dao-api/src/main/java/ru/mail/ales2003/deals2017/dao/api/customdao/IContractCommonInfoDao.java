@@ -48,4 +48,8 @@ public interface IContractCommonInfoDao {
 	 */
 	void SetPersistentSavedCACHE(Map<String, ArrayList<ContractCommonInfo>> cache);
 
+	/**
+	 * 
+	 */
+	void clearCACHE();
 }

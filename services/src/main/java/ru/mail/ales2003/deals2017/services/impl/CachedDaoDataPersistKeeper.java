@@ -18,9 +18,9 @@ import ru.mail.ales2003.deals2017.dao.api.customdao.IContractCommonInfoDao;
 import ru.mail.ales2003.deals2017.dao.api.customentities.ContractCommonInfo;
 
 @Component
-public class QueryDataPersistKeeper {
+public class CachedDaoDataPersistKeeper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(QueryDataPersistKeeper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CachedDaoDataPersistKeeper.class);
 
 	private static final String THE_PATH_TO_THE_PERSISTEND_SAVED_COMMON_INFO = "d:/REPO/GitHub/deals_2017/sql-db-root-folder/contract_common_info.ser";
 
@@ -72,5 +72,9 @@ public class QueryDataPersistKeeper {
 			LOGGER.info("Saving of {} is failed.", "CACHE_ITEM_COMMON_INFO");
 			i.printStackTrace();
 		}
+	}
+
+	public void clear() {
+		commonInfoDao.clearCACHE();
 	}
 }
