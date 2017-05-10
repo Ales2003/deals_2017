@@ -39,7 +39,7 @@ public class CachingController {
 		return new ResponseEntity<String>(msg, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/receive", method = RequestMethod.HEAD)
+	@RequestMapping(value = "/recover", method = RequestMethod.HEAD)
 	public ResponseEntity<?> fromPersistendFile() {
 
 		// Direct implementation of the method
