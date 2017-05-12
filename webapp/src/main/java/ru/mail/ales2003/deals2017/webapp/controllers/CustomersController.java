@@ -256,7 +256,19 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		entity = model2entity(entityModel);
+		entity.setFirstName(entityModel.getFirstName());
+		entity.setPatronymic(entityModel.getPatronymic());
+		entity.setLastName(entityModel.getLastName());
+		entity.setCompanyName(entityModel.getCompanyName());
+		entity.setAddress(entityModel.getAddress());
+		entity.setPhoneNumber(entityModel.getPhoneNumber());
+
+		if (entityModel.getCustomerGroupId() != null) {
+			entity.setCustomerGroupId(entityModel.getCustomerGroupId());
+		}
+		if (entityModel.getManagerId() != null) {
+			entity.setManagerId(entityModel.getManagerId());
+		}
 
 		service.save(entity);
 

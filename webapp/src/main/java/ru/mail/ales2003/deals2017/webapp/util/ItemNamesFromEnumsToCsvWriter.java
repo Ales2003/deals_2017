@@ -9,10 +9,10 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.stereotype.Repository;
 
-import ru.mail.ales2003.deals2017.datamodel.Attribute;
+import ru.mail.ales2003.deals2017.dao.api.customentities.ItemName;
 
 @Repository
-public class AttributeFromEnumsToCsvWriter {
+public class ItemNamesFromEnumsToCsvWriter {
 
 	// Delimiter used in CSV file
 	private static final String NEW_LINE_SEPARATOR = "\n";
@@ -28,7 +28,7 @@ public class AttributeFromEnumsToCsvWriter {
 
 		// CSVPrinter csvFilePrinter = null;
 
-		List<Attribute> attributes = null;
+		List<ItemName> items = null;
 
 		// Create the CSVFormat object with "\n" as a record delimiter
 		// CSVFormat csvFileFormat =
@@ -38,11 +38,11 @@ public class AttributeFromEnumsToCsvWriter {
 				CSVFormat.DEFAULT.withRecordSeparator(NEW_LINE_SEPARATOR))) {
 
 			// Create a new list of enums measure
-			attributes = new ArrayList<Attribute>(Arrays.asList(Attribute.values()));
+			items = new ArrayList<ItemName>(Arrays.asList(ItemName.values()));
 
-			for (Attribute attribute : attributes) {
+			for (ItemName item : items) {
 				List<String> ms = new ArrayList<>();
-				ms.add(attribute.name());
+				ms.add(item.name());
 				csvFilePrinter.printRecord(ms);
 			}
 
