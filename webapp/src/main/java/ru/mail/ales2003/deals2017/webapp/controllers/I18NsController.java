@@ -33,9 +33,9 @@ import ru.mail.ales2003.deals2017.webapp.util.EnumArrayToMessageConvertor;
 
 @RestController
 @RequestMapping("/i18ns")
-public class U18NsController {
+public class I18NsController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(U18NsController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(I18NsController.class);
 
 	@Inject
 	private ApplicationContext context;
@@ -53,7 +53,7 @@ public class U18NsController {
 	@Inject
 	private IUserAuthService authService;
 
-	private String thisClassName = U18NsController.class.getSimpleName();
+	private String thisClassName = I18NsController.class.getSimpleName();
 
 	/**
 	 * @return List&ltI18NModel&gt convertedEntitys
