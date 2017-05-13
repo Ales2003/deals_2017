@@ -256,12 +256,24 @@ public class CustomersController {
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
-		entity.setFirstName(entityModel.getFirstName());
-		entity.setPatronymic(entityModel.getPatronymic());
-		entity.setLastName(entityModel.getLastName());
-		entity.setCompanyName(entityModel.getCompanyName());
-		entity.setAddress(entityModel.getAddress());
-		entity.setPhoneNumber(entityModel.getPhoneNumber());
+		if (entityModel.getFirstName() != null) {
+			entity.setFirstName(entityModel.getFirstName());
+		}
+		if (entityModel.getPatronymic() != null) {
+			entity.setPatronymic(entityModel.getPatronymic());
+		}
+		if (entityModel.getLastName() != null) {
+			entity.setLastName(entityModel.getLastName());
+		}
+		if (entityModel.getCompanyName() != null) {
+			entity.setCompanyName(entityModel.getCompanyName());
+		}
+		if (entityModel.getAddress() != null) {
+			entity.setAddress(entityModel.getAddress());
+		}
+		if (entityModel.getPhoneNumber() != null) {
+			entity.setPhoneNumber(entityModel.getPhoneNumber());
+		}
 
 		if (entityModel.getCustomerGroupId() != null) {
 			entity.setCustomerGroupId(entityModel.getCustomerGroupId());
