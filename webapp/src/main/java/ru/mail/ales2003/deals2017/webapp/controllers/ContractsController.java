@@ -247,9 +247,13 @@ public class ContractsController {
 			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 		// if customer doesn't give his own id, this id we get from storage
-		if (entity.getCustomerId() == null) {
+		if (entity.getCustomerId() == null && authorisedUserRole.equals(Role.CUSTOMER)) {
 			Integer customerIdInContract = authService.get(authorisedUserId).getInOwnTableId();
 			entity.setCustomerId(customerIdInContract);
+		}
+		if (entity.getCustomerId() == null) {
+			String msg = "Customer ID is required to contract creation";
+			return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
 		}
 
 		service.saveContract(entity);
@@ -579,7 +583,4 @@ public class ContractsController {
 
 	}
 
-	
-	
-	
 }
