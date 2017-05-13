@@ -264,6 +264,7 @@ public class ContractsController {
 		Set<Role> validUserRoles = new HashSet<>();
 		{
 			validUserRoles.add(Role.ADMIN);
+			validUserRoles.add(Role.REVENUE_MANAGER);
 			validUserRoles.add(Role.SALES_MANAGER);
 		}
 

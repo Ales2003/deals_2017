@@ -29,6 +29,7 @@ import ru.mail.ales2003.deals2017.datamodel.UserAuth;
 import ru.mail.ales2003.deals2017.services.ICustomerGroupService;
 import ru.mail.ales2003.deals2017.services.ICustomerService;
 import ru.mail.ales2003.deals2017.services.IManagerService;
+import ru.mail.ales2003.deals2017.services.IUserAuthService;
 import ru.mail.ales2003.deals2017.services.impl.UserAuthStorage;
 import ru.mail.ales2003.deals2017.services.servicesexceptions.DuplicationKeyInformationException;
 import ru.mail.ales2003.deals2017.webapp.models.AuthorizedCustomerModel;
@@ -50,6 +51,9 @@ public class CustomersController {
 	private ICustomerService service;
 	@Inject
 	private ICustomerGroupService groupService;
+
+	@Inject
+	private IUserAuthService authService;
 
 	@Inject
 	private IManagerService managerService;
@@ -140,8 +144,20 @@ public class CustomersController {
 		LOGGER.info("UserAuthorization in {}: Verification of access rights.", thisClassName);
 		// Clarify the userROLE for obtaining permission to use the method
 		Role authorisedUserRole = userJVMDataStorage.getRole();
-		if ((entityIdParam != authorisedUserId && authorisedUserRole == Role.CUSTOMER) || authorisedUserRole == null
-				|| !validUserRoles.contains(authorisedUserRole)) {
+		// getting managerId from UserAuth Table
+		Integer customerAsUserId = null;
+		try {
+			customerAsUserId = authService.getByCustomerId(entityIdParam).getId();
+		} catch (Exception e) {
+			String msg = e.getMessage();
+
+			// because we need to continue method we don't return
+			// return new ResponseEntity<String>(msg, HttpStatus.BAD_REQUEST);
+		}
+		// !!! Only EQUALS!!! SALES_MANAGER, ITEM_MANAGER, REVENUE_MANAGER can
+		// get only about Thyself
+		if ((!authorisedUserId.equals(customerAsUserId) && authorisedUserRole.equals((Role.CUSTOMER)))
+				|| authorisedUserRole == null || !validUserRoles.contains(authorisedUserRole)) {
 			String msg = String.format(
 					"No access rights. Access is available only to users: %s (for CUSTOMERS only own profile is available).",
 					EnumArrayToMessageConvertor.validRoleArrayToMessage(validUserRoles));
