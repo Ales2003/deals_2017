@@ -22,7 +22,7 @@ public class CachedDaoDataPersistKeeper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CachedDaoDataPersistKeeper.class);
 
-	private static final String THE_PATH_TO_THE_PERSISTEND_SAVED_COMMON_INFO = "d:/REPO/GitHub/deals_2017/sql-db-root-folder/contract_common_info.ser";
+	private static final String THE_PATH_TO_THE_PERSISTEND_SAVED_COMMON_INFO = "d:/REPO/GitHub/deals_2017/persistend-cache-fromdb-root-folder/contract_info.ser";
 
 	@Inject
 	private IContractCommonInfoDao commonInfoDao;
